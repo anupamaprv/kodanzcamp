@@ -6,11 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 import { signInWithGoogle } from "@/components/AuthPrompt";
 import { useSession } from "@/hooks/use-session";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: z.object({
     next: z.string().optional().catch(undefined),
-    mode: z.enum(["signin", "signup"]).catch("signin"),
+    mode: z.enum(["signin", "signup", "forgot"]).catch("signin"),
   }),
   head: () => ({
     meta: [
@@ -47,6 +48,15 @@ function AuthPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === "forgot") {
+      const em = z.string().trim().email().safeParse(email);
+      if (!em.success) { toast.error("Enter a valid email"); return; }
+      setBusy(true);
+      const { error } = await supabase.auth.resetPasswordForEmail(em.data, { redirectTo: `${window.location.origin}/reset-password` });
+      setBusy(false);
+      if (error) toast.error(error.message); else setSent(true);
+      return;
+    }
     const p = schema.safeParse({ email, password });
     if (!p.success) { toast.error("Enter a valid email and a password of 8+ characters"); return; }
     setBusy(true);
@@ -61,6 +71,8 @@ function AuthPage() {
     setBusy(false);
   };
 
+  const title = mode === "signup" ? "Create your free account" : mode === "forgot" ? "Reset your password" : "Welcome back";
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
       <Logo size="lg" />
@@ -68,25 +80,41 @@ function AuthPage() {
         {sent ? (
           <div className="text-center">
             <h1 className="text-xl font-bold text-navy">Check your email</h1>
-            <p className="mt-2 text-sm text-muted-foreground">We sent a confirmation link to {email}. Click it to finish creating your account.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {mode === "forgot"
+                ? `If an account exists for ${email}, we sent a link to set a new password.`
+                : `We sent a confirmation link to ${email}. Click it to finish creating your account.`}
+            </p>
+            <button onClick={() => { setSent(false); setMode("signin"); }} className="mt-4 text-sm font-semibold text-teal underline">Back to log in</button>
           </div>
         ) : (
           <>
-            <h1 className="text-xl font-bold text-navy">{mode === "signup" ? "Create your free account" : "Welcome back"}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Save favorites, add your kids and plan every week.</p>
-            <button onClick={() => signInWithGoogle(next)} className="mt-5 w-full rounded-xl border py-3 font-semibold text-navy hover:bg-muted">Continue with Google</button>
-            <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
-            <form onSubmit={submit} className="space-y-3">
+            <h1 className="text-xl font-bold text-navy">{title}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {mode === "forgot" ? "Enter your email and we'll send you a reset link." : "Save favorites, add your kids and plan every week."}
+            </p>
+            {mode !== "forgot" && (
+              <>
+                <button onClick={() => signInWithGoogle(next)} className="mt-5 w-full rounded-xl border py-3 font-semibold text-navy hover:bg-muted">Continue with Google</button>
+                <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
+              </>
+            )}
+            <form onSubmit={submit} className={mode === "forgot" ? "mt-5 space-y-3" : "space-y-3"}>
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full rounded-xl border bg-background px-3 py-2.5 outline-none focus:ring-2 focus:ring-ring" />
-              <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password (8+ characters)" className="w-full rounded-xl border bg-background px-3 py-2.5 outline-none focus:ring-2 focus:ring-ring" />
+              {mode !== "forgot" && <PasswordInput value={password} onChange={setPassword} />}
+              {mode === "signin" && (
+                <div className="text-right">
+                  <button type="button" onClick={() => setMode("forgot")} className="text-sm font-semibold text-teal underline">Forgot password?</button>
+                </div>
+              )}
               <button disabled={busy} className="w-full rounded-xl bg-primary py-3 font-semibold text-primary-foreground disabled:opacity-50">
-                {mode === "signup" ? "Create account" : "Log in"}
+                {mode === "signup" ? "Create account" : mode === "forgot" ? "Send reset link" : "Log in"}
               </button>
             </form>
             <p className="mt-4 text-center text-sm text-muted-foreground">
-              {mode === "signup" ? "Already have an account? " : "New to Kodanz? "}
-              <button onClick={() => setMode(mode === "signup" ? "signin" : "signup")} className="font-semibold text-teal underline">
-                {mode === "signup" ? "Log in" : "Create an account"}
+              {mode === "forgot" ? "Remembered it? " : mode === "signup" ? "Already have an account? " : "New to Kodanz? "}
+              <button onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="font-semibold text-teal underline">
+                {mode === "signin" ? "Create an account" : "Log in"}
               </button>
             </p>
           </>
