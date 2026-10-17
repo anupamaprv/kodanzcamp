@@ -8,8 +8,16 @@ import tennis from "@/assets/camp-tennis.jpg";
 import makers from "@/assets/camp-makers.jpg";
 import music from "@/assets/camp-music.jpg";
 import explorers from "@/assets/camp-explorers.jpg";
+import swim from "@/assets/camp-swim.jpg";
+import karate from "@/assets/camp-karate.jpg";
+import museum from "@/assets/camp-museum.jpg";
+import academic from "@/assets/camp-academic.jpg";
+import gym from "@/assets/camp-gym.jpg";
+import raw from "@/data/camps.json";
 
-export const INTERESTS = ["STEM", "Sports", "Arts", "Nature", "Dance", "Coding", "Music"] as const;
+export const INTERESTS = [
+  "STEM", "Sports", "Arts", "Nature", "Dance", "Coding", "Music", "Swim", "Martial Arts", "Academic",
+] as const;
 export type Interest = (typeof INTERESTS)[number];
 
 /** Summer 2027 weeks, Mondays. */
@@ -19,60 +27,78 @@ export const SUMMER_WEEKS = [
   "2027-08-30",
 ];
 
-export type Camp = {
+export type RawCamp = {
   id: string;
   name: string;
   provider: string;
-  interests: Interest[];
+  city: string;
+  state: string;
+  address: string;
+  website?: string | null;
+  phone?: string | null;
+  interests: string[];
   minAge: number;
   maxAge: number;
-  pricePerWeek: number;
-  fullSummerPrice: number;
-  hours: string;
-  weeks: string[];
-  image: string;
-  /** Base offset from home in miles (x east, y north) */
-  dx: number;
-  dy: number;
+  pricePerWeek: number | null;
+  dayType: "full" | "half";
+  hours: string | null;
+  weeks?: string[] | null;
+  note?: string | null;
+  source?: string | null;
+  lat: number;
+  lng: number;
 };
 
-const all = SUMMER_WEEKS;
-const RAW: Omit<Camp, "fullSummerPrice">[] = [
-  { id: "riverbend", name: "Riverbend Adventure Camp", provider: "Riverbend Outdoors", interests: ["Nature", "Sports"], minAge: 7, maxAge: 13, pricePerWeek: 310, hours: "9am – 3pm", weeks: all, image: nature, dx: 9, dy: -11 },
-  { id: "nature-explorers", name: "Nature Explorers Camp", provider: "Greenway Conservancy", interests: ["Nature"], minAge: 6, maxAge: 12, pricePerWeek: 325, hours: "8:30am – 3:30pm", weeks: all.slice(0, 9), image: explorers, dx: -6, dy: 5.5 },
-  { id: "stem-robotics", name: "STEM Robotics Camp", provider: "BrightBots Academy", interests: ["STEM", "Coding"], minAge: 9, maxAge: 14, pricePerWeek: 350, hours: "9am – 4pm", weeks: all.slice(2), image: stem, dx: 8, dy: 9 },
-  { id: "creative-arts", name: "Creative Arts Studio", provider: "Paintbox Collective", interests: ["Arts"], minAge: 5, maxAge: 12, pricePerWeek: 275, hours: "9am – 2pm", weeks: all, image: arts, dx: -5, dy: -3.5 },
-  { id: "all-star", name: "All-Star Sports Week", provider: "Valley Youth Athletics", interests: ["Sports"], minAge: 6, maxAge: 14, pricePerWeek: 290, hours: "9am – 3pm", weeks: all, image: sports, dx: -9, dy: -8 },
-  { id: "code-quest", name: "Code Quest Junior", provider: "Pixel Labs", interests: ["Coding", "STEM"], minAge: 8, maxAge: 13, pricePerWeek: 340, hours: "9am – 3pm", weeks: all.slice(1, 10), image: coding, dx: 3, dy: 4 },
-  { id: "rhythm", name: "Rhythm & Moves Dance", provider: "Studio Juniper", interests: ["Dance", "Music"], minAge: 6, maxAge: 14, pricePerWeek: 260, hours: "10am – 3pm", weeks: all, image: dance, dx: 12, dy: -2 },
-  { id: "tennis", name: "Lakeside Tennis Camp", provider: "Lakeside Racquet Club", interests: ["Sports"], minAge: 8, maxAge: 15, pricePerWeek: 295, hours: "8am – 12pm", weeks: all, image: tennis, dx: -12, dy: 10 },
-  { id: "makers", name: "Young Makers Workshop", provider: "Forge Makerspace", interests: ["STEM", "Arts"], minAge: 7, maxAge: 12, pricePerWeek: 315, hours: "9am – 3pm", weeks: all.slice(0, 8), image: makers, dx: 1.5, dy: -6 },
-  { id: "music", name: "Summer Strings & Songs", provider: "Harmony Music School", interests: ["Music", "Arts"], minAge: 5, maxAge: 11, pricePerWeek: 240, hours: "9am – 1pm", weeks: all, image: music, dx: 5, dy: 13 },
-];
+export type Camp = Omit<RawCamp, "weeks" | "interests"> & {
+  interests: Interest[];
+  weeks: string[];
+  fullSummerPrice: number | null;
+  image: string;
+};
 
-/** Full-summer package: 10% off the weekly rate across every offered week. */
-export const CAMPS: Camp[] = RAW.map((c) => ({ ...c, fullSummerPrice: Math.round(c.pricePerWeek * c.weeks.length * 0.9) }));
+const IMAGES: Record<string, string[]> = {
+  Swim: [swim], "Martial Arts": [karate], Dance: [dance], Music: [music], Coding: [coding],
+  STEM: [stem, makers, museum], Arts: [arts, museum], Nature: [nature, explorers],
+  Sports: [sports, tennis, gym], Academic: [academic],
+};
 
-/** Deterministic, ZIP-dependent jitter so distances feel local. */
-function zipSeed(zip: string) {
-  let h = 0;
-  for (const c of zip) h = (h * 31 + c.charCodeAt(0)) % 997;
-  return h;
+/** Picks a photo by the camp's main interest; varies within a category so neighbors differ. */
+function imageFor(c: RawCamp, i: number) {
+  const n = c.name.toLowerCase();
+  if (/gymnast|tumbl|ninja/.test(n)) return gym;
+  if (/tennis/.test(n)) return tennis;
+  if (/museum|science center|institute|zoo|aquarium/.test(n)) return museum;
+  const pool = IMAGES[c.interests[0] ?? "Sports"] ?? [sports];
+  return pool[i % pool.length]!;
 }
 
-export type LatLng = { lat: number; lng: number };
-export type CampResult = Camp & { x: number; y: number; miles: number; minutes: number; lat: number; lng: number };
+/** Full-summer package: 10% off the weekly rate across every offered week. */
+export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
+  const weeks = c.weeks?.length ? c.weeks : SUMMER_WEEKS;
+  const interests = c.interests.filter((x): x is Interest => (INTERESTS as readonly string[]).includes(x));
+  return {
+    ...c,
+    interests,
+    weeks,
+    image: imageFor(c, i),
+    fullSummerPrice: c.pricePerWeek == null ? null : Math.round(c.pricePerWeek * weeks.length * 0.9),
+  };
+});
 
-export function locateCamps(zip: string, center: LatLng = { lat: 39.5, lng: -75.7 }): CampResult[] {
-  const s = zipSeed(zip || "00000");
-  return CAMPS.map((c, i) => {
-    const j = ((s * (i + 3)) % 40) / 20 - 1; // -1..1
-    const x = c.dx + j * 1.5;
-    const y = c.dy - j * 1.2;
+export type LatLng = { lat: number; lng: number };
+/** x/y are miles east/north of home. */
+export type CampResult = Camp & { x: number; y: number; miles: number; minutes: number };
+
+const DEFAULT_CENTER = { lat: 39.4496, lng: -75.7163 }; // Middletown, DE
+
+export function locateCamps(_zip: string, center: LatLng = DEFAULT_CENTER): CampResult[] {
+  const cos = Math.cos((center.lat * Math.PI) / 180);
+  return CAMPS.map((c) => {
+    const x = (c.lng - center.lng) * 69.17 * cos;
+    const y = (c.lat - center.lat) * 69.17;
     const miles = Math.round(Math.hypot(x, y) * 10) / 10;
-    const lat = center.lat + y / 69;
-    const lng = center.lng + x / (69 * Math.cos((center.lat * Math.PI) / 180));
-    return { ...c, x, y, lat, lng, miles, minutes: Math.round(miles * 1.5 + 4) };
+    // Rough drive time: ~25 mph average plus a few minutes to park.
+    return { ...c, x, y, miles, minutes: Math.round(miles * 2.4 + 4) };
   });
 }
 
@@ -85,21 +111,25 @@ export function searchCamps(opts: {
   radius?: number;
   sort?: SortKey;
   center?: LatLng | undefined;
+  fullDayOnly?: boolean;
 }): CampResult[] {
-  const { center, zip, age, interests = [], radius = 30, sort = "distance" } = opts;
+  const { center, zip, age, interests = [], radius = 30, sort = "distance", fullDayOnly = false } = opts;
+  const price = (c: Camp) => c.pricePerWeek ?? Number.POSITIVE_INFINITY;
   return locateCamps(zip, center)
     .filter((c) => c.miles <= radius)
     .filter((c) => (age ? age >= c.minAge && age <= c.maxAge : true))
     .filter((c) => (interests.length ? c.interests.some((i) => interests.includes(i)) : true))
+    .filter((c) => (fullDayOnly ? c.dayType === "full" : true))
     .sort((a, b) =>
       sort === "cost"
-        ? a.pricePerWeek - b.pricePerWeek || a.miles - b.miles
-        : a.miles - b.miles || a.pricePerWeek - b.pricePerWeek,
+        ? price(a) - price(b) || a.miles - b.miles
+        : a.miles - b.miles || price(a) - price(b),
     );
 }
 
-/** Price for selected weeks; full summer uses the package price when cheaper. */
+/** Price for selected weeks; null when the camp hasn't published a price. */
 export function priceFor(camp: Camp, weeks: string[], fullSummer: boolean) {
+  if (camp.pricePerWeek == null) return null;
   if (fullSummer) return camp.fullSummerPrice;
   return camp.pricePerWeek * weeks.length;
 }
@@ -129,7 +159,8 @@ export function buildIcs(camp: Camp, weeks: string[]) {
       `DTSTART;VALUE=DATE:${ymd(start)}`,
       `DTEND;VALUE=DATE:${ymd(end)}`,
       `SUMMARY:${camp.name}`,
-      `DESCRIPTION:${camp.provider} · ${camp.hours} · $${camp.pricePerWeek}/week`,
+      `LOCATION:${camp.address}`,
+      `DESCRIPTION:${camp.provider}${camp.hours ? ` · ${camp.hours}` : ""}`,
       "END:VEVENT",
     );
   }
