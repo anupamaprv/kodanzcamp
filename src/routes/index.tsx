@@ -2,8 +2,12 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useSession } from "@/hooks/use-session";
 import { useHomeZip } from "@/lib/family";
-import { MapPin, Search, CalendarPlus, Map, DollarSign, Users, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight, Users } from "lucide-react";
 import hero from "@/assets/hero.jpg";
+import featureMatched from "@/assets/feature-matched.jpg";
+import featureMap from "@/assets/feature-map.jpg";
+import featureCosts from "@/assets/feature-costs.jpg";
+import featureCalendar from "@/assets/feature-calendar.jpg";
 import { SiteHeader } from "@/components/Logo";
 import { INTERESTS } from "@/lib/camps";
 
