@@ -2,6 +2,12 @@ import nature from "@/assets/camp-nature.jpg";
 import stem from "@/assets/camp-stem.jpg";
 import arts from "@/assets/camp-arts.jpg";
 import sports from "@/assets/camp-sports.jpg";
+import coding from "@/assets/camp-coding.jpg";
+import dance from "@/assets/camp-dance.jpg";
+import tennis from "@/assets/camp-tennis.jpg";
+import makers from "@/assets/camp-makers.jpg";
+import music from "@/assets/camp-music.jpg";
+import explorers from "@/assets/camp-explorers.jpg";
 
 export const INTERESTS = ["STEM", "Sports", "Arts", "Nature", "Dance", "Coding", "Music"] as const;
 export type Interest = (typeof INTERESTS)[number];
@@ -33,15 +39,15 @@ export type Camp = {
 const all = SUMMER_WEEKS;
 const RAW: Omit<Camp, "fullSummerPrice">[] = [
   { id: "riverbend", name: "Riverbend Adventure Camp", provider: "Riverbend Outdoors", interests: ["Nature", "Sports"], minAge: 7, maxAge: 13, pricePerWeek: 310, hours: "9am – 3pm", weeks: all, image: nature, dx: 9, dy: -11 },
-  { id: "nature-explorers", name: "Nature Explorers Camp", provider: "Greenway Conservancy", interests: ["Nature"], minAge: 6, maxAge: 12, pricePerWeek: 325, hours: "8:30am – 3:30pm", weeks: all.slice(0, 9), image: nature, dx: -6, dy: 5.5 },
+  { id: "nature-explorers", name: "Nature Explorers Camp", provider: "Greenway Conservancy", interests: ["Nature"], minAge: 6, maxAge: 12, pricePerWeek: 325, hours: "8:30am – 3:30pm", weeks: all.slice(0, 9), image: explorers, dx: -6, dy: 5.5 },
   { id: "stem-robotics", name: "STEM Robotics Camp", provider: "BrightBots Academy", interests: ["STEM", "Coding"], minAge: 9, maxAge: 14, pricePerWeek: 350, hours: "9am – 4pm", weeks: all.slice(2), image: stem, dx: 8, dy: 9 },
   { id: "creative-arts", name: "Creative Arts Studio", provider: "Paintbox Collective", interests: ["Arts"], minAge: 5, maxAge: 12, pricePerWeek: 275, hours: "9am – 2pm", weeks: all, image: arts, dx: -5, dy: -3.5 },
   { id: "all-star", name: "All-Star Sports Week", provider: "Valley Youth Athletics", interests: ["Sports"], minAge: 6, maxAge: 14, pricePerWeek: 290, hours: "9am – 3pm", weeks: all, image: sports, dx: -9, dy: -8 },
-  { id: "code-quest", name: "Code Quest Junior", provider: "Pixel Labs", interests: ["Coding", "STEM"], minAge: 8, maxAge: 13, pricePerWeek: 340, hours: "9am – 3pm", weeks: all.slice(1, 10), image: stem, dx: 3, dy: 4 },
-  { id: "rhythm", name: "Rhythm & Moves Dance", provider: "Studio Juniper", interests: ["Dance", "Music"], minAge: 6, maxAge: 14, pricePerWeek: 260, hours: "10am – 3pm", weeks: all, image: arts, dx: 12, dy: -2 },
-  { id: "tennis", name: "Lakeside Tennis Camp", provider: "Lakeside Racquet Club", interests: ["Sports"], minAge: 8, maxAge: 15, pricePerWeek: 295, hours: "8am – 12pm", weeks: all, image: sports, dx: -12, dy: 10 },
-  { id: "makers", name: "Young Makers Workshop", provider: "Forge Makerspace", interests: ["STEM", "Arts"], minAge: 7, maxAge: 12, pricePerWeek: 315, hours: "9am – 3pm", weeks: all.slice(0, 8), image: stem, dx: 1.5, dy: -6 },
-  { id: "music", name: "Summer Strings & Songs", provider: "Harmony Music School", interests: ["Music", "Arts"], minAge: 5, maxAge: 11, pricePerWeek: 240, hours: "9am – 1pm", weeks: all, image: arts, dx: 5, dy: 13 },
+  { id: "code-quest", name: "Code Quest Junior", provider: "Pixel Labs", interests: ["Coding", "STEM"], minAge: 8, maxAge: 13, pricePerWeek: 340, hours: "9am – 3pm", weeks: all.slice(1, 10), image: coding, dx: 3, dy: 4 },
+  { id: "rhythm", name: "Rhythm & Moves Dance", provider: "Studio Juniper", interests: ["Dance", "Music"], minAge: 6, maxAge: 14, pricePerWeek: 260, hours: "10am – 3pm", weeks: all, image: dance, dx: 12, dy: -2 },
+  { id: "tennis", name: "Lakeside Tennis Camp", provider: "Lakeside Racquet Club", interests: ["Sports"], minAge: 8, maxAge: 15, pricePerWeek: 295, hours: "8am – 12pm", weeks: all, image: tennis, dx: -12, dy: 10 },
+  { id: "makers", name: "Young Makers Workshop", provider: "Forge Makerspace", interests: ["STEM", "Arts"], minAge: 7, maxAge: 12, pricePerWeek: 315, hours: "9am – 3pm", weeks: all.slice(0, 8), image: makers, dx: 1.5, dy: -6 },
+  { id: "music", name: "Summer Strings & Songs", provider: "Harmony Music School", interests: ["Music", "Arts"], minAge: 5, maxAge: 11, pricePerWeek: 240, hours: "9am – 1pm", weeks: all, image: music, dx: 5, dy: 13 },
 ];
 
 /** Full-summer package: 10% off the weekly rate across every offered week. */
