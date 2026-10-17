@@ -48,7 +48,7 @@ function AuthPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const p = schema.safeParse({ email, password });
-    if (!p.success) return toast.error("Enter a valid email and a password of 8+ characters");
+    if (!p.success) { toast.error("Enter a valid email and a password of 8+ characters"); return; }
     setBusy(true);
     if (mode === "signup") {
       const { data, error } = await supabase.auth.signUp({ ...p.data, options: { emailRedirectTo: window.location.origin + safeNext(next) } });

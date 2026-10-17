@@ -38,7 +38,7 @@ function Planner() {
   const addKid = async (e: React.FormEvent) => {
     e.preventDefault();
     const n = name.trim();
-    if (!n || n.length > 40) return toast.error("Enter a name (up to 40 characters)");
+    if (!n || n.length > 40) { toast.error("Enter a name (up to 40 characters)"); return; }
     await m.addKid.mutateAsync({ name: n, age: Number(age) });
     setName("");
   };
