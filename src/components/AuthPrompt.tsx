@@ -10,7 +10,7 @@ export async function signInWithGoogle(next?: string) {
 }
 
 /** Shown when a signed-out visitor tries a members-only action. */
-export function AuthPrompt({ onClose, title = "Save this camp?" }: { onClose: () => void; title?: string }) {
+export function AuthPrompt({ onClose, title = "Save this camp?", description = "Create a free account to save favorites, plan each child's summer and see it on a calendar." }: { onClose: () => void; title?: string; description?: string }) {
   const loc = useLocation();
   const next = loc.href;
   return (
@@ -19,7 +19,7 @@ export function AuthPrompt({ onClose, title = "Save this camp?" }: { onClose: ()
         <button onClick={onClose} aria-label="Close" className="float-right rounded-full p-1 hover:bg-muted"><X className="h-5 w-5" /></button>
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-coral-soft text-coral"><Heart className="h-6 w-6" /></div>
         <h2 className="mt-4 text-xl font-bold text-navy">{title}</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Create a free account to save favorites, plan each child's summer and see it on a calendar.</p>
+        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
         <ul className="mt-4 space-y-1 text-left text-sm">
           <li className="flex items-center gap-2"><Heart className="h-4 w-4 text-teal" /> Favorites for each child</li>
           <li className="flex items-center gap-2"><Users className="h-4 w-4 text-teal" /> Add all your kids</li>

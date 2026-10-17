@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Camp sharing uses the reusable ShareButton and public /camps?camp= links; share only public camp information so recipients never see private family plans.
