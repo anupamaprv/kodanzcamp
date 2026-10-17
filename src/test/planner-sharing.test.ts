@@ -1,13 +1,42 @@
 import { describe, expect, it } from "vitest";
 import { adoptablePlans, matchingKids, plannerInviteUrl } from "@/lib/planner-sharing";
-import { buildPlannerIcs, calendarRows } from "@/lib/planner-export";
-import { CAMPS } from "@/lib/camps";
+import { buildPlannerIcs, buildPlannerPdf, calendarRows } from "@/lib/planner-export";
+import { CAMPS, buildIcs } from "@/lib/camps";
 
 const kid = { id: "one", name: "Sam", age: 8 };
 const friend = { id: "two", name: "Alex", age: 8 };
 const source = [{ id: "p", kid_id: friend.id, camp_id: "camp", week: "2027-06-07" }];
 const camp = { id: "camp", minAge: 5, maxAge: 12, weeks: ["2027-06-07"] };
+const readBlob = (blob: Blob) => new Promise<ArrayBuffer>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => reader.result instanceof ArrayBuffer ? resolve(reader.result) : reject(new Error("Invalid PDF bytes"));
+  reader.onerror = () => reject(reader.error);
+  reader.readAsArrayBuffer(blob);
+});
 describe("Private summer coordination", () => {
+  it("includes an existing camp website in each calendar event", () => {
+    const c = CAMPS.find((camp) => camp.website);
+    if (!c?.website) throw new Error("Camp website fixture missing");
+    const ics = buildPlannerIcs([kid], [{ id: "p", kid_id: kid.id, camp_id: c.id, week: "2027-06-07" }], []).replace(/\r\n /g, "");
+    expect(ics).toContain(`URL:${c.website}`);
+    expect(ics).toContain(`Website: ${c.website.replace(/,/g, "\\,").replace(/;/g, "\\;")}`);
+    expect(buildIcs(c, ["2027-06-07"])).toContain(`URL:${c.website}`);
+  });
+  it("does not attach a website to personal activity events", () => {
+    expect(buildPlannerIcs([kid], [], [{ id: "a", kid_id: kid.id, week: "2027-06-07", label: "Trip" }])).not.toContain("URL:");
+  });
+  it("puts two children together only when side-by-side is selected", async () => {
+    const { PDFDocument } = await import("pdf-lib");
+    const together = await buildPlannerPdf([kid, friend], [], [], "side-by-side");
+    const separate = await buildPlannerPdf([kid, friend], [], [], "separate");
+    expect((await PDFDocument.load(await readBlob(together))).getPageCount()).toBe(1);
+    expect((await PDFDocument.load(await readBlob(separate))).getPageCount()).toBe(2);
+  });
+  it("keeps a single child's PDF on one page regardless of layout", async () => {
+    const { PDFDocument } = await import("pdf-lib");
+    const blob = await buildPlannerPdf([kid], [], [], "side-by-side");
+    expect((await PDFDocument.load(await readBlob(blob))).getPageCount()).toBe(1);
+  });
   it("matches only the same camp in the same week", () => {
     expect(matchingKids(source[0] ?? { camp_id: "camp", week: "" }, [kid], [{ ...source[0], id: "mine", kid_id: kid.id, camp_id: "camp", week: "2027-06-07" }])).toEqual([kid]);
     expect(matchingKids({ camp_id: "camp", week: "2027-06-14" }, [kid], [{ id: "mine", kid_id: kid.id, camp_id: "camp", week: "2027-06-07" }])).toEqual([]);

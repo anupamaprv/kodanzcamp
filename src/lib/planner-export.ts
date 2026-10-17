@@ -18,10 +18,10 @@ export function buildPlannerIcs(kids: Kid[], plans: Plan[], activities: Activity
     const end = new Date(`${row.week}T12:00:00Z`);
     end.setUTCDate(end.getUTCDate() + 5);
     const events = [
-      ...row.camps.map((c) => ({ id: c.id, title: c.name, location: c.address, description: `${c.provider}${c.hours ? ` · ${c.hours}` : ""}` })),
-      ...row.activities.map((a) => ({ id: a.id, title: a.label, location: "", description: "Personal activity" })),
+      ...row.camps.map((c) => ({ id: c.id, title: c.name, location: c.address, url: c.website ?? "", description: `${c.provider}${c.hours ? ` · ${c.hours}` : ""}${c.website ? `\nWebsite: ${c.website}` : ""}` })),
+      ...row.activities.map((a) => ({ id: a.id, title: a.label, location: "", url: "", description: "Personal activity" })),
     ];
-    for (const event of events) lines.push("BEGIN:VEVENT", `UID:${row.kid.id}-${event.id}-${row.week}@kodanz`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${row.week.replace(/-/g, "")}`, `DTEND;VALUE=DATE:${end.toISOString().slice(0, 10).replace(/-/g, "")}`, `SUMMARY:${escapeIcs(`${row.kid.name}: ${event.title}`)}`, `LOCATION:${escapeIcs(event.location)}`, `DESCRIPTION:${escapeIcs(event.description)}`, "END:VEVENT");
+    for (const event of events) lines.push("BEGIN:VEVENT", `UID:${row.kid.id}-${event.id}-${row.week}@kodanz`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${row.week.replace(/-/g, "")}`, `DTEND;VALUE=DATE:${end.toISOString().slice(0, 10).replace(/-/g, "")}`, `SUMMARY:${escapeIcs(`${row.kid.name}: ${event.title}`)}`, `LOCATION:${escapeIcs(event.location)}`, `DESCRIPTION:${escapeIcs(event.description)}`, ...(event.url ? [`URL:${event.url}`] : []), "END:VEVENT");
   }
   lines.push("END:VCALENDAR");
   // RFC 5545 folds at 75 octets, not characters (child names can be Unicode).
@@ -39,7 +39,9 @@ export function buildPlannerIcs(kids: Kid[], plans: Plan[], activities: Activity
   }).join("\r\n") + "\r\n";
 }
 
-export async function buildPlannerPdf(kids: Kid[], plans: Plan[], activities: Activity[]) {
+export type PlannerPdfLayout = "separate" | "side-by-side";
+
+export async function buildPlannerPdf(kids: Kid[], plans: Plan[], activities: Activity[], layout: PlannerPdfLayout = "separate") {
   const { PDFDocument, StandardFonts, rgb } = await import("pdf-lib");
   const pdf = await PDFDocument.create();
   const font = await pdf.embedFont(StandardFonts.Helvetica);
@@ -47,6 +49,44 @@ export async function buildPlannerPdf(kids: Kid[], plans: Plan[], activities: Ac
   // Fixed document palette; independent of the app's theme.
   const ink = rgb(0.12, 0.23, 0.3), teal = rgb(0.15, 0.5, 0.48), lilac = rgb(0.48, 0.3, 0.6);
   const safe = (s: string) => s.replace(/[^\x20-\x7e\xa0-\xff]/g, "-");
+  if (layout === "side-by-side" && kids.length > 1) {
+    // Up to three children per landscape page keeps each column readable.
+    for (let start = 0; start < kids.length; start += 3) {
+      const group = kids.slice(start, start + 3);
+      const page = pdf.addPage([842, 595]);
+      const text = (s: string, x: number, y: number, size = 10, color = ink, strong = false) => page.drawText(safe(s), { x, y, size, font: strong ? bold : font, color });
+      const fit = (s: string, width: number, size: number) => {
+        let value = safe(s);
+        if (font.widthOfTextAtSize(value, size) <= width) return value;
+        while (value.length && font.widthOfTextAtSize(`${value}...`, size) > width) value = value.slice(0, -1);
+        return `${value}...`;
+      };
+      text("KODANZ / SUMMER 2027", 32, 557, 13, teal, true);
+      text("Family summer calendar", 32, 530, 21, ink, true);
+      text("June 7 - September 3, 2027  |  Planned, not booked", 32, 510);
+      const dateWidth = 120, width = (778 - dateWidth) / group.length;
+      text("WEEK", 40, 482, 9, ink, true);
+      group.forEach((kid, col) => text(fit(kid.name, width - 20, 12), 32 + dateWidth + col * width + 10, 482, 12, ink, true));
+      SUMMER_WEEKS.forEach((week, index) => {
+        const y = 452 - index * 31;
+        text(weekLabel(week), 40, y, 9, ink, true);
+        group.forEach((kid, col) => {
+          const row = calendarRows([kid], plans, activities)[index];
+          if (!row) return;
+          const x = 32 + dateWidth + col * width;
+          page.drawRectangle({ x, y: y - 12, width: width - 2, height: 30, color: row.activities.length ? rgb(0.96, 0.93, 0.98) : index % 2 ? rgb(0.95, 0.97, 0.97) : rgb(1, 1, 1) });
+          const words = safe([...row.camps.map((c) => c.name), ...row.activities.map((a) => a.label)].join(" / ") || "Open - no camp planned").split(" ");
+          let first = "";
+          while (words.length && font.widthOfTextAtSize(`${first} ${words[0]}`.trim(), 9) <= width - 20) first = `${first} ${words.shift()}`.trim();
+          const color = row.activities.length ? lilac : row.camps.length ? teal : ink;
+          text(first || fit(words.shift() ?? "", width - 20, 9), x + 10, y + 2, 9, color);
+          if (words.length) text(fit(words.join(" "), width - 20, 9), x + 10, y - 9, 9, color);
+        });
+      });
+      text("Teal: camps   |   Purple cells: personal activities", 32, 26, 9);
+    }
+    return new Blob([new Uint8Array(await pdf.save())], { type: "application/pdf" });
+  }
   for (const kid of kids) {
     const page = pdf.addPage([842, 595]);
     const text = (s: string, x: number, y: number, size = 10, color = ink, strong = false) => page.drawText(safe(s), { x, y, size, font: strong ? bold : font, color });
