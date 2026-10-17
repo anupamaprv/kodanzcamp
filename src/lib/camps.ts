@@ -70,7 +70,8 @@ function imageFor(c: RawCamp, i: number) {
   if (/zoo|aquarium/.test(n)) return zoo;
   if (/museum|science center|institute/.test(n)) return museum;
   if (/heron day camp/.test(n)) return daycamp;
-  if (/museum|science center|institute|zoo|aquarium/.test(n)) return museum;
+  if (/gymnast|tumbl|ninja/.test(n)) return gym;
+  if (/tennis/.test(n)) return tennis;
   const pool = IMAGES[c.interests[0] ?? "Sports"] ?? [sports];
   return pool[i % pool.length]!;
 }
