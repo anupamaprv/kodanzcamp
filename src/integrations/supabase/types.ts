@@ -70,6 +70,24 @@ export type Database = {
         }
         Relationships: []
       }
+      households: {
+        Row: {
+          home_zip: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          home_zip: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          home_zip?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       kids: {
         Row: {
           age: number
