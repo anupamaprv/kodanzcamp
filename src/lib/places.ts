@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { geocodeZip } from "@/lib/geocode.functions";
 import { useHomeZip, useSavedPlaces } from "@/lib/family";
@@ -19,10 +20,13 @@ export function useMapPlaces(enabled: boolean): MapPlace[] {
       staleTime: Infinity,
     })),
   });
-  return list.flatMap((p, i) => {
+  const out = list.flatMap((p, i) => {
     const g = geos[i]?.data;
     return g?.ok ? [{ ...p, lat: g.lat, lng: g.lng }] : [];
   });
+  const sig = out.map((p) => `${p.key}:${p.label}:${p.lat},${p.lng}`).join("|");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => out, [sig]);
 }
 
 /** Straight-line miles between two points. */

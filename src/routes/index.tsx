@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "@/hooks/use-session";
+import { useHomeZip } from "@/lib/family";
 import { MapPin, Search, CalendarPlus, Map, DollarSign, Users, ArrowRight } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import { SiteHeader } from "@/components/Logo";
@@ -32,6 +34,9 @@ function Home() {
   const [age, setAge] = useState("8");
   const [interests, setInterests] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const { user } = useSession();
+  const homeZip = useHomeZip(!!user);
+  useEffect(() => { if (homeZip.data) setZip((z) => z || homeZip.data!); }, [homeZip.data]);
 
   const toggle = (i: string) =>
     setInterests((cur) => (cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i]));
