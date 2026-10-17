@@ -1,42 +1,93 @@
-import { Home } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { CampResult } from "@/lib/camps";
 
-const PIN = ["text-coral", "text-teal", "text-lilac", "text-sun", "text-navy"];
+declare global {
+  interface Window {
+    google?: any;
+    __kodanzMapsReady?: () => void;
+  }
+}
 
-/** Illustrated commute map: pins placed by offset (miles) from home. */
-export function CampMap({ camps, radius, selected, onSelect }: {
-  camps: CampResult[]; radius: number; selected?: string | undefined; onSelect: (id: string) => void;
+let loader: Promise<void> | null = null;
+function loadMaps() {
+  if (window.google?.maps?.Map) return Promise.resolve();
+  if (loader) return loader;
+  loader = new Promise<void>((resolve, reject) => {
+    window.__kodanzMapsReady = () => resolve();
+    const key = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY"];
+    const channel = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID"];
+    const s = document.createElement("script");
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&loading=async&callback=__kodanzMapsReady&channel=${channel}`;
+    s.async = true;
+    s.onerror = () => reject(new Error("Maps failed to load"));
+    document.head.appendChild(s);
+  });
+  return loader;
+}
+
+const MILE_M = 1609.34;
+
+/** Real Google map: home at the ZIP centre, camps as price pins. */
+export function CampMap({ camps, radius, center, selected, onSelect }: {
+  camps: CampResult[];
+  radius: number;
+  center: { lat: number; lng: number };
+  selected?: string | undefined;
+  onSelect: (id: string) => void;
 }) {
-  const scale = 45 / Math.max(radius, 10); // % per mile
-  const pos = (v: number) => 50 + v * scale;
+  const el = useRef<HTMLDivElement>(null);
+  const map = useRef<any>(null);
+  const overlays = useRef<any[]>([]);
+  const [error, setError] = useState("");
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    loadMaps()
+      .then(() => {
+        if (!el.current || map.current) return;
+        map.current = new window.google.maps.Map(el.current, {
+          center, zoom: 11, clickableIcons: false, mapTypeControl: false, streetViewControl: false,
+          styles: [{ featureType: "poi", stylers: [{ visibility: "off" }] }],
+        });
+        setReady(true);
+      })
+      .catch((e) => setError(e.message));
+  }, []);
+
+  useEffect(() => {
+    const g = window.google;
+    if (!ready || !g) return;
+    overlays.current.forEach((o) => o.setMap(null));
+    overlays.current = [];
+    const m = map.current;
+    const circle = new g.maps.Circle({
+      map: m, center, radius: radius * MILE_M, strokeColor: "#0e8a8a", strokeOpacity: 0.5,
+      strokeWeight: 1, fillColor: "#0e8a8a", fillOpacity: 0.06, clickable: false,
+    });
+    const home = new g.maps.Marker({ map: m, position: center, title: "Home", label: { text: "⌂", color: "#ffffff", fontSize: "16px" } });
+    overlays.current.push(circle, home);
+    camps.forEach((c) => {
+      const mk = new g.maps.Marker({
+        map: m, position: { lat: c.lat, lng: c.lng }, title: `${c.name} · $${c.pricePerWeek}/wk · ${c.minutes} min`,
+        label: { text: `$${c.pricePerWeek}`, fontWeight: "700", fontSize: "11px", color: "#ffffff" },
+        icon: {
+          path: "M -22 -12 h 44 a 6 6 0 0 1 6 6 v 12 a 6 6 0 0 1 -6 6 h -16 l -6 7 l -6 -7 h -16 a 6 6 0 0 1 -6 -6 v -12 a 6 6 0 0 1 6 -6 z",
+          fillColor: selected === c.id ? "#e8775a" : "#16324a", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 1.5,
+          scale: 1, labelOrigin: new g.maps.Point(0, 0), anchor: new g.maps.Point(0, 19),
+        },
+        zIndex: selected === c.id ? 10 : 1,
+      });
+      mk.addListener("click", () => onSelect(c.id));
+      overlays.current.push(mk);
+    });
+    m.setCenter(center);
+    m.fitBounds(circle.getBounds());
+  }, [ready, camps, radius, center.lat, center.lng, selected]);
+
   return (
     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border bg-map-land shadow-soft">
-      <svg viewBox="0 0 100 75" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
-        <path d="M0 10 Q20 5 30 18 T60 12 L60 0 L0 0Z" className="fill-map-park" />
-        <path d="M70 75 Q75 55 90 50 T100 40 L100 75Z" className="fill-map-water" />
-        <ellipse cx="78" cy="20" rx="10" ry="5" className="fill-map-water" />
-        <ellipse cx="18" cy="55" rx="12" ry="8" className="fill-map-park" />
-        <path d="M45 0 Q50 30 40 75" className="stroke-map-road" strokeWidth="1.6" fill="none" />
-        <path d="M0 45 Q50 35 100 30" className="stroke-map-road" strokeWidth="1.2" fill="none" />
-      </svg>
-      {[1, 0.6].map((r) => (
-        <div key={r} className="absolute rounded-full border border-teal/40 bg-teal/5"
-          style={{ left: "50%", top: "50%", width: `${r * 60}%`, aspectRatio: "1", transform: "translate(-50%,-50%)" }} />
-      ))}
-      <div className="absolute flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-card text-navy shadow-pin" style={{ left: "50%", top: "50%" }}>
-        <Home className="h-5 w-5" />
-      </div>
-      {camps.map((c, i) => (
-        <button key={c.id} onClick={() => onSelect(c.id)}
-          className={`absolute flex -translate-x-1/2 -translate-y-full items-center gap-1.5 rounded-xl bg-card px-2 py-1 text-left shadow-pin transition hover:z-20 hover:scale-105 ${selected === c.id ? "z-10 ring-2 ring-teal" : ""}`}
-          style={{ left: `${Math.min(95, Math.max(5, pos(c.x)))}%`, top: `${Math.min(95, Math.max(8, pos(-c.y)))}%` }}>
-          <svg viewBox="0 0 24 24" className={`h-5 w-5 ${PIN[i % PIN.length]}`}><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" /></svg>
-          <span className="leading-tight">
-            <span className="block text-xs font-bold text-navy">${c.pricePerWeek}</span>
-            <span className="block text-[10px] text-muted-foreground">{c.minutes} min</span>
-          </span>
-        </button>
-      ))}
+      <div ref={el} className="absolute inset-0" />
+      {error && <p className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-muted-foreground">{error}</p>}
     </div>
   );
 }
