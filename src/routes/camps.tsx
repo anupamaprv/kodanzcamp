@@ -8,6 +8,7 @@ import { Logo } from "@/components/Logo";
 import { CampMap } from "@/components/CampMap";
 import { ScheduleDialog } from "@/components/ScheduleDialog";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { ShareButton } from "@/components/ShareButton";
 import { AccountLink } from "@/components/AccountLink";
 import { searchCamps, locateCamps, type CampResult } from "@/lib/camps";
 import { useSession } from "@/hooks/use-session";
@@ -22,6 +23,7 @@ const schema = z.object({
   sort: z.enum(["distance", "cost"]).catch("distance"),
   radius: z.coerce.number().catch(20),
   fullDay: z.coerce.boolean().catch(false),
+  camp: z.string().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/camps")({
@@ -69,8 +71,9 @@ function CampsPage() {
   }, [camps, savedIds, center?.lat, center?.lng]);
   const [selected, setSelected] = useState<string>();
   const [saving, setSaving] = useState<CampResult>();
+  const sharedCamp = s.camp ? locateCamps(s.zip, center).find((c) => c.id === s.camp) : undefined;
   const set = (patch: Partial<typeof s>) => navigate({ search: (prev) => ({ ...prev, ...patch }) });
-  const active = mapCamps.find((c) => c.id === selected) ?? camps[0];
+  const active = mapCamps.find((c) => c.id === selected) ?? sharedCamp ?? camps[0];
 
   return (
     <div className="min-h-screen">
@@ -88,6 +91,7 @@ function CampsPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-6">
+        {sharedCamp && s.view === "list" && <section className="mb-6 space-y-3"><p className="eyebrow">Shared camp</p><CampCard camp={sharedCamp} zip={s.zip} onSave={() => setSaving(sharedCamp)} /></section>}
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Matched options</p>
@@ -111,7 +115,7 @@ function CampsPage() {
           </div>
         ) : s.view === "list" ? (
           <div className="mt-6 grid gap-4">
-            {camps.map((c) => <CampCard key={c.id} camp={c} onSave={() => setSaving(c)} />)}
+            {camps.filter((c) => c.id !== sharedCamp?.id).map((c) => <CampCard key={c.id} camp={c} zip={s.zip} onSave={() => setSaving(c)} />)}
           </div>
         ) : (
           <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
@@ -123,7 +127,7 @@ function CampsPage() {
               </div>
             )}
             <div className="space-y-4">
-              {active && <CampCard camp={active} onSave={() => setSaving(active)} compact />}
+              {active && <CampCard camp={active} zip={s.zip} onSave={() => setSaving(active)} compact />}
               {active && places.length > 0 && (
                 <div className="rounded-2xl border bg-card p-4 text-sm">
                   <p className="font-semibold text-navy">Drop-off & pick-up distance</p>
@@ -166,7 +170,7 @@ function Segment({ value, options, onChange, labels }: {
   );
 }
 
-function CampCard({ camp, onSave, compact }: { camp: CampResult; onSave: () => void; compact?: boolean }) {
+function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: string; onSave: () => void; compact?: boolean }) {
   return (
     <article className={`flex gap-4 rounded-3xl border bg-card p-4 shadow-soft ${compact ? "flex-col" : "flex-col sm:flex-row"}`}>
       <img src={camp.image} alt={camp.name} loading="lazy" width={944} height={704}
@@ -179,7 +183,8 @@ function CampCard({ camp, onSave, compact }: { camp: CampResult; onSave: () => v
             <p className="text-xs text-muted-foreground">{camp.address}</p>
             {camp.note && <p className="mt-1 text-xs font-semibold text-coral">{camp.note}</p>}
           </div>
-          <div className="flex gap-2">
+          <div className="flex shrink-0 flex-wrap justify-end gap-2">
+          <ShareButton camp={camp} zip={zip} />
           <FavoriteButton camp={camp} />
           <button onClick={onSave} aria-label={`Save ${camp.name} to calendar`}
             className="shrink-0 rounded-xl border p-2 text-teal transition hover:bg-teal-soft">
