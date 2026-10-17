@@ -1,4 +1,5 @@
 # Directory trust and commute planning
+- [ ] Add multi-child side-by-side PDF choice and camp website links in calendar exports; test downloads.
 - [x] Research official providers and distinguish verification from 2027 availability (26 checked sources; remaining listings explicitly unverified).
 - [x] Remove unsupported pricing and availability claims; add sources and pending-review correction/provider submissions.
 - [x] Store optional private commute addresses and calculate bounded, cached Google road routes on demand.

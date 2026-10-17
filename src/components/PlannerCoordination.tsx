@@ -7,7 +7,7 @@ import { CAMPS, SUMMER_WEEKS, weekLabel, type Camp } from "@/lib/camps";
 import { useFamilyMutations, type Activity, type Kid, type Plan } from "@/lib/family";
 import { adoptablePlans, matchingKids, plannerInviteUrl, type SharedPlanner } from "@/lib/planner-sharing";
 import { usePlannerSharing } from "@/lib/planner-sharing-data";
-import { buildPlannerIcs, buildPlannerPdf, deliverCalendar } from "@/lib/planner-export";
+import { buildPlannerIcs, buildPlannerPdf, deliverCalendar, type PlannerPdfLayout } from "@/lib/planner-export";
 import { ScheduleDialog } from "@/components/ScheduleDialog";
 import { CampTrust } from "@/components/CampTrust";
 
@@ -26,6 +26,7 @@ export function PlannerCoordination({ kids, plans, activities, invite }: Props) 
   const [title, setTitle] = useState("");
   const [pdf, setPdf] = useState<Blob | null>(null);
   const [pdfError, setPdfError] = useState(false);
+  const [pdfLayout, setPdfLayout] = useState<PlannerPdfLayout | null>(null);
   const [link, setLink] = useState("");
   const [inviteInput, setInviteInput] = useState(invite ?? "");
   const [accepted, setAccepted] = useState(false);
@@ -35,14 +36,14 @@ export function PlannerCoordination({ kids, plans, activities, invite }: Props) 
 
   useEffect(() => { setInviteInput(invite ?? ""); setAccepted(false); }, [invite]);
   useEffect(() => {
-    if (mode !== "export" || !selected.length) { setPdf(null); return; }
+    if (mode !== "export" || !selected.length || (selected.length > 1 && !pdfLayout)) { setPdf(null); return; }
     let active = true;
     setPdf(null); setPdfError(false);
-    buildPlannerPdf(kids.filter((k) => selected.includes(k.id)), plans, activities).then((blob) => { if (active) setPdf(blob); }).catch(() => { if (active) setPdfError(true); });
+    buildPlannerPdf(kids.filter((k) => selected.includes(k.id)), plans, activities, selected.length > 1 ? pdfLayout ?? "separate" : "separate").then((blob) => { if (active) setPdf(blob); }).catch(() => { if (active) setPdfError(true); });
     return () => { active = false; };
-  }, [mode, selected, kids, plans, activities]);
+  }, [mode, selected, kids, plans, activities, pdfLayout]);
 
-  function open(next: "share" | "export") { setSelected(kids.map((k) => k.id)); setMode(next); setLink(""); }
+  function open(next: "share" | "export") { setSelected(kids.map((k) => k.id)); setPdfLayout(null); setMode(next); setLink(""); }
   async function copyLink(url: string) {
     try { await navigator.clipboard.writeText(url); toast.success("Planner invitation copied"); }
     catch { toast.error("Select and copy the invitation link below"); }
@@ -127,8 +128,12 @@ export function PlannerCoordination({ kids, plans, activities, invite }: Props) 
           <DialogDescription>{mode === "export" ? "June 7 – September 3, 2027. Choose the children to include." : "Share selected children’s camp plans with signed-in friends. Home, offices and personal activities stay private."}</DialogDescription></DialogHeader>
         <ChildSelection kids={kids} selected={selected} onChange={setSelected} />
         {mode === "export" ? <>
+          {chosenKids.length > 1 && <fieldset className="space-y-2"><legend className="mb-2 text-sm font-semibold text-navy">Show kids side-by-side?</legend><div className="flex flex-wrap gap-2">
+            <Button variant={pdfLayout === "side-by-side" ? "default" : "outline"} aria-pressed={pdfLayout === "side-by-side"} onClick={() => setPdfLayout("side-by-side")}>Side-by-side</Button>
+            <Button variant={pdfLayout === "separate" ? "default" : "outline"} aria-pressed={pdfLayout === "separate"} onClick={() => setPdfLayout("separate")}>Separate pages</Button>
+          </div></fieldset>}
           <p className="text-sm text-muted-foreground">PDF includes all 13 weeks, open weeks and personal activities. Calendar file includes scheduled camps and activities.</p>
-          <Button disabled={!pdf} onClick={() => { if (pdf) void deliverCalendar(pdf, "kodanz-summer-2027.pdf"); }}><Download />{pdf ? "Download full calendar PDF" : selected.length ? "Preparing PDF…" : "Select children"}</Button>
+          <Button disabled={!pdf} onClick={() => { if (pdf) void deliverCalendar(pdf, "kodanz-summer-2027.pdf"); }}><Download />{pdf ? "Download full calendar PDF" : chosenKids.length > 1 && !pdfLayout ? "Choose PDF layout" : selected.length ? "Preparing PDF…" : "Select children"}</Button>
           {pdfError && <p className="text-sm text-destructive">Couldn’t prepare the PDF. Close and reopen to retry.</p>}
           <Button variant="outline" disabled={!selected.length} onClick={() => deliverCalendar(new Blob([buildPlannerIcs(chosenKids, plans, activities)], { type: "text/calendar;charset=utf-8" }), "kodanz-summer-2027.ics")}><CalendarDays /> Download calendar file (.ics)</Button>
         </> : <>
