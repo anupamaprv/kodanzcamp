@@ -873,11 +873,11 @@
   "lng": -75.545351
  },
  {
-  "name": "Summer Art Camp (July)",
+  "name": "Bayberry Summer Art Camp",
   "provider": "Local art teacher (flyer)",
   "city": "Middletown",
   "state": "DE",
-  "address": "Middletown, DE 19709",
+  "address": "Bayberry community (near Cedar Lane Elementary), Middletown, DE 19709",
   "website": null,
   "interests": [
    "Arts"
@@ -892,10 +892,32 @@
    "2027-07-05",
    "2027-07-19"
   ],
-  "note": "From a local flyer: beginner friendly, 5 days of different arts & crafts. Call for exact location.",
+  "note": "From a local flyer: beginner friendly, 5 days of different arts & crafts. Expected again for 2027 \u2014 call to confirm.",
   "id": "summer-art-camp-july-middletown",
-  "lat": 39.449556,
-  "lng": -75.716321
+  "lat": 39.501461,
+  "lng": -75.687333
+ },
+ {
+  "name": "Shilpi Fine Arts Summer Art Camp",
+  "provider": "Shilpi Fine Arts",
+  "city": "Middletown",
+  "state": "DE",
+  "address": "Middletown, DE 19709",
+  "website": null,
+  "interests": [
+   "Arts"
+  ],
+  "minAge": 5,
+  "maxAge": 14,
+  "pricePerWeek": null,
+  "dayType": "half",
+  "hours": "9am\u20131pm, Mon\u2013Fri",
+  "phone": "848-391-4684",
+  "weeks": null,
+  "note": "From a local flyer: half-day summer art camps; also paint parties and custom paintings. Call for location and price.",
+  "id": "shilpi-fine-arts-summer-art-camp-middletown",
+  "lat": 39.4496,
+  "lng": -75.7163
  },
  {
   "name": "Navarasa School of Dance \u2014 Bharatanatyam",
@@ -915,7 +937,7 @@
   "hours": "Evening & weekend classes",
   "phone": "267-226-5425",
   "weeks": null,
-  "note": "Year-round classes for kids & adults, free trial class. Ask about summer sessions.",
+  "note": "Year-round classes for kids & adults, free trial class. Ask about summer sessions. Expected again in 2027.",
   "id": "navarasa-school-of-dance-bharatanatyam-newark",
   "lat": 39.602691,
   "lng": -75.74761
@@ -938,7 +960,7 @@
   "hours": "Saturdays 10\u201311am",
   "phone": "(302) 534-4614",
   "weeks": null,
-  "note": "School-year Saturday program: $780 for 26 weeks. Ask about summer camps.",
+  "note": "School-year Saturday program: $780 for 26 weeks. Ask about summer camps. Expected again in 2027.",
   "id": "wize-steam-enrichment-whitehall-middletown",
   "lat": 39.532498,
   "lng": -75.681419
