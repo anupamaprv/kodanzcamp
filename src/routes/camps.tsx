@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { geocodeZip } from "@/lib/geocode.functions";
 import { CalendarPlus, List, Map as MapIcon, MapPin, Clock, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import { Logo } from "@/components/Logo";
@@ -35,9 +37,16 @@ function CampsPage() {
   const s = Route.useSearch();
   const navigate = useNavigate({ from: "/camps" });
   const interests = s.interests ? s.interests.split(",").filter(Boolean) : [];
+  const geo = useQuery({
+    queryKey: ["geocode", s.zip],
+    queryFn: () => geocodeZip({ data: { zip: s.zip } }),
+    enabled: /^\d{5}$/.test(s.zip),
+    staleTime: Infinity,
+  });
+  const center = geo.data?.ok ? { lat: geo.data.lat, lng: geo.data.lng } : undefined;
   const camps = useMemo(
-    () => searchCamps({ zip: s.zip, age: s.age, interests, radius: s.radius, sort: s.sort }),
-    [s.zip, s.age, s.interests, s.radius, s.sort],
+    () => searchCamps({ zip: s.zip, age: s.age, interests, radius: s.radius, sort: s.sort, center }),
+    [s.zip, s.age, s.interests, s.radius, s.sort, center?.lat, center?.lng],
   );
   const [selected, setSelected] = useState<string>();
   const [saving, setSaving] = useState<CampResult>();
@@ -65,7 +74,7 @@ function CampsPage() {
             <h1 className="text-3xl font-bold text-navy">{camps.length} camps within {s.radius} mi</h1>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Segment value={String(s.radius)} options={[["10", "10 mi"], ["20", "20 mi"], ["30", "30 mi"]]} onChange={(v) => set({ radius: Number(v) })} />
+            <Segment value={String(s.radius)} options={[["5", "5 mi"], ["10", "10 mi"], ["20", "20 mi"], ["30", "30 mi"]]} onChange={(v) => set({ radius: Number(v) })} />
             <Segment value={s.sort} options={[["distance", "Nearest"], ["cost", "Lowest cost"]]} onChange={(v) => set({ sort: v as "distance" | "cost" })} />
             <Segment value={s.view} options={[["list", <List key="l" className="h-4 w-4" />], ["map", <MapIcon key="m" className="h-4 w-4" />]]} onChange={(v) => set({ view: v as "list" | "map" })} labels={["List view", "Map view"]} />
           </div>
@@ -82,7 +91,13 @@ function CampsPage() {
           </div>
         ) : (
           <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-            <CampMap camps={camps} radius={s.radius} selected={active?.id} onSelect={setSelected} />
+            {center ? (
+              <CampMap camps={camps} radius={s.radius} center={center} selected={active?.id} onSelect={setSelected} />
+            ) : (
+              <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border bg-card text-sm text-muted-foreground">
+                {geo.data && !geo.data.ok ? geo.data.error : "Loading map…"}
+              </div>
+            )}
             <div className="space-y-4">
               {active && <CampCard camp={active} onSave={() => setSaving(active)} compact />}
               <p className="text-xs text-muted-foreground">Commute estimates are approximate; exact routes depend on the starting address.</p>
