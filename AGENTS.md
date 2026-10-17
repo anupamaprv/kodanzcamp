@@ -10,3 +10,5 @@
 <!-- LOVABLE:END -->
 
 - Camp sharing uses the reusable ShareButton and public /camps?camp= links; share only public camp information so recipients never see private family plans.
+- Private planner coordination uses revocable token invitations and authenticated database RPCs that return only selected children's names, ages, and camp plans to accepted recipients; keep this separate from public camp sharing and never expose household locations or personal activities.
+- Planner exports are generated in the browser from selected children; PDF renders the whole summer including open weeks, while ICS contains scheduled events.

@@ -7,10 +7,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 import { DrivingZone } from "@/components/DrivingZone";
 import { SavedPlaces } from "@/components/SavedPlaces";
+import { PlannerCoordination } from "@/components/PlannerCoordination";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
 import { CAMPS, SUMMER_WEEKS, weekLabel } from "@/lib/camps";
 import { useActivities, useFamilyMutations, useFavorites, useKids, usePlans } from "@/lib/family";
 
 export const Route = createFileRoute("/_authenticated/planner")({
+  validateSearch: z.object({ invite: z.string().uuid().optional().catch(undefined) }),
   head: () => ({
     meta: [
       { title: "My summer planner — Kodanz" },
@@ -28,12 +32,13 @@ const CHIP = ["bg-teal-soft", "bg-sun-soft", "bg-coral-soft", "bg-secondary", "b
 const campById = Object.fromEntries(CAMPS.map((c) => [c.id, c]));
 
 function Planner() {
+  const { invite } = Route.useSearch();
   const kids = useKids(true);
   const plans = usePlans(true);
   const favs = useFavorites(true);
   const acts = useActivities(true);
   const [actLabel, setActLabel] = useState("");
-  const [actWeek, setActWeek] = useState(SUMMER_WEEKS[0]!);
+  const [actWeek, setActWeek] = useState(SUMMER_WEEKS[0] ?? "2027-06-07");
   const [actWho, setActWho] = useState("family");
   const m = useFamilyMutations();
   const qc = useQueryClient();
@@ -116,7 +121,7 @@ function Planner() {
                               ))}
                               {cell.map((p) => (
                                 <div key={p.id} className={`group flex items-start justify-between gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-navy ${CHIP[ki % CHIP.length]}`}>
-                                  <span className="line-clamp-2">{campById[p.camp_id]?.name ?? p.camp_id}</span>
+                                  <Button variant="link" asChild className="h-auto whitespace-normal p-0 text-left text-xs text-navy"><Link to="/camps" search={{ camp: p.camp_id }}>{campById[p.camp_id]?.name ?? p.camp_id}</Link></Button>
                                   <button onClick={() => m.removePlan.mutate(p.id)} aria-label="Remove week" className="opacity-50 hover:opacity-100"><X className="h-3 w-3" /></button>
                                 </div>
                               ))}
@@ -150,6 +155,7 @@ function Planner() {
             </form>
           )}
           <p className="mt-2 text-xs text-muted-foreground">Planned, not booked. Use the calendar icon on any camp to add weeks here. Registration happens with the provider.</p>
+          <PlannerCoordination kids={kidList} plans={planList} activities={actList} invite={invite} />
         </section>
 
         <SavedPlaces />

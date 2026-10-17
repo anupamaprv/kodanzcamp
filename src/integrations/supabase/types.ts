@@ -112,6 +112,59 @@ export type Database = {
         }
         Relationships: []
       }
+      planner_share_recipients: {
+        Row: {
+          created_at: string
+          share_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          share_id: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          share_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planner_share_recipients_share_id_fkey"
+            columns: ["share_id"]
+            isOneToOne: false
+            referencedRelation: "planner_shares"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      planner_shares: {
+        Row: {
+          created_at: string
+          id: string
+          kid_ids: string[]
+          title: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kid_ids: string[]
+          title: string
+          token?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kid_ids?: string[]
+          title?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       plans: {
         Row: {
           camp_id: string
@@ -176,7 +229,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      accept_planner_share: { Args: { invite_token: string }; Returns: string }
+      shared_planners: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never
