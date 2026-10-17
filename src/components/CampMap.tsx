@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { CampResult } from "@/lib/camps";
+import type { MapPlace } from "@/lib/places";
 
 declare global {
   interface Window {
@@ -28,7 +29,9 @@ export function loadMaps() {
 const MILE_M = 1609.34;
 
 /** Real Google map: home at the ZIP centre, camps as price pins. */
-export function CampMap({ camps, radius, center, selected, onSelect }: {
+export function CampMap({ camps, radius, center, selected, onSelect, places = [], savedIds }: {
+  places?: MapPlace[];
+  savedIds?: Set<string>;
   camps: CampResult[];
   radius: number;
   center: { lat: number; lng: number };
@@ -66,13 +69,22 @@ export function CampMap({ camps, radius, center, selected, onSelect }: {
     });
     const home = new g.maps.Marker({ map: m, position: center, title: "Home", label: { text: "⌂", color: "#ffffff", fontSize: "16px" } });
     overlays.current.push(circle, home);
+    const bounds = circle.getBounds();
+    places.filter((p) => p.kind === "office").forEach((p) => {
+      bounds.extend({ lat: p.lat, lng: p.lng });
+      overlays.current.push(new g.maps.Marker({
+        map: m, position: { lat: p.lat, lng: p.lng }, title: `${p.label} (${p.zip})`, zIndex: 20,
+        label: { text: "W", color: "#ffffff", fontWeight: "700" },
+        icon: { path: g.maps.SymbolPath.BACKWARD_CLOSED_ARROW, scale: 7, fillColor: "#7c4dbc", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 2, labelOrigin: new g.maps.Point(0, -3) },
+      }));
+    });
     camps.forEach((c) => {
       const mk = new g.maps.Marker({
         map: m, position: { lat: c.lat, lng: c.lng }, title: `${c.name} · ${c.pricePerWeek != null ? `$${c.pricePerWeek}/wk` : 'price n/a'} · ${c.minutes} min`,
         label: { text: c.pricePerWeek != null ? `$${c.pricePerWeek}` : '$?', fontWeight: "700", fontSize: "11px", color: "#ffffff" },
         icon: {
           path: "M -22 -12 h 44 a 6 6 0 0 1 6 6 v 12 a 6 6 0 0 1 -6 6 h -16 l -6 7 l -6 -7 h -16 a 6 6 0 0 1 -6 -6 v -12 a 6 6 0 0 1 6 -6 z",
-          fillColor: selected === c.id ? "#e8775a" : "#16324a", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 1.5,
+          fillColor: selected === c.id ? "#0e8a8a" : savedIds?.has(c.id) ? "#e8775a" : "#16324a", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 1.5,
           scale: 1, labelOrigin: new g.maps.Point(0, 0), anchor: new g.maps.Point(0, 19),
         },
         zIndex: selected === c.id ? 10 : 1,
@@ -81,8 +93,9 @@ export function CampMap({ camps, radius, center, selected, onSelect }: {
       overlays.current.push(mk);
     });
     m.setCenter(center);
-    m.fitBounds(circle.getBounds());
-  }, [ready, camps, radius, center.lat, center.lng, selected]);
+    camps.forEach((c) => { if (savedIds?.has(c.id)) bounds.extend({ lat: c.lat, lng: c.lng }); });
+    m.fitBounds(bounds);
+  }, [ready, camps, radius, center.lat, center.lng, selected, places, savedIds]);
 
   return (
     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border bg-map-land shadow-soft">
