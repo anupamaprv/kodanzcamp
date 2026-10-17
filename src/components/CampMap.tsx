@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CampResult } from "@/lib/camps";
 import type { MapPlace } from "@/lib/places";
+import { officePinIcon } from "@/lib/mapIcons";
 
 declare global {
   interface Window {
@@ -69,13 +70,12 @@ export function CampMap({ camps, radius, center, selected, onSelect, places = []
     });
     const home = new g.maps.Marker({ map: m, position: center, title: "Home", label: { text: "⌂", color: "#ffffff", fontSize: "16px" } });
     overlays.current.push(circle, home);
-    const bounds = circle.getBounds();
+    const bounds = circle.getBounds(); // undefined until the map has a projection
     places.filter((p) => p.kind === "office").forEach((p) => {
-      bounds.extend({ lat: p.lat, lng: p.lng });
+      bounds?.extend({ lat: p.lat, lng: p.lng });
       overlays.current.push(new g.maps.Marker({
         map: m, position: { lat: p.lat, lng: p.lng }, title: `${p.label} (${p.zip})`, zIndex: 20,
-        label: { text: "W", color: "#ffffff", fontWeight: "700" },
-        icon: { path: g.maps.SymbolPath.BACKWARD_CLOSED_ARROW, scale: 7, fillColor: "#7c4dbc", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 2, labelOrigin: new g.maps.Point(0, -3) },
+        icon: officePinIcon(g, "#7c4dbc"),
       }));
     });
     camps.forEach((c) => {
@@ -93,8 +93,10 @@ export function CampMap({ camps, radius, center, selected, onSelect, places = []
       overlays.current.push(mk);
     });
     m.setCenter(center);
-    camps.forEach((c) => { if (savedIds?.has(c.id)) bounds.extend({ lat: c.lat, lng: c.lng }); });
-    m.fitBounds(bounds);
+    if (bounds) {
+      camps.forEach((c) => { if (savedIds?.has(c.id)) bounds.extend({ lat: c.lat, lng: c.lng }); });
+      m.fitBounds(bounds);
+    }
   }, [ready, camps, radius, center.lat, center.lng, selected, places, savedIds]);
 
   return (

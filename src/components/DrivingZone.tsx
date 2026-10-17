@@ -8,6 +8,7 @@ import { locateCamps, type CampResult } from "@/lib/camps";
 import { loadMaps } from "@/components/CampMap";
 import { useHomeZip, usePlaceMutations, type Favorite, type Kid, type Plan } from "@/lib/family";
 import { useMapPlaces, type MapPlace } from "@/lib/places";
+import { officePinIcon } from "@/lib/mapIcons";
 
 /** Map-only colors (Google Maps needs raw values); legend reuses them. */
 const KID_COLORS = ["#0e8a8a", "#e8775a", "#7c4dbc", "#d9a400", "#16324a"];
@@ -152,7 +153,7 @@ function ZoneMap({ center, groups, offices }: { center: { lat: number; lng: numb
     overlays.current.push(new g.maps.Marker({ map: m, position: center, title: "Home", label: { text: "⌂", color: "#ffffff", fontSize: "16px" }, zIndex: 20 }));
     offices.forEach((o) => {
       bounds.extend(o);
-      overlays.current.push(new g.maps.Marker({ map: m, position: { lat: o.lat, lng: o.lng }, title: `${o.label} (${o.zip})`, label: { text: "W", color: "#ffffff", fontWeight: "700" }, icon: { path: g.maps.SymbolPath.BACKWARD_CLOSED_ARROW, scale: 7, fillColor: "#16324a", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 2, labelOrigin: new g.maps.Point(0, -3) }, zIndex: 15 }));
+      overlays.current.push(new g.maps.Marker({ map: m, position: { lat: o.lat, lng: o.lng }, title: `${o.label} (${o.zip})`, icon: officePinIcon(g, "#16324a"), zIndex: 15 }));
     });
     groups.forEach((grp) => grp.camps.forEach((c) => {
       const pos = { lat: c.lat, lng: c.lng };
