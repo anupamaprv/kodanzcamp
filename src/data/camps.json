@@ -1,7 +1,7 @@
 [
  {
   "name": "Camp Silver Lake",
-  "provider": "YMCA of Delaware \u2014 Middletown Family YMCA",
+  "provider": "YMCA of Delaware — Middletown Family YMCA",
   "city": "Middletown",
   "state": "DE",
   "address": "200 E. Cochran Street, Middletown, DE 19709",
@@ -16,13 +16,13 @@
   "maxAge": 13,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "7am\u20136pm",
+  "hours": "7am–6pm",
   "id": "camp-silver-lake-middletown",
   "lat": 39.447332,
   "lng": -75.709185
  },
  {
-  "name": "Spark Summer Camp \u2014 Middletown",
+  "name": "Spark Summer Camp — Middletown",
   "provider": "Spark Summer Camp",
   "city": "Middletown",
   "state": "DE",
@@ -59,7 +59,7 @@
   "maxAge": 12,
   "pricePerWeek": 375,
   "dayType": "full",
-  "hours": "9am\u20133:30pm",
+  "hours": "9am–3:30pm",
   "id": "tumble-kids-summer-camp-middletown",
   "lat": 39.436087,
   "lng": -75.75075
@@ -125,7 +125,7 @@
   "lng": -75.747708
  },
  {
-  "name": "First State Gymnastics Summer Camp \u2014 Middletown",
+  "name": "First State Gymnastics Summer Camp — Middletown",
   "provider": "First State Gymnastics",
   "city": "Middletown",
   "state": "DE",
@@ -139,7 +139,7 @@
   "maxAge": 12,
   "pricePerWeek": 500,
   "dayType": "full",
-  "hours": "8:30am\u20134:30pm",
+  "hours": "8:30am–4:30pm",
   "id": "first-state-gymnastics-summer-camp-middletown-middletown",
   "lat": 39.444419,
   "lng": -75.723736
@@ -161,7 +161,7 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "8:30am\u20133:30pm",
+  "hours": "8:30am–3:30pm",
   "id": "heron-day-camp-middletown",
   "lat": 39.438809,
   "lng": -75.700076
@@ -200,7 +200,7 @@
   "maxAge": 11,
   "pricePerWeek": 125,
   "dayType": "half",
-  "hours": "8:30am\u201311:30am",
+  "hours": "8:30am–11:30am",
   "id": "beginner-s-chess-camp-middletown",
   "lat": 39.454945,
   "lng": -75.744048
@@ -219,7 +219,7 @@
   "maxAge": 12,
   "pricePerWeek": 125,
   "dayType": "half",
-  "hours": "8:30am\u201311:30am",
+  "hours": "8:30am–11:30am",
   "id": "brick-builders-bootcamp-middletown",
   "lat": 39.454945,
   "lng": -75.744048
@@ -238,7 +238,7 @@
   "maxAge": 12,
   "pricePerWeek": 125,
   "dayType": "half",
-  "hours": "8:30am\u201311:30am",
+  "hours": "8:30am–11:30am",
   "id": "dance-fiesta-middletown",
   "lat": 39.454945,
   "lng": -75.744048
@@ -257,7 +257,7 @@
   "maxAge": 12,
   "pricePerWeek": 125,
   "dayType": "half",
-  "hours": "8:30am\u201311:30am",
+  "hours": "8:30am–11:30am",
   "id": "bling-bedazzle-middletown",
   "lat": 39.454945,
   "lng": -75.744048
@@ -276,7 +276,7 @@
   "maxAge": 12,
   "pricePerWeek": 125,
   "dayType": "half",
-  "hours": "8:30am\u201311:30am",
+  "hours": "8:30am–11:30am",
   "id": "board-brain-game-camp-middletown",
   "lat": 39.454945,
   "lng": -75.744048
@@ -295,14 +295,14 @@
   "maxAge": 13,
   "pricePerWeek": 125,
   "dayType": "half",
-  "hours": "8:30am\u201311:30am",
+  "hours": "8:30am–11:30am",
   "id": "crochet-stuffed-animals-middletown",
   "lat": 39.454945,
   "lng": -75.744048
  },
  {
   "name": "Camp Cassey",
-  "provider": "YMCA of Delaware \u2014 Bear-Glasgow Family YMCA",
+  "provider": "YMCA of Delaware — Bear-Glasgow Family YMCA",
   "city": "Newark",
   "state": "DE",
   "address": "351 George Williams Way, Newark, DE 19702",
@@ -317,14 +317,14 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "camp-cassey-newark",
   "lat": 39.605572,
   "lng": -75.732526
  },
  {
   "name": "Camp Wassaqui",
-  "provider": "YMCA of Delaware \u2014 Western Family YMCA",
+  "provider": "YMCA of Delaware — Western Family YMCA",
   "city": "Newark",
   "state": "DE",
   "address": "2600 Kirkwood Highway, Newark, DE 19711",
@@ -345,7 +345,7 @@
   "lng": -75.685262
  },
  {
-  "name": "First State Gymnastics Summer Camp \u2014 Newark",
+  "name": "First State Gymnastics Summer Camp — Newark",
   "provider": "First State Gymnastics",
   "city": "Newark",
   "state": "DE",
@@ -359,7 +359,7 @@
   "maxAge": 12,
   "pricePerWeek": 500,
   "dayType": "full",
-  "hours": "8:30am\u20134:30pm",
+  "hours": "8:30am–4:30pm",
   "id": "first-state-gymnastics-summer-camp-newark-newark",
   "lat": 39.682692,
   "lng": -75.729744
@@ -385,7 +385,7 @@
   "lng": -75.710987
  },
  {
-  "name": "All About Adventure \u2014 Fishing and Wildlife",
+  "name": "All About Adventure — Fishing and Wildlife",
   "provider": "University of Delaware Lab School",
   "city": "Newark",
   "state": "DE",
@@ -400,7 +400,7 @@
   "maxAge": 7,
   "pricePerWeek": 395,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "all-about-adventure-fishing-and-wildlife-newark",
   "lat": 39.675918,
   "lng": -75.737235
@@ -421,7 +421,7 @@
   "maxAge": 12,
   "pricePerWeek": 175,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "rittenhouse-day-camp-newark",
   "lat": 39.655077,
   "lng": -75.758226
@@ -448,7 +448,7 @@
   "lng": -75.761038
  },
  {
-  "name": "Delaware Tech Summer Camps \u2014 Stanton Campus",
+  "name": "Delaware Tech Summer Camps — Stanton Campus",
   "provider": "Delaware Technical Community College",
   "city": "Newark",
   "state": "DE",
@@ -463,7 +463,7 @@
   "maxAge": 17,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "delaware-tech-summer-camps-stanton-campus-newark",
   "lat": 39.689848,
   "lng": -75.648404
@@ -490,7 +490,7 @@
  },
  {
   "name": "White Clay Stream Explorers",
-  "provider": "Delaware State Parks \u2014 White Clay Creek State Park",
+  "provider": "Delaware State Parks — White Clay Creek State Park",
   "city": "Newark",
   "state": "DE",
   "address": "1475 Creek Road, Newark, DE 19711",
@@ -503,7 +503,7 @@
   "maxAge": 7,
   "pricePerWeek": 200,
   "dayType": "full",
-  "hours": "9am\u20132pm",
+  "hours": "9am–2pm",
   "id": "white-clay-stream-explorers-newark",
   "lat": 39.727219,
   "lng": -75.768065
@@ -599,7 +599,7 @@
   "maxAge": 8,
   "pricePerWeek": 310,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "art-around-the-world-wilmington",
   "lat": 39.766198,
   "lng": -75.564423
@@ -620,14 +620,14 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "summer-camp-at-hagley-wilmington",
   "lat": 39.773708,
   "lng": -75.578783
  },
  {
   "name": "Camp Quoowant",
-  "provider": "YMCA of Delaware \u2014 Brandywine YMCA",
+  "provider": "YMCA of Delaware — Brandywine YMCA",
   "city": "Wilmington",
   "state": "DE",
   "address": "35 Chestnut Street, Wilmington, DE 19810",
@@ -649,7 +649,7 @@
  },
  {
   "name": "Camp Koda",
-  "provider": "YMCA of Delaware \u2014 Brandywine YMCA",
+  "provider": "YMCA of Delaware — Brandywine YMCA",
   "city": "Wilmington",
   "state": "DE",
   "address": "3 Mt. Lebanon Road, Wilmington, DE 19803",
@@ -706,7 +706,7 @@
   "maxAge": 13,
   "pricePerWeek": 290,
   "dayType": "full",
-  "hours": "7:30am\u20135:30pm",
+  "hours": "7:30am–5:30pm",
   "id": "camp-st-e-wilmington",
   "lat": 39.737973,
   "lng": -75.573563
@@ -745,7 +745,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "7:30am\u20135:30pm",
+  "hours": "7:30am–5:30pm",
   "id": "american-karate-studio-summer-camp-wilmington",
   "lat": 39.80412,
   "lng": -75.505468
@@ -805,7 +805,7 @@
   "maxAge": 13,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "7:45\u201310:15am or 11am\u20131:30pm",
+  "hours": "7:45–10:15am or 11am–1:30pm",
   "id": "fitter-faster-swim-camp-wilmington",
   "lat": 39.788587,
   "lng": -75.564446
@@ -832,7 +832,7 @@
   "lng": -75.54972
  },
  {
-  "name": "Delaware Tech Summer Camps \u2014 Wilmington Campus",
+  "name": "Delaware Tech Summer Camps — Wilmington Campus",
   "provider": "Delaware Technical Community College",
   "city": "Wilmington",
   "state": "DE",
@@ -847,14 +847,14 @@
   "maxAge": 17,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "delaware-tech-summer-camps-wilmington-campus-wilmington",
   "lat": 39.739777,
   "lng": -75.552775
  },
  {
   "name": "Adventure Rock Climbing Camp",
-  "provider": "Delaware State Parks \u2014 Alapocas Run State Park",
+  "provider": "Delaware State Parks — Alapocas Run State Park",
   "city": "Wilmington",
   "state": "DE",
   "address": "1914 W. Park Drive, Wilmington, DE 19803",
@@ -886,13 +886,13 @@
   "maxAge": 15,
   "pricePerWeek": 100,
   "dayType": "half",
-  "hours": "11am\u20131pm",
+  "hours": "11am–1pm",
   "phone": "630-523-8019",
   "weeks": [
    "2027-07-05",
    "2027-07-19"
   ],
-  "note": "From a local flyer: beginner friendly, 5 days of different arts & crafts. Expected again for 2027 \u2014 call to confirm.",
+  "note": "From a local flyer: beginner friendly, 5 days of different arts & crafts. Expected again for 2027 — call to confirm.",
   "id": "summer-art-camp-july-middletown",
   "lat": 39.501461,
   "lng": -75.687333
@@ -911,7 +911,7 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "9am\u20131pm, Mon\u2013Fri",
+  "hours": "9am–1pm, Mon–Fri",
   "phone": "848-391-4684",
   "weeks": null,
   "note": "From a local flyer: half-day summer art camps; also paint parties and custom paintings. Call for location and price.",
@@ -920,7 +920,7 @@
   "lng": -75.7163
  },
  {
-  "name": "Navarasa School of Dance \u2014 Bharatanatyam",
+  "name": "Navarasa School of Dance — Bharatanatyam",
   "provider": "Navarasa School of Dance (Rachana Raghu)",
   "city": "Newark",
   "state": "DE",
@@ -943,7 +943,7 @@
   "lng": -75.74761
  },
  {
-  "name": "WIZE STEAM Enrichment \u2014 Whitehall",
+  "name": "WIZE STEAM Enrichment — Whitehall",
   "provider": "WIZE Computing Academy at Whitehall Recreation Center",
   "city": "Middletown",
   "state": "DE",
@@ -957,7 +957,7 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "Saturdays 10\u201311am",
+  "hours": "Saturdays 10–11am",
   "phone": "(302) 534-4614",
   "weeks": null,
   "note": "School-year Saturday program: $780 for 26 weeks. Ask about summer camps. Expected again in 2027.",
@@ -1000,13 +1000,13 @@
   "maxAge": 7,
   "pricePerWeek": 545,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "aerospace-camp-experience-seattle",
   "lat": 47.517962,
   "lng": -122.29634
  },
  {
-  "name": "Sport and Swim Camp \u2014 East Madison Y",
+  "name": "Sport and Swim Camp — East Madison Y",
   "provider": "YMCA of Greater Seattle",
   "city": "Seattle",
   "state": "WA",
@@ -1040,13 +1040,13 @@
   "maxAge": 12,
   "pricePerWeek": 875,
   "dayType": "full",
-  "hours": "8am\u20134pm",
+  "hours": "8am–4pm",
   "id": "lake-union-swim-academy-summer-camp-seattle",
   "lat": 47.63739,
   "lng": -122.339887
  },
  {
-  "name": "Summer Gymnastics Camp \u2014 Lake City",
+  "name": "Summer Gymnastics Camp — Lake City",
   "provider": "Seattle Gymnastics Academy",
   "city": "Seattle",
   "state": "WA",
@@ -1060,13 +1060,13 @@
   "maxAge": 10,
   "pricePerWeek": 751,
   "dayType": "full",
-  "hours": "8:30am\u20134pm",
+  "hours": "8:30am–4pm",
   "id": "summer-gymnastics-camp-lake-city-seattle",
   "lat": 47.722289,
   "lng": -122.298181
  },
  {
-  "name": "Summer Karate Camps \u2014 Ballard",
+  "name": "Summer Karate Camps — Ballard",
   "provider": "Washington Karate Association",
   "city": "Seattle",
   "state": "WA",
@@ -1081,7 +1081,7 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "8:30am\u20136pm",
+  "hours": "8:30am–6pm",
   "id": "summer-karate-camps-ballard-seattle",
   "lat": 47.691937,
   "lng": -122.360312
@@ -1101,7 +1101,7 @@
   "maxAge": 5,
   "pricePerWeek": 250,
   "dayType": "half",
-  "hours": "2\u20134:30pm (Mon\u2013Thu)",
+  "hours": "2–4:30pm (Mon–Thu)",
   "id": "under-the-sea-summer-dance-camp-seattle",
   "lat": 47.69046,
   "lng": -122.35497
@@ -1142,7 +1142,7 @@
   "maxAge": 9,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "seward-park-nature-adventures-seattle",
   "lat": 47.54964,
   "lng": -122.25631
@@ -1182,7 +1182,7 @@
   "maxAge": 12,
   "pricePerWeek": 560,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "monorails-trails-summer-camp-seattle",
   "lat": 47.621552,
   "lng": -122.350955
@@ -1203,7 +1203,7 @@
   "maxAge": 12,
   "pricePerWeek": 575,
   "dayType": "full",
-  "hours": "9am\u20134pm (care 7:30am\u20135:30pm)",
+  "hours": "9am–4pm (care 7:30am–5:30pm)",
   "id": "champ-camp-at-university-of-washington-seattle",
   "lat": 47.655389,
   "lng": -122.305086
@@ -1222,7 +1222,7 @@
   "maxAge": 11,
   "pricePerWeek": 220,
   "dayType": "half",
-  "hours": "10am\u20131pm",
+  "hours": "10am–1pm",
   "id": "miller-community-center-basketball-camp-seattle",
   "lat": 47.621916,
   "lng": -122.306978
@@ -1241,7 +1241,7 @@
   "maxAge": 12,
   "pricePerWeek": 270,
   "dayType": "half",
-  "hours": "10am\u20131pm",
+  "hours": "10am–1pm",
   "id": "miller-community-center-drum-camp-seattle",
   "lat": 47.621916,
   "lng": -122.306978
@@ -1262,13 +1262,13 @@
   "maxAge": 9,
   "pricePerWeek": 425,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "thinkery-summer-camp-austin",
   "lat": 30.297601,
   "lng": -97.704886
  },
  {
-  "name": "YMCA Summer Day Camp \u2014 East Communities",
+  "name": "YMCA Summer Day Camp — East Communities",
   "provider": "Greater Austin YMCA",
   "city": "Austin",
   "state": "TX",
@@ -1290,7 +1290,7 @@
   "lng": -97.66202
  },
  {
-  "name": "iD Tech Day Camps \u2014 UT Austin",
+  "name": "iD Tech Day Camps — UT Austin",
   "provider": "iD Tech",
   "city": "Austin",
   "state": "TX",
@@ -1323,13 +1323,13 @@
   "maxAge": 12,
   "pricePerWeek": 325,
   "dayType": "half",
-  "hours": "9am\u201312pm",
+  "hours": "9am–12pm",
   "id": "kula-karate-summer-camp-austin",
   "lat": 30.283146,
   "lng": -97.753214
  },
  {
-  "name": "Samurai Summer Camp \u2014 Westlake",
+  "name": "Samurai Summer Camp — Westlake",
   "provider": "Life Ki-do Martial Arts",
   "city": "Austin",
   "state": "TX",
@@ -1342,13 +1342,13 @@
   "maxAge": 11,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "10am\u20131pm (Mon\u2013Thu)",
+  "hours": "10am–1pm (Mon–Thu)",
   "id": "samurai-summer-camp-westlake-austin",
   "lat": 30.279282,
   "lng": -97.805715
  },
  {
-  "name": "Camp Jump \u2014 North Austin",
+  "name": "Camp Jump — North Austin",
   "provider": "Jump! Gymnastics",
   "city": "Austin",
   "state": "TX",
@@ -1362,7 +1362,7 @@
   "maxAge": 10,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "8:30am\u20133pm",
+  "hours": "8:30am–3pm",
   "id": "camp-jump-north-austin-austin",
   "lat": 30.354218,
   "lng": -97.729159
@@ -1382,7 +1382,7 @@
   "maxAge": 6,
   "pricePerWeek": 290,
   "dayType": "half",
-  "hours": "9am\u201312pm",
+  "hours": "9am–12pm",
   "id": "dance-discovery-camps-austin",
   "lat": 30.354517,
   "lng": -97.729661
@@ -1423,7 +1423,7 @@
   "maxAge": 12,
   "pricePerWeek": 220,
   "dayType": "half",
-  "hours": "9am\u201312pm (Mon\u2013Thu)",
+  "hours": "9am–12pm (Mon–Thu)",
   "id": "swim-safety-summer-camp-austin",
   "lat": 30.463884,
   "lng": -97.812433
@@ -1483,7 +1483,7 @@
   "maxAge": 12,
   "pricePerWeek": 435,
   "dayType": "full",
-  "hours": "9:30am\u20134pm",
+  "hours": "9:30am–4pm",
   "id": "austin-zoo-summer-camp-austin",
   "lat": 30.261345,
   "lng": -97.93773
@@ -1502,7 +1502,7 @@
   "maxAge": 12,
   "pricePerWeek": 275,
   "dayType": "half",
-  "hours": "9am\u201312pm",
+  "hours": "9am–12pm",
   "id": "rock-camp-atx-austin",
   "lat": 30.199385,
   "lng": -97.806778
@@ -1523,7 +1523,7 @@
   "maxAge": 5,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "9am\u20131pm",
+  "hours": "9am–1pm",
   "id": "jcamps-tiny-tumblers-austin",
   "lat": 30.357399,
   "lng": -97.757289
@@ -1543,7 +1543,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "science-investigations-summer-program-new-york-city",
   "lat": 40.781135,
   "lng": -73.973604
@@ -1564,7 +1564,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "little-lions-camp-new-york-city",
   "lat": 40.810188,
   "lng": -73.961944
@@ -1585,7 +1585,7 @@
   "maxAge": 13,
   "pricePerWeek": 650,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "full-day-karate-summer-camp-new-york-city",
   "lat": 40.799027,
   "lng": -73.963375
@@ -1605,7 +1605,7 @@
   "maxAge": 15,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "gymnastics-summer-camp-new-york-city",
   "lat": 40.797863,
   "lng": -73.970927
@@ -1627,7 +1627,7 @@
   "maxAge": 12,
   "pricePerWeek": 471,
   "dayType": "full",
-  "hours": "9am\u20135pm",
+  "hours": "9am–5pm",
   "id": "bedford-stuyvesant-ymca-summer-camp-new-york-city",
   "lat": 40.685368,
   "lng": -73.953708
@@ -1648,7 +1648,7 @@
   "maxAge": 10,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "beansprouts-summer-day-camp-new-york-city",
   "lat": 40.667579,
   "lng": -73.984057
@@ -1667,7 +1667,7 @@
   "maxAge": 11,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "songwriting-summer-camp-new-york-city",
   "lat": 40.67702,
   "lng": -73.985528
@@ -1687,7 +1687,7 @@
   "maxAge": 8,
   "pricePerWeek": 690,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "dance-and-tumbling-summer-camp-new-york-city",
   "lat": 40.684637,
   "lng": -73.97685
@@ -1706,7 +1706,7 @@
   "maxAge": 12,
   "pricePerWeek": 650,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "dance-summer-camp-new-york-city",
   "lat": 40.69686,
   "lng": -73.97235
@@ -1726,7 +1726,7 @@
   "maxAge": 11,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "dance-art-summer-camp-new-york-city",
   "lat": 40.669435,
   "lng": -73.992995
@@ -1746,7 +1746,7 @@
   "maxAge": 11,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20135pm",
+  "hours": "9am–5pm",
   "id": "flushing-ymca-swim-camp-new-york-city",
   "lat": 40.763848,
   "lng": -73.826376
@@ -1766,7 +1766,7 @@
   "maxAge": 12,
   "pricePerWeek": 525,
   "dayType": "full",
-  "hours": "8:30am\u20133:30pm",
+  "hours": "8:30am–3:30pm",
   "id": "summer-farm-camp-new-york-city",
   "lat": 40.746925,
   "lng": -73.719398
@@ -1787,7 +1787,7 @@
   "maxAge": 11,
   "pricePerWeek": 200,
   "dayType": "half",
-  "hours": "10am\u201312pm",
+  "hours": "10am–12pm",
   "id": "animal-group-troop-new-york-city",
   "lat": 40.762582,
   "lng": -73.753038
@@ -1808,7 +1808,7 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "10am\u20134pm",
+  "hours": "10am–4pm",
   "id": "summer-media-camp-new-york-city",
   "lat": 40.756345,
   "lng": -73.92395
@@ -1847,7 +1847,7 @@
   "maxAge": 12,
   "pricePerWeek": 425,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "discovery-camp-philadelphia",
   "lat": 39.958211,
   "lng": -75.173135
@@ -1868,7 +1868,7 @@
   "maxAge": 6,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "mini-academy-camp-philadelphia",
   "lat": 39.956892,
   "lng": -75.171071
@@ -1891,7 +1891,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "7am\u20136pm",
+  "hours": "7am–6pm",
   "id": "christian-street-ymca-camp-philadelphia",
   "lat": 39.940498,
   "lng": -75.172154
@@ -1917,7 +1917,7 @@
   "lng": -75.08043
  },
  {
-  "name": "Enrichment Summer Camp \u2014 Queen Village",
+  "name": "Enrichment Summer Camp — Queen Village",
   "provider": "Philly inMovement",
   "city": "Philadelphia",
   "state": "PA",
@@ -1932,7 +1932,7 @@
   "maxAge": 12,
   "pricePerWeek": 492,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "enrichment-summer-camp-queen-village-philadelphia",
   "lat": 39.940669,
   "lng": -75.151768
@@ -1952,7 +1952,7 @@
   "maxAge": 11,
   "pricePerWeek": 425,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "mister-john-s-music-summer-camp-philadelphia",
   "lat": 39.939663,
   "lng": -75.155738
@@ -2035,7 +2035,7 @@
   "maxAge": 10,
   "pricePerWeek": 440,
   "dayType": "full",
-  "hours": "8:45am\u20133pm",
+  "hours": "8:45am–3pm",
   "id": "playarts-summer-camp-philadelphia",
   "lat": 39.971966,
   "lng": -75.144739
@@ -2097,7 +2097,7 @@
   "maxAge": 10,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133:30pm",
+  "hours": "9am–3:30pm",
   "id": "dance-drama-summer-camp-philadelphia",
   "lat": 39.952105,
   "lng": -75.172755
@@ -2156,7 +2156,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20133pm",
+  "hours": "9am–3pm",
   "id": "summer-science-camp-richmond",
   "lat": 37.561242,
   "lng": -77.465805
@@ -2175,7 +2175,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "9am\u201312pm or 1\u20134pm",
+  "hours": "9am–12pm or 1–4pm",
   "id": "summer-art-adventures-richmond",
   "lat": 37.556584,
   "lng": -77.47491
@@ -2195,7 +2195,7 @@
   "maxAge": 12,
   "pricePerWeek": 339,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "swimrva-summer-swim-camp-richmond",
   "lat": 37.4496,
   "lng": -77.492462
@@ -2216,7 +2216,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "7am\u20136pm",
+  "hours": "7am–6pm",
   "id": "camp-blue-sky-richmond",
   "lat": 37.638218,
   "lng": -77.587405
@@ -2235,7 +2235,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "9am\u201312pm",
+  "hours": "9am–12pm",
   "id": "summer-gymnastics-camp-richmond",
   "lat": 37.60693,
   "lng": -77.569875
@@ -2255,7 +2255,7 @@
   "maxAge": 10,
   "pricePerWeek": 250,
   "dayType": "half",
-  "hours": "12:30\u20133:30pm",
+  "hours": "12:30–3:30pm",
   "id": "summer-music-camps-richmond",
   "lat": 37.636951,
   "lng": -77.632604
@@ -2275,7 +2275,7 @@
   "maxAge": 13,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "7:30am\u20136pm",
+  "hours": "7:30am–6pm",
   "id": "martial-arts-summer-camp-richmond",
   "lat": 37.598967,
   "lng": -77.620722
@@ -2296,7 +2296,7 @@
   "maxAge": 13,
   "pricePerWeek": 375,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "arts-in-education-summer-day-camp-richmond",
   "lat": 37.541544,
   "lng": -77.436725
@@ -2315,7 +2315,7 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "creative-arts-day-camp-richmond",
   "lat": 37.551078,
   "lng": -77.450687
@@ -2334,7 +2334,7 @@
   "maxAge": 17,
   "pricePerWeek": 395,
   "dayType": "full",
-  "hours": "9am\u20134pm (Mon\u2013Thu)",
+  "hours": "9am–4pm (Mon–Thu)",
   "id": "richmond-spiders-basketball-day-camp-richmond",
   "lat": 37.575824,
   "lng": -77.539719
@@ -2439,7 +2439,7 @@
   "maxAge": 10,
   "pricePerWeek": 380,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "fernbank-summer-camp-atlanta",
   "lat": 33.773938,
   "lng": -84.327662
@@ -2458,7 +2458,7 @@
   "maxAge": 14,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "summer-art-camp-atlanta",
   "lat": 33.789856,
   "lng": -84.386149
@@ -2478,7 +2478,7 @@
   "maxAge": 18,
   "pricePerWeek": 400,
   "dayType": "full",
-  "hours": "8:30am\u20133pm",
+  "hours": "8:30am–3pm",
   "id": "puppet-camp-atlanta",
   "lat": 33.792842,
   "lng": -84.38985
@@ -2519,14 +2519,14 @@
   "maxAge": 12,
   "pricePerWeek": 425,
   "dayType": "full",
-  "hours": "8am\u20135pm",
+  "hours": "8am–5pm",
   "id": "tech-wreck-summer-camp-atlanta",
   "lat": 33.775632,
   "lng": -84.402539
  },
  {
   "name": "Summer PEAKS",
-  "provider": "Georgia Tech \u2014 CEISMC",
+  "provider": "Georgia Tech — CEISMC",
   "city": "Atlanta",
   "state": "GA",
   "address": "505 10th Street NW, Atlanta, GA 30332",
@@ -2582,7 +2582,7 @@
   "maxAge": 16,
   "pricePerWeek": 425,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "full-day-gymnastics-summer-camp-atlanta",
   "lat": 33.811417,
   "lng": -84.420304
@@ -2607,7 +2607,7 @@
   "lng": -84.35441
  },
  {
-  "name": "Dance for Joy \u2014 Buckhead",
+  "name": "Dance for Joy — Buckhead",
   "provider": "Atlanta Ballet Centre for Dance Education",
   "city": "Atlanta",
   "state": "GA",
@@ -2621,7 +2621,7 @@
   "maxAge": 7,
   "pricePerWeek": null,
   "dayType": "half",
-  "hours": "10am\u20131pm",
+  "hours": "10am–1pm",
   "id": "dance-for-joy-buckhead-atlanta",
   "lat": 33.871221,
   "lng": -84.379296
@@ -2642,7 +2642,7 @@
   "maxAge": 12,
   "pricePerWeek": 425,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "full-day-nature-summer-camp-atlanta",
   "lat": 33.866311,
   "lng": -84.38016
@@ -2664,7 +2664,7 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "7am\u20136pm",
+  "hours": "7am–6pm",
   "id": "summer-adventure-club-atlanta",
   "lat": 33.787128,
   "lng": -84.382788
@@ -2684,13 +2684,13 @@
   "maxAge": 9,
   "pricePerWeek": 1079,
   "dayType": "full",
-  "hours": "9am\u20134:30pm",
+  "hours": "9am–4:30pm",
   "id": "coding-101-camp-at-georgia-tech-atlanta",
   "lat": 33.772875,
   "lng": -84.394176
  },
  {
-  "name": "Summer Day Camp \u2014 Buckhead YMCA",
+  "name": "Summer Day Camp — Buckhead YMCA",
   "provider": "Carl E. Sanders Family YMCA",
   "city": "Atlanta",
   "state": "GA",
@@ -2706,9 +2706,324 @@
   "maxAge": 12,
   "pricePerWeek": null,
   "dayType": "full",
-  "hours": "9am\u20134pm",
+  "hours": "9am–4pm",
   "id": "summer-day-camp-buckhead-ymca-atlanta",
   "lat": 33.831123,
   "lng": -84.425404
+ },
+ {
+  "id": "brilliant-little-minds-bunker-hill",
+  "name": "Brilliant Little Minds Summer Camp — Bunker Hill Elementary",
+  "provider": "Brilliant Little Minds",
+  "city": "Middletown",
+  "state": "DE",
+  "address": "1070 Bunker Hill Rd, Middletown, DE 19709",
+  "website": "https://www.brilliantlittleminds.com",
+  "interests": [
+   "Academic",
+   "STEM",
+   "Arts",
+   "Sports"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 260,
+  "dayType": "full",
+  "hours": "7am–6pm",
+  "note": "Full-day summer camp at Bunker Hill Elementary",
+  "lat": 39.4296,
+  "lng": -75.7433,
+  "estimated": true
+ },
+ {
+  "id": "brilliant-little-minds-odessa",
+  "name": "Brilliant Little Minds Summer Camp — Odessa",
+  "provider": "Brilliant Little Minds",
+  "city": "Odessa",
+  "state": "DE",
+  "address": "Odessa, DE 19730",
+  "website": "https://www.brilliantlittleminds.com",
+  "interests": [
+   "Academic",
+   "STEM",
+   "Arts",
+   "Sports"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 260,
+  "dayType": "full",
+  "hours": "7am–6pm",
+  "note": "Full-day summer camp at the Odessa school site",
+  "lat": 39.4568,
+  "lng": -75.661,
+  "estimated": true
+ },
+ {
+  "id": "tumble-kids-evening-to-summer-middletown",
+  "name": "Tumble Kids Full-Day Summer Gymnastics",
+  "provider": "Tumble Kids",
+  "city": "Middletown",
+  "state": "DE",
+  "address": "Middletown, DE 19709",
+  "website": null,
+  "interests": [
+   "Sports"
+  ],
+  "minAge": 4,
+  "maxAge": 12,
+  "pricePerWeek": 300,
+  "dayType": "full",
+  "hours": "9am–4pm",
+  "note": "Evening gymnastics classes during school; full-day camp in summer",
+  "lat": 39.441,
+  "lng": -75.726,
+  "estimated": true
+ },
+ {
+  "id": "ymca-western-family-newark-summer",
+  "name": "Western Family YMCA Day Camp",
+  "provider": "YMCA of Delaware",
+  "city": "Newark",
+  "state": "DE",
+  "address": "2600 Kirkwood Hwy, Newark, DE 19711",
+  "website": "https://www.ymcade.org",
+  "interests": [
+   "Sports",
+   "Swim",
+   "Arts"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 265,
+  "dayType": "full",
+  "hours": "7am–6pm",
+  "note": null,
+  "lat": 39.7106,
+  "lng": -75.6869,
+  "estimated": true
+ },
+ {
+  "id": "ymca-chicago-south-side",
+  "name": "South Side YMCA Summer Day Camp",
+  "provider": "YMCA of Metro Chicago",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "6330 S Stony Island Ave, Chicago, IL 60637",
+  "website": "https://www.ymcachicago.org",
+  "interests": [
+   "Sports",
+   "Swim",
+   "Arts"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 250,
+  "dayType": "full",
+  "hours": "7am–6pm",
+  "note": null,
+  "lat": 41.7798,
+  "lng": -87.5866,
+  "estimated": true
+ },
+ {
+  "id": "ymca-chicago-lakeview",
+  "name": "Lakeview YMCA Summer Camp",
+  "provider": "YMCA of Metro Chicago",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "3333 N Marshfield Ave, Chicago, IL 60657",
+  "website": "https://www.ymcachicago.org",
+  "interests": [
+   "Sports",
+   "Swim",
+   "Nature"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 295,
+  "dayType": "full",
+  "hours": "7am–6pm",
+  "note": null,
+  "lat": 41.9423,
+  "lng": -87.6689,
+  "estimated": true
+ },
+ {
+  "id": "chicago-park-district-day-camp",
+  "name": "Chicago Park District Day Camp",
+  "provider": "Chicago Park District",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "Various parks, Chicago, IL",
+  "website": "https://www.chicagoparkdistrict.com",
+  "interests": [
+   "Sports",
+   "Arts",
+   "Nature"
+  ],
+  "minAge": 6,
+  "maxAge": 12,
+  "pricePerWeek": 90,
+  "dayType": "full",
+  "hours": "9am–3pm",
+  "note": null,
+  "lat": 41.8818,
+  "lng": -87.6231,
+  "estimated": true
+ },
+ {
+  "id": "msi-chicago-science-camp",
+  "name": "Museum of Science and Industry Summer Camp",
+  "provider": "Museum of Science and Industry",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "5700 S DuSable Lake Shore Dr, Chicago, IL 60637",
+  "website": "https://www.msichicago.org",
+  "interests": [
+   "STEM",
+   "Academic"
+  ],
+  "minAge": 6,
+  "maxAge": 13,
+  "pricePerWeek": 425,
+  "dayType": "full",
+  "hours": "9am–4pm",
+  "note": null,
+  "lat": 41.7906,
+  "lng": -87.5831,
+  "estimated": true
+ },
+ {
+  "id": "lincoln-park-zoo-camp",
+  "name": "Lincoln Park Zoo Summer Camp",
+  "provider": "Lincoln Park Zoo",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "2001 N Clark St, Chicago, IL 60614",
+  "website": "https://www.lpzoo.org",
+  "interests": [
+   "Nature",
+   "STEM"
+  ],
+  "minAge": 4,
+  "maxAge": 12,
+  "pricePerWeek": 380,
+  "dayType": "full",
+  "hours": "9am–3pm",
+  "note": null,
+  "lat": 41.9211,
+  "lng": -87.634,
+  "estimated": true
+ },
+ {
+  "id": "uchicago-lab-summer",
+  "name": "Lab+ Summer Programs",
+  "provider": "University of Chicago Laboratory Schools",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "1362 E 59th St, Chicago, IL 60637",
+  "website": "https://www.ucls.uchicago.edu",
+  "interests": [
+   "Academic",
+   "STEM",
+   "Arts"
+  ],
+  "minAge": 5,
+  "maxAge": 14,
+  "pricePerWeek": 450,
+  "dayType": "full",
+  "hours": "9am–3pm",
+  "note": null,
+  "lat": 41.7881,
+  "lng": -87.5948,
+  "estimated": true
+ },
+ {
+  "id": "old-town-school-music-camp",
+  "name": "Old Town School of Folk Music Summer Camp",
+  "provider": "Old Town School of Folk Music",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "4544 N Lincoln Ave, Chicago, IL 60625",
+  "website": "https://www.oldtownschool.org",
+  "interests": [
+   "Music",
+   "Arts"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 400,
+  "dayType": "half",
+  "hours": "9am–12pm",
+  "note": null,
+  "lat": 41.9653,
+  "lng": -87.6863,
+  "estimated": true
+ },
+ {
+  "id": "chicago-karate-summer",
+  "name": "Karate Kids Summer Camp",
+  "provider": "Chicago Martial Arts studio",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "Lincoln Park, Chicago, IL 60614",
+  "website": null,
+  "interests": [
+   "Martial Arts",
+   "Sports"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 275,
+  "dayType": "full",
+  "hours": "8:30am–4pm",
+  "note": "Evening karate studio running full-day summer camp",
+  "lat": 41.9214,
+  "lng": -87.6513,
+  "estimated": true
+ },
+ {
+  "id": "chicago-gymnastics-summer",
+  "name": "Gymnastics & Ninja Summer Camp",
+  "provider": "Chicago gymnastics studio",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "West Loop, Chicago, IL 60607",
+  "website": null,
+  "interests": [
+   "Sports"
+  ],
+  "minAge": 5,
+  "maxAge": 12,
+  "pricePerWeek": 325,
+  "dayType": "full",
+  "hours": "9am–3pm",
+  "note": null,
+  "lat": 41.8826,
+  "lng": -87.6505,
+  "estimated": true
+ },
+ {
+  "id": "chicago-swim-camp",
+  "name": "Swim & Splash Summer Camp",
+  "provider": "Chicago swim school",
+  "city": "Chicago",
+  "state": "IL",
+  "address": "Wicker Park, Chicago, IL 60622",
+  "website": null,
+  "interests": [
+   "Swim",
+   "Sports"
+  ],
+  "minAge": 4,
+  "maxAge": 10,
+  "pricePerWeek": 300,
+  "dayType": "half",
+  "hours": "9am–12pm",
+  "note": null,
+  "lat": 41.9088,
+  "lng": -87.6796,
+  "estimated": true
  }
 ]
