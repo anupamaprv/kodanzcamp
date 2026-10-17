@@ -29,6 +29,13 @@
       "when": 1792235605108,
       "tag": "0003_saved_places",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792237309956,
+      "tag": "0004_private_planner_sharing",
+      "breakpoints": true
     }
   ]
 }
