@@ -14,7 +14,86 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      favorites: {
+        Row: {
+          camp_id: string
+          created_at: string
+          kid_ids: string[]
+          user_id: string
+        }
+        Insert: {
+          camp_id: string
+          created_at?: string
+          kid_ids?: string[]
+          user_id?: string
+        }
+        Update: {
+          camp_id?: string
+          created_at?: string
+          kid_ids?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      kids: {
+        Row: {
+          age: number
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          age: number
+          created_at?: string
+          id?: string
+          name: string
+          user_id?: string
+        }
+        Update: {
+          age?: number
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      plans: {
+        Row: {
+          camp_id: string
+          created_at: string
+          id: string
+          kid_id: string
+          user_id: string
+          week: string
+        }
+        Insert: {
+          camp_id: string
+          created_at?: string
+          id?: string
+          kid_id: string
+          user_id?: string
+          week: string
+        }
+        Update: {
+          camp_id?: string
+          created_at?: string
+          id?: string
+          kid_id?: string
+          user_id?: string
+          week?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plans_kid_id_fkey"
+            columns: ["kid_id"]
+            isOneToOne: false
+            referencedRelation: "kids"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
