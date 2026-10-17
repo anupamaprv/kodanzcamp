@@ -39,7 +39,7 @@ function Home() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!/^\d{5}$/.test(zip.trim())) return setError("Enter a 5-digit ZIP code");
-    navigate({ to: "/camps", search: { zip: zip.trim(), age: Number(age), interests: interests.join(","), view: "list", sort: "distance", radius: 20 } });
+    navigate({ to: "/camps", search: { zip: zip.trim(), age: Number(age), interests: interests.join(","), view: "list", sort: "distance", radius: 20, fullDay: false } });
   };
 
   return (
