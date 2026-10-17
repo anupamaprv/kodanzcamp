@@ -1,5 +1,6 @@
-# Planner coordination
-- [x] Export a full summer calendar for selected children.
-- [x] Add private, revocable planner invitations for signed-in recipients.
-- [x] Compare shared camps, review details, and copy selections into the recipient’s own planner.
-- [x] Test access rules, export, and the signed-in coordination flow.
+# Directory trust and commute planning
+- [ ] Research official providers and distinguish verification from 2027 availability.
+- [ ] Remove unsupported pricing and availability claims; add sources and correction/provider submissions.
+- [ ] Store optional private commute addresses and calculate bounded, cached Google road routes on demand.
+- [ ] Compare home/camp/office detours and selected multi-child drop-off/pick-up routes.
+- [ ] Test privacy and route parsing; verify non-Maps signed-in flows.
