@@ -45,7 +45,7 @@ export function CommuteComparison({ camps, onRoute }: { camps: Camp[]; onRoute?:
     }}><Car />{busy ? "Calculating…" : "Calculate drive"}</Button>
     {error && <p role="alert" className="break-words text-destructive">{error}</p>}
     {result && <div className="space-y-2 border-l-2 border-teal pl-3">
-      <p className="font-semibold text-navy">{result.from} → {direction === "pickup" ? [...result.stops].join(" → ") : result.stops.join(" → ")}{result.to !== result.stops.at(-1) ? ` → ${result.to}` : ""}</p>
+      <p className="font-semibold text-navy">{[result.from, ...result.stops.filter((name, i) => i > 0 || name !== result.from), ...(result.to !== result.stops.at(-1) ? [result.to] : [])].join(" → ")}</p>
       <p className="text-lg font-bold text-teal">{(result.route.meters / 1609.344).toFixed(1)} road miles · {Math.round(result.route.seconds / 60)} min</p>
       {result.baseline && <p>Direct commute: {Math.round(result.baseline.seconds / 60)} min. Camp detour: {Math.max(0, Math.round((result.route.seconds - result.baseline.seconds) / 60))} extra min.</p>}
       <p className="text-xs text-muted-foreground">{result.approximateStart ? "Uses a ZIP center where no private address is saved. " : "Uses your private starting addresses. "}Traffic estimate when calculated; not a guaranteed arrival time. Recent results reused for 15 minutes.</p>

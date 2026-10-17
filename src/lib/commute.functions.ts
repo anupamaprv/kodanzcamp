@@ -24,8 +24,7 @@ export const calculateCommute = createServerFn({ method: "POST" })
     const addressFor = (key: string, zip: string) => addresses.data?.find((p) => p.place_key === key)?.address ?? `${zip}, USA`;
     const homeAddress = addressFor("home", home.data.home_zip);
     const officeAddress = office ? addressFor(office.id, office.zip) : homeAddress;
-    const ordered = data.direction === "pickup" ? [...camps].reverse() : camps;
-    const stops = ordered.flatMap((c) => c ? [c] : []);
+    const stops = camps.flatMap((c) => c ? [c] : []);
     const campWaypoint = (c: typeof stops[number]) => ({ address: c.address });
     if (!stops.length) throw new Error("Choose a camp");
     const first = stops[0]; const last = stops.at(-1);

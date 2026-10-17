@@ -14,6 +14,16 @@ export type CampEvidence = {
 
 // Only fields supported by a reviewed official source belong here.
 export const CAMP_EVIDENCE: Record<string, CampEvidence> = {
+  "camp-silver-lake-middletown": { sourceUrl: "https://www.ymcade.org/locations/middletown-ymca/campsilverlake/", checkedAt: "2026-10-17", hours: "7am–6pm, Monday–Friday", dayType: "full" },
+  "sport-and-swim-camp-east-madison-y-seattle": { sourceUrl: "https://www.seattleymca.org/programs/camp-and-outdoor-leadership/day-camp/programs/swim-sports", checkedAt: "2026-10-17", hours: "8:30am–4:30pm", dayType: "full", detailsYear: 2026 },
+  "ymca-summer-day-camp-east-communities-austin": { sourceUrl: "https://www.austinymca.org/camp/summer-day/", checkedAt: "2026-10-17", minAge: 5, maxAge: 12, hours: "8am–5pm; extended care 7am–6pm", dayType: "full" },
+  "bedford-stuyvesant-ymca-summer-camp-new-york-city": { sourceUrl: "https://ymcanyc.org/locations/bedford-stuyvesant-ymca/programs-classes/camps", checkedAt: "2026-10-17", minAge: 6, maxAge: 12, hours: "9am–5pm", dayType: "full", detailsYear: 2026 },
+  "christian-street-ymca-camp-philadelphia": { sourceUrl: "https://www.philaymca.org/sites/default/files/2026-01/Christian%20Street%20YMCA%20Summer%20Camp%20Planner%202026.pdf", checkedAt: "2026-10-17", minAge: 6, maxAge: 14, hours: "7am–6pm including before/aftercare", dayType: "full", detailsYear: 2026 },
+  "northside-ymca-summer-day-camp-richmond": { sourceUrl: "https://www.ymcarichmond.org/programs/camp/day-camp/", checkedAt: "2026-10-17", dayType: "full", detailsYear: 2026 },
+  "summer-day-camp-buckhead-ymca-atlanta": { sourceUrl: "https://www.ymcaatlanta.org/sanders-y-camp-overview", checkedAt: "2026-10-17", hours: "Traditional camp 9am–4pm; separate half-day options", detailsYear: 2026 },
+  "little-lions-camp-new-york-city": { sourceUrl: "https://perec.columbia.edu/littlelionscamp", checkedAt: "2026-10-17", minAge: 6, maxAge: 12, hours: "Arrival 8:15–9am; pickup 3pm", dayType: "full", detailsYear: 2026 },
+  "champ-camp-at-university-of-washington-seattle": { sourceUrl: "https://www.discoverchampions.com/landing-pages/seattle-summer-break-003129", checkedAt: "2026-10-17", minAge: 5, maxAge: 12, hours: "9am–4pm; extended care 7:30am–5:30pm", dayType: "full", detailsYear: 2026 },
+  "kula-karate-summer-camp-austin": { sourceUrl: "https://www.kulakarate.com/summer-camps", checkedAt: "2026-10-17", minAge: 4, maxAge: 12, hours: "9am–noon, Monday–Friday", dayType: "half", detailsYear: 2026 },
   "summer-science-camp-richmond": { sourceUrl: "https://smv.org/explore/things-to-do/summer-camp/", checkedAt: "2026-10-17", minAge: 6, maxAge: 12, hours: "9am–3pm", dayType: "full", detailsYear: 2026 },
   "summer-art-adventures-richmond": { sourceUrl: "https://www.vmfa.museum/summer-camps", checkedAt: "2026-10-17", detailsYear: 2026 },
   "camps-for-curious-minds-seattle": { sourceUrl: "https://pacificsciencecenter.org/education/camps/", checkedAt: "2026-10-17", detailsYear: 2026 },
