@@ -9,6 +9,9 @@ import { loadMaps } from "@/components/CampMap";
 import { useHomeZip, usePlaceMutations, type Favorite, type Kid, type Plan } from "@/lib/family";
 import { useMapPlaces, type MapPlace } from "@/lib/places";
 import { officePinIcon } from "@/lib/mapIcons";
+import { Button } from "@/components/ui/button";
+import { CommuteComparison } from "@/components/CommuteComparison";
+import type { CommuteResult } from "@/lib/commute";
 
 /** Map-only colors (Google Maps needs raw values); legend reuses them. */
 const KID_COLORS = ["#0e8a8a", "#e8775a", "#7c4dbc", "#d9a400", "#16324a"];
@@ -24,6 +27,7 @@ function angleBetween(a: number, b: number) {
 export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Plan[]; favorites: Favorite[] }) {
   const [open, setOpen] = useState(false);
   const [zipInput, setZipInput] = useState("");
+  const [road, setRoad] = useState<CommuteResult | null>(null);
 
   const household = useHomeZip(true);
   const zip = household.data ?? undefined;
@@ -32,7 +36,7 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
 
   const geo = useQuery({
     queryKey: ["geocode", zip],
-    queryFn: () => geocodeZip({ data: { zip: zip! } }),
+    queryFn: () => geocodeZip({ data: { zip: zip ?? "" } }),
     enabled: open && !!zip,
     staleTime: Infinity,
   });
@@ -46,7 +50,7 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
         ...plans.filter((p) => p.kid_id === k.id).map((p) => p.camp_id),
         ...favorites.filter((f) => f.kid_ids.includes(k.id)).map((f) => f.camp_id),
       ]);
-      return { kid: k, color: KID_COLORS[i % KID_COLORS.length]!, camps: [...ids].map((id) => located[id]).filter((c): c is CampResult => !!c) };
+      return { kid: k, color: KID_COLORS[i % KID_COLORS.length] ?? KID_COLORS[0] ?? "", camps: [...ids].map((id) => located[id]).filter((c): c is CampResult => !!c) };
     });
   }, [zip, center?.lat, center?.lng, kids, plans, favorites]);
 
@@ -54,10 +58,10 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
     const out: string[] = [];
     for (let i = 0; i < perKid.length; i++)
       for (let j = i + 1; j < perKid.length; j++)
-        for (const a of perKid[i]!.camps)
-          for (const b of perKid[j]!.camps)
+        for (const a of perKid[i]?.camps ?? [])
+          for (const b of perKid[j]?.camps ?? [])
             if (a.id !== b.id && angleBetween(bearing(a), bearing(b)) > 120)
-              out.push(`${perKid[i]!.kid.name} (${a.name}) and ${perKid[j]!.kid.name} (${b.name}) are in opposite directions — about ${a.minutes + b.minutes} min of driving for drop-off.`);
+              out.push(`${perKid[i]?.kid.name} (${a.name}) and ${perKid[j]?.kid.name} (${b.name}) are in opposite directions. Calculate a road route to compare the drive.`);
     return out.slice(0, 4);
   }, [perKid]);
 
@@ -70,9 +74,9 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
           <h2 className="flex items-center gap-2 text-xl font-bold text-navy"><Car className="h-5 w-5 text-teal" /> Driving zone</h2>
           <p className="text-sm text-muted-foreground">See each child's camps around home. Are drop-offs in opposite directions?</p>
         </div>
-        <button onClick={() => setOpen((o) => !o)} className="rounded-xl bg-primary px-4 py-2 font-semibold text-primary-foreground">
+        <Button onClick={() => setOpen((o) => !o)}>
           {open ? "Hide driving zone" : "Show driving zone"}
-        </button>
+        </Button>
       </div>
 
       {open && (zip ? null : (
@@ -90,7 +94,7 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
 
       {open && zip && (
         <div className="mt-4 grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-          {center ? <ZoneMap center={center} groups={perKid} offices={offices} /> : (
+          {center ? <ZoneMap center={center} groups={perKid} offices={offices} road={road} /> : (
             <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border text-sm text-muted-foreground">
               {geo.data && !geo.data.ok ? geo.data.error : "Loading map…"}
             </div>
@@ -104,7 +108,7 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
               {perKid.map((g) => (
                 <li key={g.kid.id} className="rounded-xl border p-3">
                   <p className="flex items-center gap-2 font-semibold text-navy"><span className="h-3 w-3 rounded-full" style={{ background: g.color }} />{g.kid.name}</p>
-                  {g.camps.length ? g.camps.map((c) => <p key={c.id} className="text-xs text-muted-foreground">{c.name} · {c.miles} mi · {c.minutes} min</p>)
+                  {g.camps.length ? g.camps.map((c) => <p key={c.id} className="text-xs text-muted-foreground">{c.name} · {c.miles} mi straight-line</p>)
                     : <p className="text-xs text-muted-foreground">No camps saved or planned yet.</p>}
                 </li>
               ))}
@@ -117,7 +121,8 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
             ) : perKid.some((g) => g.camps.length) ? (
               <p className="rounded-xl bg-teal-soft p-3 text-sm text-navy">Nice — your kids' camps are roughly in the same direction.</p>
             ) : null}
-            <p className="text-xs text-muted-foreground">Distances and times are straight-line estimates from your home ZIP.</p>
+            <CommuteComparison camps={[...new Map(perKid.flatMap((g) => g.camps).map((c) => [c.id, c])).values()]} onRoute={setRoad} />
+            <p className="text-xs text-muted-foreground">Camp pins use directory locations. Road calculations use provider addresses. Choose up to four stops; pickup reverses drop-off order.</p>
           </div>
         </div>
       )}
@@ -125,7 +130,7 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
   );
 }
 
-function ZoneMap({ center, groups, offices }: { center: { lat: number; lng: number }; offices: MapPlace[]; groups: { kid: Kid; color: string; camps: CampResult[] }[] }) {
+function ZoneMap({ center, groups, offices, road }: { road: CommuteResult | null; center: { lat: number; lng: number }; offices: MapPlace[]; groups: { kid: Kid; color: string; camps: CampResult[] }[] }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<any>(null);
   const overlays = useRef<any[]>([]);
@@ -159,17 +164,20 @@ function ZoneMap({ center, groups, offices }: { center: { lat: number; lng: numb
       const pos = { lat: c.lat, lng: c.lng };
       bounds.extend(pos);
       overlays.current.push(
-        new g.maps.Polyline({ map: m, path: [center, pos], strokeColor: grp.color, strokeOpacity: 0.8, strokeWeight: 3 }),
         new g.maps.Marker({
-          map: m, position: pos, title: `${grp.kid.name}: ${c.name} (${c.minutes} min)`,
+          map: m, position: pos, title: `${grp.kid.name}: ${c.name}`,
           label: { text: grp.kid.name.slice(0, 1).toUpperCase(), color: "#ffffff", fontWeight: "700" },
           icon: { path: g.maps.SymbolPath.CIRCLE, scale: 13, fillColor: grp.color, fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 2 },
         }),
       );
     }));
+    if (road) {
+      overlays.current.push(new g.maps.Polyline({ map: m, path: road.route.path, strokeColor: KID_COLORS[0], strokeOpacity: 0.9, strokeWeight: 5 }));
+      road.route.path.forEach((p) => bounds.extend(p));
+    }
     if (offices.length || groups.some((x) => x.camps.length)) m.fitBounds(bounds, 60);
     else m.setCenter(center);
-  }, [ready, groups, offices, center.lat, center.lng]);
+  }, [ready, groups, offices, center.lat, center.lng, road]);
 
   return (
     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border bg-map-land">

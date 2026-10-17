@@ -11,7 +11,7 @@ describe("camp search", () => {
     expect(p).toEqual([...p].sort((a, b) => a - b));
   });
   it("filters by age", () => {
-    expect(searchCamps({ zip: "19709", age: 15 }).every((c) => c.maxAge >= 15)).toBe(true);
+    expect(searchCamps({ zip: "19709", age: 15 }).every((c) => c.maxAge !== null && c.maxAge >= 15)).toBe(true);
   });
   it("hides half-day camps when asked", () => {
     expect(searchCamps({ zip: "19709", fullDayOnly: true }).every((c) => c.dayType === "full")).toBe(true);
@@ -19,9 +19,37 @@ describe("camp search", () => {
 });
 
 describe("pricing", () => {
-  const camp = { ...CAMPS[0]!, pricePerWeek: 300, fullSummerPrice: 3510 };
+  const first = CAMPS[0];
+  if (!first) throw new Error("Directory empty");
+  const camp = { ...first, pricePerWeek: 300 };
   it("partial weeks = weekly price x weeks", () => expect(priceFor(camp, camp.weeks.slice(0, 2), false)).toBe(600));
   it("unknown price stays unknown", () => expect(priceFor({ ...camp, pricePerWeek: null }, [], false)).toBeNull());
+  it("does not invent a full-summer discount", () => expect(priceFor({ ...camp, weeks: ["2027-06-07", "2027-06-14"] }, [], true)).toBe(600));
+});
+
+describe("directory trust", () => {
+  it("preserves the Bayberry flyer assumption and concrete price and ages", () => {
+    const camp = CAMPS.find((c) => c.id === "summer-art-camp-july-middletown");
+    expect(camp?.availability).toBe("assumed");
+    expect(camp?.pricePerWeek).toBe(100);
+    expect([camp?.minAge, camp?.maxAge]).toEqual([5, 15]);
+    expect(camp?.offeredWeeks).toEqual([]);
+  });
+  it("preserves Shilpi's half-day hours without guessing eligibility or price", () => {
+    const camp = CAMPS.find((c) => c.id === "shilpi-fine-arts-summer-art-camp-middletown");
+    expect(camp?.dayType).toBe("half");
+    expect(camp?.hours).toBe("9am–1pm, Monday–Friday");
+    expect(camp?.minAge).toBeNull();
+    expect(camp?.pricePerWeek).toBeNull();
+  });
+  it("does not treat unsupported ages as a verified age match", () => {
+    expect(searchCamps({ zip: "19709", age: 7 }).some((c) => c.id === "shilpi-fine-arts-summer-art-camp-middletown")).toBe(false);
+  });
+  it("never confirms all thirteen weeks through a missing-date default", () => {
+    const camp = CAMPS.find((c) => c.id === "spark-summer-camp-middletown-middletown");
+    expect(camp?.availability).toBe("pending");
+    expect(camp?.offeredWeeks).toEqual([]);
+  });
 });
 
 describe("summer dates", () => {
