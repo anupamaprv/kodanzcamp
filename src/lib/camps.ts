@@ -48,11 +48,18 @@ export type RawCamp = {
   weeks?: string[] | null;
   note?: string | null;
   source?: string | null;
+  estimated?: boolean;
   lat: number;
   lng: number;
 };
 
-export type Camp = Omit<RawCamp, "weeks" | "interests"> & {
+export type Camp = Omit<RawCamp, "weeks" | "interests" | "minAge" | "maxAge" | "pricePerWeek"> & {
+  minAge: number;
+  maxAge: number;
+  pricePerWeek: number;
+  ageEstimated: boolean;
+  priceEstimated: boolean;
+  synthetic: boolean;
   interests: Interest[];
   weeks: string[];
   fullSummerPrice: number | null;
@@ -83,6 +90,13 @@ function imageFor(c: RawCamp, i: number) {
   return pool[i % pool.length] ?? sports;
 }
 
+/** Estimated weekly rate: directory figure, else a typical local rate by day length. */
+function estimatePrice(c: RawCamp, dayType: string) {
+  if (c.pricePerWeek != null) return c.pricePerWeek;
+  const metro = ["New York City", "Seattle", "Chicago"].includes(c.city) ? 1.25 : 1;
+  return Math.round(((dayType === "half" ? 150 : 275) * metro) / 5) * 5;
+}
+
 /** Tentative planning weeks are separate from provider-confirmed availability. */
 export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
   const evidence = CAMP_EVIDENCE[c.id];
@@ -92,13 +106,21 @@ export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
   const offeredWeeks = evidence?.confirmed2027 ? evidence.weeks ?? [] : [];
   const weeks = offeredWeeks.length ? offeredWeeks : artFlyer && c.weeks?.length ? c.weeks : SUMMER_WEEKS;
   const interests = c.interests.filter((x): x is Interest => (INTERESTS as readonly string[]).includes(x));
+  const dayType = evidence?.dayType ?? (artFlyer || shilpi ? "half" : c.dayType);
+  const realPrice = evidence?.confirmed2027 ? evidence.pricePerWeek ?? null : artFlyer ? 100 : null;
+  const minAge = evidence?.minAge ?? (artFlyer ? 5 : null);
+  const maxAge = evidence?.maxAge ?? (artFlyer ? 15 : null);
+  const ageEstimated = minAge === null || maxAge === null;
   return {
     ...c,
-    minAge: evidence?.minAge ?? (artFlyer ? 5 : null),
-    maxAge: evidence?.maxAge ?? (artFlyer ? 15 : null),
-    pricePerWeek: evidence?.confirmed2027 ? evidence.pricePerWeek ?? null : artFlyer ? 100 : null,
-    hours: evidence?.hours ?? (artFlyer ? "11am–1pm" : shilpi ? "9am–1pm, Monday–Friday" : null),
-    dayType: evidence?.dayType ?? (artFlyer || shilpi ? "half" : "unknown"),
+    minAge: minAge ?? c.minAge ?? 5,
+    maxAge: maxAge ?? c.maxAge ?? 12,
+    ageEstimated,
+    pricePerWeek: realPrice ?? estimatePrice(c, dayType),
+    priceEstimated: realPrice === null,
+    synthetic: !!c.estimated,
+    hours: evidence?.hours ?? (artFlyer ? "11am–1pm" : shilpi ? "9am–1pm, Monday–Friday" : c.hours),
+    dayType,
     interests,
     weeks,
     offeredWeeks,
