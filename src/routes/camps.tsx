@@ -9,7 +9,10 @@ import { CampMap } from "@/components/CampMap";
 import { ScheduleDialog } from "@/components/ScheduleDialog";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { AccountLink } from "@/components/AccountLink";
-import { searchCamps, type CampResult } from "@/lib/camps";
+import { searchCamps, locateCamps, type CampResult } from "@/lib/camps";
+import { useSession } from "@/hooks/use-session";
+import { useFavorites, usePlans } from "@/lib/family";
+import { useMapPlaces, milesBetween } from "@/lib/places";
 
 const schema = z.object({
   zip: z.string().catch("19709"),
@@ -51,10 +54,23 @@ function CampsPage() {
     () => searchCamps({ zip: s.zip, age: s.age, interests, radius: s.radius, sort: s.sort, center, fullDayOnly: s.fullDay }),
     [s.zip, s.age, s.interests, s.radius, s.sort, s.fullDay, center?.lat, center?.lng],
   );
+  const { user } = useSession();
+  const favs = useFavorites(!!user);
+  const plans = usePlans(!!user);
+  const places = useMapPlaces(!!user && s.view === "map");
+  const savedIds = useMemo(
+    () => new Set([...(favs.data ?? []).map((f) => f.camp_id), ...(plans.data ?? []).map((p) => p.camp_id)]),
+    [favs.data, plans.data],
+  );
+  const mapCamps = useMemo(() => {
+    const ids = new Set(camps.map((c) => c.id));
+    const extra = savedIds.size ? locateCamps(s.zip, center).filter((c) => savedIds.has(c.id) && !ids.has(c.id) && c.miles <= 60) : [];
+    return [...camps, ...extra];
+  }, [camps, savedIds, center?.lat, center?.lng]);
   const [selected, setSelected] = useState<string>();
   const [saving, setSaving] = useState<CampResult>();
   const set = (patch: Partial<typeof s>) => navigate({ search: (prev) => ({ ...prev, ...patch }) });
-  const active = camps.find((c) => c.id === selected) ?? camps[0];
+  const active = mapCamps.find((c) => c.id === selected) ?? camps[0];
 
   return (
     <div className="min-h-screen">
@@ -100,7 +116,7 @@ function CampsPage() {
         ) : (
           <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
             {center ? (
-              <CampMap camps={camps} radius={s.radius} center={center} selected={active?.id} onSelect={setSelected} />
+              <CampMap camps={mapCamps} radius={s.radius} center={center} selected={active?.id} onSelect={setSelected} places={places} savedIds={savedIds} />
             ) : (
               <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border bg-card text-sm text-muted-foreground">
                 {geo.data && !geo.data.ok ? geo.data.error : "Loading map…"}
@@ -108,6 +124,23 @@ function CampsPage() {
             )}
             <div className="space-y-4">
               {active && <CampCard camp={active} onSave={() => setSaving(active)} compact />}
+              {active && places.length > 0 && (
+                <div className="rounded-2xl border bg-card p-4 text-sm">
+                  <p className="font-semibold text-navy">Drop-off & pick-up distance</p>
+                  <ul className="mt-2 space-y-1">
+                    {[...places].sort((a, b) => milesBetween(a, active) - milesBetween(b, active)).map((p, i) => (
+                      <li key={p.key} className="flex justify-between">
+                        <span>{p.kind === "home" ? "⌂ " : "💼 "}{p.label} <span className="text-muted-foreground">({p.zip})</span></span>
+                        <span className={i === 0 ? "font-semibold text-teal" : "text-muted-foreground"}>{milesBetween(p, active)} mi{i === 0 ? " · closest" : ""}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {user && places.length === 0 && (
+                <p className="text-xs text-muted-foreground"><Link to="/planner" className="font-semibold text-teal underline">Add home and office ZIPs</Link> to see which is closer for drop-off.</p>
+              )}
+              {savedIds.size > 0 && <p className="text-xs text-muted-foreground">Your saved and planned camps are shown in coral.</p>}
               <p className="text-xs text-muted-foreground">Commute estimates are approximate; exact routes depend on the starting address.</p>
             </div>
           </div>

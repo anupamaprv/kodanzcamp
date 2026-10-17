@@ -147,6 +147,30 @@ export type Database = {
           },
         ]
       }
+      saved_places: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          user_id: string
+          zip: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          user_id?: string
+          zip: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          user_id?: string
+          zip?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

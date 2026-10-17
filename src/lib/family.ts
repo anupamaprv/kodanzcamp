@@ -116,3 +116,56 @@ export function useFamilyMutations() {
     }),
   };
 }
+
+export type SavedPlace = { id: string; label: string; zip: string };
+
+export function useHomeZip(enabled: boolean) {
+  return useQuery({
+    queryKey: ["household"],
+    enabled,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("households").select("home_zip").maybeSingle();
+      if (error) throw error;
+      return data?.home_zip ?? null;
+    },
+  });
+}
+
+export function useSavedPlaces(enabled: boolean) {
+  return useQuery({
+    queryKey: ["saved_places"],
+    enabled,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("saved_places").select("id,label,zip").order("created_at");
+      if (error) throw error;
+      return data as SavedPlace[];
+    },
+  });
+}
+
+export function usePlaceMutations() {
+  const qc = useQueryClient();
+  return {
+    saveHome: useMutation({
+      mutationFn: async (home_zip: string) => {
+        const { error } = await supabase.from("households").upsert({ home_zip }, { onConflict: "user_id" });
+        if (error) throw error;
+      },
+      onSuccess: () => qc.invalidateQueries({ queryKey: ["household"] }),
+    }),
+    addPlace: useMutation({
+      mutationFn: async (p: { label: string; zip: string }) => {
+        const { error } = await supabase.from("saved_places").insert(p);
+        if (error) throw error;
+      },
+      onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_places"] }),
+    }),
+    removePlace: useMutation({
+      mutationFn: async (id: string) => {
+        const { error } = await supabase.from("saved_places").delete().eq("id", id);
+        if (error) throw error;
+      },
+      onSuccess: () => qc.invalidateQueries({ queryKey: ["saved_places"] }),
+    }),
+  };
+}
