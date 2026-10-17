@@ -186,6 +186,6 @@ function CopySelections({ source, kids, plans, activities, onClose, onDetail }: 
         {!available && <p className="mt-1 text-xs text-muted-foreground">Already planned, personal activity, or no age-eligible camp available this week.</p>}
       </div>;
     })}</div>
-    <Button disabled={!eligible.length || addPlans.isPending} onClick={accept}><Check />{addPlans.isPending ? "Adding…" : `Accept ${eligible.length} selected weeks`}</Button>
+    <Button disabled={!eligible.length || addPlans.isPending} onClick={accept}><Check />{addPlans.isPending ? "Adding…" : `Accept ${eligible.length} selected week${eligible.length === 1 ? "" : "s"}`}</Button>
   </DialogContent></Dialog>;
 }

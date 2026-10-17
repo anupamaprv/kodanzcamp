@@ -65,7 +65,7 @@ export async function buildPlannerPdf(kids: Kid[], plans: Plan[], activities: Ac
       while (size > 5 && font.widthOfTextAtSize(label, size) > 615) size -= 0.5;
       let fitted = label;
       while (font.widthOfTextAtSize(fitted, size) > 615) fitted = fitted.slice(0, -4) + "...";
-      text(fitted, 175, y, size, row.activities.length ? lilac : ink);
+      text(fitted, 175, y, size, row.activities.length ? lilac : row.camps.length ? teal : ink);
     });
     text("Teal: camps   |   Purple rows: personal activities", 32, 26, 9);
   }
