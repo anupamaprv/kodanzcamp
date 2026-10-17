@@ -7,6 +7,8 @@ import { z } from "zod";
 import { Logo } from "@/components/Logo";
 import { CampMap } from "@/components/CampMap";
 import { ScheduleDialog } from "@/components/ScheduleDialog";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { AccountLink } from "@/components/AccountLink";
 import { searchCamps, type CampResult } from "@/lib/camps";
 
 const schema = z.object({
@@ -63,6 +65,7 @@ function CampsPage() {
             <span className="rounded-full bg-teal-soft px-3 py-1 font-semibold text-navy"><MapPin className="mr-1 inline h-3.5 w-3.5" />{s.zip}</span>
             {s.age && <span className="rounded-full bg-sun-soft px-3 py-1 font-semibold text-navy">Age {s.age}</span>}
             {interests.map((i) => <span key={i} className="rounded-full bg-coral-soft px-3 py-1 font-semibold text-navy">{i}</span>)}
+            <AccountLink />
           </div>
         </div>
       </header>
@@ -136,10 +139,13 @@ function CampCard({ camp, onSave, compact }: { camp: CampResult; onSave: () => v
             <h2 className="text-lg font-bold text-navy">{camp.name}</h2>
             <p className="text-sm text-muted-foreground">{camp.provider} · Ages {camp.minAge} – {camp.maxAge}</p>
           </div>
+          <div className="flex gap-2">
+          <FavoriteButton camp={camp} />
           <button onClick={onSave} aria-label={`Save ${camp.name} to calendar`}
             className="shrink-0 rounded-xl border p-2 text-teal transition hover:bg-teal-soft">
             <CalendarPlus className="h-5 w-5" />
           </button>
+          </div>
         </div>
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
           <span><MapPin className="mr-1 inline h-4 w-4 text-teal" />{camp.miles} mi · {camp.minutes} min</span>

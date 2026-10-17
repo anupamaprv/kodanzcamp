@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { AccountLink } from "@/components/AccountLink";
 
 export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
   return (
@@ -18,9 +19,10 @@ export function SiteHeader() {
   return (
     <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
       <Logo />
-      <span className="hidden rounded-full border bg-card px-4 py-1.5 font-display text-xs font-semibold text-navy sm:inline">
+      <div className="flex items-center gap-3"><span className="hidden rounded-full border bg-card px-4 py-1.5 font-display text-xs font-semibold text-navy sm:inline">
         A NEW SUMMER-PLANNING APP
       </span>
+      <AccountLink /></div>
     </header>
   );
 }
