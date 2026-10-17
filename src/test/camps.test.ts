@@ -59,3 +59,16 @@ describe("summer dates", () => {
     expect(SUMMER_WEEKS.at(-1)).toBe("2027-08-30");
   });
 });
+
+describe("synthetic everywhere camps", () => {
+  for (const zip of ["19709", "98101", "60614"]) it(`shows Picasso Kids and Ninja Kids near ${zip}`, () => {
+    const center = zip === "19709" ? undefined : zip === "98101" ? { lat: 47.61, lng: -122.33 } : { lat: 41.92, lng: -87.65 };
+    const r = searchCamps({ zip, radius: 5, center });
+    const picasso = r.find((c) => c.id === "picasso-kids-arts-club");
+    const ninja = r.find((c) => c.id === "ninja-kids-sports-club");
+    expect(picasso?.pricePerWeek).toBe(200);
+    expect(picasso?.hours).toBe("10am–3pm");
+    expect([ninja?.minAge, ninja?.maxAge]).toEqual([3, 16]);
+    expect(picasso?.synthetic && ninja?.synthetic).toBe(true);
+  });
+});
