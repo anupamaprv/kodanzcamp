@@ -8,8 +8,8 @@ declare global {
   }
 }
 
-let loader: Promise<void> | null = null;
-function loadMaps() {
+export let loader: Promise<void> | null = null;
+export function loadMaps() {
   if (window.google?.maps?.Map) return Promise.resolve();
   if (loader) return loader;
   loader = new Promise<void>((resolve, reject) => {
