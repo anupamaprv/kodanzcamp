@@ -188,6 +188,7 @@ export function buildIcs(camp: Camp, weeks: string[]) {
       `SUMMARY:${camp.name}`,
       `LOCATION:${camp.address}`,
       `DESCRIPTION:${camp.provider}${camp.hours ? ` · ${camp.hours}` : ""}`,
+      ...(camp.website ? [`URL:${camp.website}`] : []),
       "END:VEVENT",
     );
   }
