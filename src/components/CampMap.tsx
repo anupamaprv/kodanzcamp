@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CampResult } from "@/lib/camps";
 import type { MapPlace } from "@/lib/places";
+import { officePinIcon } from "@/lib/mapIcons";
 
 declare global {
   interface Window {
@@ -74,8 +75,7 @@ export function CampMap({ camps, radius, center, selected, onSelect, places = []
       bounds.extend({ lat: p.lat, lng: p.lng });
       overlays.current.push(new g.maps.Marker({
         map: m, position: { lat: p.lat, lng: p.lng }, title: `${p.label} (${p.zip})`, zIndex: 20,
-        label: { text: "W", color: "#ffffff", fontWeight: "700" },
-        icon: { path: g.maps.SymbolPath.BACKWARD_CLOSED_ARROW, scale: 7, fillColor: "#7c4dbc", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 2, labelOrigin: new g.maps.Point(0, -3) },
+        icon: officePinIcon(g, "#7c4dbc"),
       }));
     });
     camps.forEach((c) => {
