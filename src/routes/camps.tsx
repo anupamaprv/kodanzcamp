@@ -12,6 +12,7 @@ import { ShareButton } from "@/components/ShareButton";
 import { AccountLink } from "@/components/AccountLink";
 import { CampTrust, CampSubmission } from "@/components/CampTrust";
 import { CommuteComparison } from "@/components/CommuteComparison";
+import { Button } from "@/components/ui/button";
 import { searchCamps, locateCamps, type CampResult } from "@/lib/camps";
 import { useSession } from "@/hooks/use-session";
 import { useFavorites, usePlans } from "@/lib/family";
@@ -204,7 +205,7 @@ function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: strin
             {camp.phone && <span className="ml-2">{camp.phone}</span>}
           </div>
         </div>
-        {user && <><button className="mt-3 self-start text-sm font-semibold text-teal underline" onClick={() => setCommute(!commute)}>{commute ? "Hide driving comparison" : "Compare driving options"}</button>{commute && <CommuteComparison camps={[camp]} />}</>}
+        {user && <><Button variant="link" className="mt-3 self-start px-0 text-teal" onClick={() => setCommute(!commute)}>{commute ? "Hide driving comparison" : "Compare driving options"}</Button>{commute && <CommuteComparison camps={[camp]} />}</>}
       </div>
     </article>
   );

@@ -27,10 +27,12 @@ export const calculateCommute = createServerFn({ method: "POST" })
     const ordered = data.direction === "pickup" ? [...camps].reverse() : camps;
     const stops = ordered.flatMap((c) => c ? [c] : []);
     const campWaypoint = (c: typeof stops[number]) => ({ address: c.address });
-    const origin = { address: data.direction === "pickup" ? officeAddress : homeAddress };
-    const destination = office ? { address: data.direction === "pickup" ? homeAddress : officeAddress } : campWaypoint(stops[stops.length - 1] ?? stops[0] as typeof stops[number]);
     if (!stops.length) throw new Error("Choose a camp");
-    const intermediates = (office ? stops : stops.slice(0, -1)).map(campWaypoint);
+    const first = stops[0]; const last = stops.at(-1);
+    if (!first || !last) throw new Error("Choose a camp");
+    const origin = !office && data.direction === "pickup" ? campWaypoint(first) : { address: data.direction === "pickup" ? officeAddress : homeAddress };
+    const destination = office ? { address: data.direction === "pickup" ? homeAddress : officeAddress } : data.direction === "pickup" ? { address: homeAddress } : campWaypoint(last);
+    const intermediates = (office ? stops : data.direction === "pickup" ? stops.slice(1) : stops.slice(0, -1)).map(campWaypoint);
     const keyBytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify({ origin, destination, intermediates, direction: data.direction })));
     const cacheKey = Array.from(new Uint8Array(keyBytes), (b) => b.toString(16).padStart(2, "0")).join("");
     const cached = await context.supabase.from("commute_route_cache").select("result").eq("user_id", context.userId).eq("cache_key", cacheKey).gt("expires_at", new Date().toISOString()).maybeSingle();
@@ -55,7 +57,7 @@ export const calculateCommute = createServerFn({ method: "POST" })
       return parseRoadRoute(await response.json());
     }
     const [road, baseline] = await Promise.all([route(intermediates), office ? route([]) : Promise.resolve(null)]);
-    const result: CommuteResult = { route: road, baseline, from: data.direction === "pickup" && office ? office.label : "Home", to: office ? (data.direction === "pickup" ? "Home" : office.label) : stops.at(-1)?.name ?? "Camp", stops: stops.map((c) => c.name), approximateStart: !addresses.data?.some((p) => p.place_key === "home") || (!!office && !addresses.data?.some((p) => p.place_key === office.id)), calculatedAt: new Date().toISOString() };
+    const result: CommuteResult = { route: road, baseline, from: data.direction === "pickup" ? office?.label ?? first.name : "Home", to: data.direction === "pickup" ? "Home" : office?.label ?? last.name, stops: stops.map((c) => c.name), approximateStart: !addresses.data?.some((p) => p.place_key === "home") || (!!office && !addresses.data?.some((p) => p.place_key === office.id)), calculatedAt: new Date().toISOString() };
     await context.supabase.from("commute_route_cache").upsert({ user_id: context.userId, cache_key: cacheKey, result: JSON.parse(JSON.stringify(result)), expires_at: new Date(Date.now() + 15 * 60 * 1000).toISOString() });
     return result;
   });

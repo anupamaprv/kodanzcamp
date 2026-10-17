@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Briefcase, Home, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { useHomeZip, usePlaceMutations, useSavedPlaces } from "@/lib/family";
+import { useCommuteAddresses } from "@/lib/family";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
 const isZip = (z: string) => /^\d{5}$/.test(z.trim());
 
@@ -60,6 +64,33 @@ export function SavedPlaces() {
         <input value={zip} onChange={(e) => setZip(e.target.value)} inputMode="numeric" maxLength={5} placeholder="ZIP" className="w-24 rounded-xl border bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring" />
         <button className="inline-flex items-center gap-1 rounded-xl bg-primary px-3 py-2 font-semibold text-primary-foreground"><Plus className="h-4 w-4" /> Add office</button>
       </form>
+      <div className="mt-5 space-y-3 border-t pt-4">
+        <h3 className="font-semibold text-navy">Private starting addresses (optional)</h3>
+        <p className="text-xs text-muted-foreground">Used only for your driving calculations; never shared with friends. Without an address, driving uses the ZIP center. Google receives the address when you calculate.</p>
+        {home.data && <PrivateAddress placeKey="home" label="Home" />}
+        {(places.data ?? []).map((p) => <PrivateAddress key={p.id} placeKey={p.id} label={p.label} />)}
+      </div>
     </section>
   );
+}
+
+function PrivateAddress({ placeKey, label }: { placeKey: string; label: string }) {
+  const addresses = useCommuteAddresses(true);
+  const qc = useQueryClient();
+  const saved = addresses.data?.find((p) => p.place_key === placeKey)?.address ?? "";
+  const [draft, setDraft] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  return <form className="flex flex-wrap items-center gap-2" onSubmit={async (e) => {
+    e.preventDefault(); setBusy(true);
+    try {
+      const value = (draft ?? saved).trim();
+      const result = value ? await supabase.from("commute_addresses").upsert({ place_key: placeKey, address: value }, { onConflict: "user_id,place_key" }) : await supabase.from("commute_addresses").delete().eq("place_key", placeKey);
+      if (result.error) throw result.error;
+      await qc.invalidateQueries({ queryKey: ["commute_addresses"] }); setDraft(null); toast.success(value ? "Private address saved" : "Private address removed");
+    } catch { toast.error("Could not save this address"); } finally { setBusy(false); }
+  }}>
+    <label className="min-w-0 flex-1 text-sm">{label}<input aria-label={`${label} private address`} value={draft ?? saved} onChange={(e) => setDraft(e.target.value)} maxLength={300} placeholder="Street, city, state ZIP" className="mt-1 w-full rounded-md border bg-background p-2" /></label>
+    <Button type="submit" variant="outline" disabled={busy}>{busy ? "Saving…" : "Save address"}</Button>
+    {saved && <Button variant="ghost" disabled={busy} onClick={async () => { const { error } = await supabase.from("commute_addresses").delete().eq("place_key", placeKey); if (error) { toast.error("Could not remove address"); return; } setDraft(""); await qc.invalidateQueries({ queryKey: ["commute_addresses"] }); }}>Remove</Button>}
+  </form>;
 }
