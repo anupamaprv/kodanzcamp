@@ -49,6 +49,7 @@ export type RawCamp = {
   note?: string | null;
   source?: string | null;
   estimated?: boolean;
+  everywhere?: boolean;
   lat: number;
   lng: number;
 };
@@ -100,6 +101,7 @@ function estimatePrice(c: RawCamp, dayType: string) {
 /** Tentative planning weeks are separate from provider-confirmed availability. */
 export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
   const evidence = CAMP_EVIDENCE[c.id];
+  const direct: { minAge?: number | undefined; maxAge?: number | undefined; pricePerWeek?: number | undefined } = c.everywhere ? { minAge: c.minAge ?? undefined, maxAge: c.maxAge ?? undefined, pricePerWeek: c.pricePerWeek ?? undefined } : {};
   const flyer = FLYER_IDS.has(c.id);
   const artFlyer = c.id === "summer-art-camp-july-middletown";
   const shilpi = c.id === "shilpi-fine-arts-summer-art-camp-middletown";
@@ -107,17 +109,19 @@ export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
   const weeks = offeredWeeks.length ? offeredWeeks : artFlyer && c.weeks?.length ? c.weeks : SUMMER_WEEKS;
   const interests = c.interests.filter((x): x is Interest => (INTERESTS as readonly string[]).includes(x));
   const dayType = evidence?.dayType ?? (artFlyer || shilpi ? "half" : c.dayType);
-  const realPrice = evidence?.confirmed2027 ? evidence.pricePerWeek ?? null : artFlyer ? 100 : null;
-  const minAge = evidence?.minAge ?? (artFlyer ? 5 : null);
-  const maxAge = evidence?.maxAge ?? (artFlyer ? 15 : null);
+  const realPrice = direct.pricePerWeek ?? null;
+  const _ev = evidence?.confirmed2027 ? evidence.pricePerWeek ?? null : artFlyer ? 100 : null;
+  const price = realPrice ?? _ev;
+  const minAge = direct.minAge ?? evidence?.minAge ?? (artFlyer ? 5 : null);
+  const maxAge = direct.maxAge ?? evidence?.maxAge ?? (artFlyer ? 15 : null);
   const ageEstimated = minAge === null || maxAge === null;
   return {
     ...c,
     minAge: minAge ?? c.minAge ?? 5,
     maxAge: maxAge ?? c.maxAge ?? 12,
     ageEstimated,
-    pricePerWeek: realPrice ?? estimatePrice(c, dayType),
-    priceEstimated: realPrice === null,
+    pricePerWeek: price ?? estimatePrice(c, dayType),
+    priceEstimated: price === null,
     synthetic: !!c.estimated,
     hours: evidence?.hours ?? (artFlyer ? "11am–1pm" : shilpi ? "9am–1pm, Monday–Friday" : c.hours),
     dayType,
@@ -142,7 +146,9 @@ const DEFAULT_CENTER = { lat: 39.4496, lng: -75.7163 }; // Middletown, DE
 
 export function locateCamps(_zip: string, center: LatLng = DEFAULT_CENTER): CampResult[] {
   const cos = Math.cos((center.lat * Math.PI) / 180);
-  return CAMPS.map((c) => {
+  return CAMPS.map((orig, i) => {
+    // Synthetic "everywhere" camps sit a couple of miles from the searched ZIP.
+    const c = orig.everywhere ? { ...orig, lat: center.lat + 0.02 + (i % 2) * 0.01, lng: center.lng + (i % 2 ? -0.03 : 0.025) } : orig;
     const x = (c.lng - center.lng) * 69.17 * cos;
     const y = (c.lat - center.lat) * 69.17;
     const miles = Math.round(Math.hypot(x, y) * 10) / 10;
