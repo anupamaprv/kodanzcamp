@@ -12,6 +12,8 @@ import swim from "@/assets/camp-swim.jpg";
 import karate from "@/assets/camp-karate.jpg";
 import museum from "@/assets/camp-museum.jpg";
 import academic from "@/assets/camp-academic.jpg";
+import zoo from "@/assets/camp-zoo.jpg";
+import daycamp from "@/assets/camp-daycamp.jpg";
 import gym from "@/assets/camp-gym.jpg";
 import raw from "@/data/camps.json";
 
@@ -58,16 +60,18 @@ export type Camp = Omit<RawCamp, "weeks" | "interests"> & {
 
 const IMAGES: Record<string, string[]> = {
   Swim: [swim], "Martial Arts": [karate], Dance: [dance], Music: [music], Coding: [coding],
-  STEM: [stem, makers, museum], Arts: [arts, museum], Nature: [nature, explorers],
+  STEM: [stem, makers], Arts: [arts], Nature: [nature, explorers],
   Sports: [sports, tennis, gym], Academic: [academic],
 };
 
 /** Picks a photo by the camp's main interest; varies within a category so neighbors differ. */
 function imageFor(c: RawCamp, i: number) {
   const n = c.name.toLowerCase();
+  if (/zoo|aquarium/.test(n)) return zoo;
+  if (/museum|science center|institute/.test(n)) return museum;
+  if (/heron day camp/.test(n)) return daycamp;
   if (/gymnast|tumbl|ninja/.test(n)) return gym;
   if (/tennis/.test(n)) return tennis;
-  if (/museum|science center|institute|zoo|aquarium/.test(n)) return museum;
   const pool = IMAGES[c.interests[0] ?? "Sports"] ?? [sports];
   return pool[i % pool.length]!;
 }
