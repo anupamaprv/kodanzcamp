@@ -109,7 +109,6 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
           <div className="space-y-4">
             <div className="flex items-center justify-between text-sm">
               <span>Home ZIP <b>{zip}</b></span>
-              <button onClick={() => saveZip.mutate("")} className="hidden" />
               <button onClick={() => { const z = prompt("New home ZIP code", zip); if (z && /^\d{5}$/.test(z)) saveZip.mutate(z); }} className="font-semibold text-teal underline">Change</button>
             </div>
             <ul className="space-y-2">
