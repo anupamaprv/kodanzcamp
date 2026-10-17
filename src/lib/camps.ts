@@ -12,6 +12,8 @@ import swim from "@/assets/camp-swim.jpg";
 import karate from "@/assets/camp-karate.jpg";
 import museum from "@/assets/camp-museum.jpg";
 import academic from "@/assets/camp-academic.jpg";
+import zoo from "@/assets/camp-zoo.jpg";
+import daycamp from "@/assets/camp-daycamp.jpg";
 import gym from "@/assets/camp-gym.jpg";
 import raw from "@/data/camps.json";
 
