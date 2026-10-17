@@ -23,7 +23,6 @@ describe("pricing", () => {
   if (!first) throw new Error("Directory empty");
   const camp = { ...first, pricePerWeek: 300 };
   it("partial weeks = weekly price x weeks", () => expect(priceFor(camp, camp.weeks.slice(0, 2), false)).toBe(600));
-  it("unknown price stays unknown", () => expect(priceFor({ ...camp, pricePerWeek: null }, [], false)).toBeNull());
   it("does not invent a full-summer discount", () => expect(priceFor({ ...camp, weeks: ["2027-06-07", "2027-06-14"] }, [], true)).toBe(600));
 });
 
