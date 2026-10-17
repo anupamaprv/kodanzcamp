@@ -7,6 +7,12 @@ const kid = { id: "one", name: "Sam", age: 8 };
 const friend = { id: "two", name: "Alex", age: 8 };
 const source = [{ id: "p", kid_id: friend.id, camp_id: "camp", week: "2027-06-07" }];
 const camp = { id: "camp", minAge: 5, maxAge: 12, weeks: ["2027-06-07"] };
+const readBlob = (blob: Blob) => new Promise<ArrayBuffer>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => reader.result instanceof ArrayBuffer ? resolve(reader.result) : reject(new Error("Invalid PDF bytes"));
+  reader.onerror = () => reject(reader.error);
+  reader.readAsArrayBuffer(blob);
+});
 describe("Private summer coordination", () => {
   it("includes an existing camp website in each calendar event", () => {
     const c = CAMPS.find((camp) => camp.website);
@@ -23,13 +29,13 @@ describe("Private summer coordination", () => {
     const { PDFDocument } = await import("pdf-lib");
     const together = await buildPlannerPdf([kid, friend], [], [], "side-by-side");
     const separate = await buildPlannerPdf([kid, friend], [], [], "separate");
-    expect((await PDFDocument.load(await together.arrayBuffer())).getPageCount()).toBe(1);
-    expect((await PDFDocument.load(await separate.arrayBuffer())).getPageCount()).toBe(2);
+    expect((await PDFDocument.load(await readBlob(together))).getPageCount()).toBe(1);
+    expect((await PDFDocument.load(await readBlob(separate))).getPageCount()).toBe(2);
   });
   it("keeps a single child's PDF on one page regardless of layout", async () => {
     const { PDFDocument } = await import("pdf-lib");
     const blob = await buildPlannerPdf([kid], [], [], "side-by-side");
-    expect((await PDFDocument.load(await blob.arrayBuffer())).getPageCount()).toBe(1);
+    expect((await PDFDocument.load(await readBlob(blob))).getPageCount()).toBe(1);
   });
   it("matches only the same camp in the same week", () => {
     expect(matchingKids(source[0] ?? { camp_id: "camp", week: "" }, [kid], [{ ...source[0], id: "mine", kid_id: kid.id, camp_id: "camp", week: "2027-06-07" }])).toEqual([kid]);
