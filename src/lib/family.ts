@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type Kid = { id: string; name: string; age: number };
 export type Favorite = { camp_id: string; kid_ids: string[] };
+export type Activity = { id: string; kid_id: string | null; week: string; label: string };
 export type Plan = { id: string; kid_id: string; camp_id: string; week: string };
 
 export function useKids(enabled: boolean) {
@@ -41,6 +42,18 @@ export function usePlans(enabled: boolean) {
   });
 }
 
+export function useActivities(enabled: boolean) {
+  return useQuery({
+    queryKey: ["activities"],
+    enabled,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("activities").select("id,kid_id,week,label");
+      if (error) throw error;
+      return data as Activity[];
+    },
+  });
+}
+
 export function useFamilyMutations() {
   const qc = useQueryClient();
   const done = (key: string) => () => qc.invalidateQueries({ queryKey: [key] });
@@ -57,7 +70,7 @@ export function useFamilyMutations() {
         const { error } = await supabase.from("kids").delete().eq("id", id);
         if (error) throw error;
       },
-      onSuccess: () => { qc.invalidateQueries({ queryKey: ["kids"] }); qc.invalidateQueries({ queryKey: ["plans"] }); },
+      onSuccess: () => { ["kids", "plans", "activities"].forEach((k) => qc.invalidateQueries({ queryKey: [k] })); },
     }),
     saveFavorite: useMutation({
       mutationFn: async (f: Favorite) => {
@@ -79,6 +92,20 @@ export function useFamilyMutations() {
         if (error) throw error;
       },
       onSuccess: done("plans"),
+    }),
+    addActivity: useMutation({
+      mutationFn: async (rows: { kid_id: string | null; week: string; label: string }[]) => {
+        const { error } = await supabase.from("activities").insert(rows);
+        if (error) throw error;
+      },
+      onSuccess: done("activities"),
+    }),
+    removeActivity: useMutation({
+      mutationFn: async (id: string) => {
+        const { error } = await supabase.from("activities").delete().eq("id", id);
+        if (error) throw error;
+      },
+      onSuccess: done("activities"),
     }),
     removePlan: useMutation({
       mutationFn: async (id: string) => {
