@@ -10,10 +10,12 @@ import { ScheduleDialog } from "@/components/ScheduleDialog";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { ShareButton } from "@/components/ShareButton";
 import { AccountLink } from "@/components/AccountLink";
+import { CampTrust, CampSubmission } from "@/components/CampTrust";
+import { CommuteComparison } from "@/components/CommuteComparison";
 import { searchCamps, locateCamps, type CampResult } from "@/lib/camps";
 import { useSession } from "@/hooks/use-session";
 import { useFavorites, usePlans } from "@/lib/family";
-import { useMapPlaces, milesBetween } from "@/lib/places";
+import { useMapPlaces } from "@/lib/places";
 
 const schema = z.object({
   zip: z.string().catch("19709"),
@@ -96,6 +98,7 @@ function CampsPage() {
           <div>
             <p className="eyebrow">Matched options</p>
             <h1 className="text-3xl font-bold text-navy">{camps.length} camps within {s.radius} mi</h1>
+            <p className="mt-1 text-xs text-muted-foreground">Radius and nearest sorting use straight-line distance. 2027 availability is labeled separately.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Segment value={String(s.radius)} options={[["5", "5 mi"], ["10", "10 mi"], ["20", "20 mi"], ["30", "30 mi"]]} onChange={(v) => set({ radius: Number(v) })} />
@@ -107,6 +110,7 @@ function CampsPage() {
             <Segment value={s.view} options={[["list", <List key="l" className="h-4 w-4" />], ["map", <MapIcon key="m" className="h-4 w-4" />]]} onChange={(v) => set({ view: v as "list" | "map" })} labels={["List view", "Map view"]} />
           </div>
         </div>
+        <CampSubmission />
 
         {camps.length === 0 ? (
           <div className="mt-10 rounded-3xl border bg-card p-10 text-center">
@@ -128,24 +132,10 @@ function CampsPage() {
             )}
             <div className="space-y-4">
               {active && <CampCard camp={active} zip={s.zip} onSave={() => setSaving(active)} compact />}
-              {active && places.length > 0 && (
-                <div className="rounded-2xl border bg-card p-4 text-sm">
-                  <p className="font-semibold text-navy">Drop-off & pick-up distance</p>
-                  <ul className="mt-2 space-y-1">
-                    {[...places].sort((a, b) => milesBetween(a, active) - milesBetween(b, active)).map((p, i) => (
-                      <li key={p.key} className="flex justify-between">
-                        <span>{p.kind === "home" ? "⌂ " : "💼 "}{p.label} <span className="text-muted-foreground">({p.zip})</span></span>
-                        <span className={i === 0 ? "font-semibold text-teal" : "text-muted-foreground"}>{milesBetween(p, active)} mi{i === 0 ? " · closest" : ""}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
               {user && places.length === 0 && (
                 <p className="text-xs text-muted-foreground"><Link to="/planner" className="font-semibold text-teal underline">Add home and office ZIPs</Link> to see which is closer for drop-off.</p>
               )}
               {savedIds.size > 0 && <p className="text-xs text-muted-foreground">Your saved and planned camps are shown in coral.</p>}
-              <p className="text-xs text-muted-foreground">Commute estimates are approximate; exact routes depend on the starting address.</p>
             </div>
           </div>
         )}
@@ -171,6 +161,8 @@ function Segment({ value, options, onChange, labels }: {
 }
 
 function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: string; onSave: () => void; compact?: boolean }) {
+  const { user } = useSession();
+  const [commute, setCommute] = useState(false);
   return (
     <article className={`flex gap-4 rounded-3xl border bg-card p-4 shadow-soft ${compact ? "flex-col" : "flex-col sm:flex-row"}`}>
       <img src={camp.image} alt={camp.name} loading="lazy" width={944} height={704}
@@ -179,7 +171,7 @@ function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: strin
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-navy">{camp.name}</h2>
-            <p className="text-sm text-muted-foreground">{camp.provider} · Ages {camp.minAge} – {camp.maxAge}</p>
+            <p className="text-sm text-muted-foreground">{camp.provider} · {camp.minAge !== null && camp.maxAge !== null ? `Ages ${camp.minAge} – ${camp.maxAge}` : "Ages not published"}</p>
             <p className="text-xs text-muted-foreground">{camp.address}</p>
             {camp.note && <p className="mt-1 text-xs font-semibold text-coral">{camp.note}</p>}
           </div>
@@ -192,10 +184,11 @@ function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: strin
           </button>
           </div>
         </div>
+        <CampTrust camp={camp} />
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-          <span><MapPin className="mr-1 inline h-4 w-4 text-teal" />{camp.miles} mi · {camp.minutes} min</span>
+          <span><MapPin className="mr-1 inline h-4 w-4 text-teal" />{camp.miles} mi straight-line</span>
           {camp.hours && <span><Clock className="mr-1 inline h-4 w-4 text-teal" />{camp.hours}</span>}
-          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${camp.dayType === "full" ? "bg-teal-soft text-navy" : "bg-sun-soft text-navy"}`}>{camp.dayType === "full" ? "Full day" : "Half day"}</span>
+          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${camp.dayType === "full" ? "bg-teal-soft text-navy" : "bg-sun-soft text-navy"}`}>{camp.dayType === "full" ? "Full day" : camp.dayType === "half" ? "Half day" : "Day length not published"}</span>
         </div>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {camp.interests.map((i) => <span key={i} className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold">{i}</span>)}
@@ -204,14 +197,14 @@ function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: strin
           {camp.pricePerWeek != null ? (
             <p><span className="font-display text-2xl font-bold text-navy">${camp.pricePerWeek}</span><span className="text-sm text-muted-foreground"> / week</span></p>
           ) : (
-            <p className="font-semibold text-navy">Price: contact provider</p>
+            <p className="font-semibold text-navy">2027 price not published</p>
           )}
           <div className="text-right text-sm text-muted-foreground">
-            {camp.fullSummerPrice != null && <p>Full summer est.: <span className="font-semibold text-navy">${camp.fullSummerPrice.toLocaleString()}</span> · {camp.weeks.length} weeks</p>}
             {camp.website && <a href={camp.website} target="_blank" rel="noreferrer" className="font-semibold text-teal underline">Visit provider</a>}
             {camp.phone && <span className="ml-2">{camp.phone}</span>}
           </div>
         </div>
+        {user && <><button className="mt-3 self-start text-sm font-semibold text-teal underline" onClick={() => setCommute(!commute)}>{commute ? "Hide driving comparison" : "Compare driving options"}</button>{commute && <CommuteComparison camps={[camp]} />}</>}
       </div>
     </article>
   );

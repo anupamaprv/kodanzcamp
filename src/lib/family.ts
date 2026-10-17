@@ -143,6 +143,14 @@ export function useSavedPlaces(enabled: boolean) {
   });
 }
 
+export function useCommuteAddresses(enabled: boolean) {
+  return useQuery({ queryKey: ["commute_addresses"], enabled, queryFn: async () => {
+    const { data, error } = await supabase.from("commute_addresses").select("place_key,address");
+    if (error) throw error;
+    return data;
+  } });
+}
+
 export function usePlaceMutations() {
   const qc = useQueryClient();
   return {

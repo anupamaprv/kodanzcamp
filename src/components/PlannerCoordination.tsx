@@ -9,6 +9,7 @@ import { adoptablePlans, matchingKids, plannerInviteUrl, type SharedPlanner } fr
 import { usePlannerSharing } from "@/lib/planner-sharing-data";
 import { buildPlannerIcs, buildPlannerPdf, deliverCalendar } from "@/lib/planner-export";
 import { ScheduleDialog } from "@/components/ScheduleDialog";
+import { CampTrust } from "@/components/CampTrust";
 
 type Props = { kids: Kid[]; plans: Plan[]; activities: Activity[]; invite?: string | undefined };
 
@@ -156,7 +157,8 @@ function CampReview({ camp }: { camp: Camp }) {
   return <>
     <DialogHeader><DialogTitle className="pr-4 text-navy">{camp.name}</DialogTitle><DialogDescription>{camp.provider} · {camp.city}, {camp.state}</DialogDescription></DialogHeader>
     <img src={camp.image} alt={camp.name} className="aspect-[2/1] w-full rounded-md object-cover" />
-    <div className="space-y-2 text-sm"><p>{camp.address}</p><p>Ages {camp.minAge}–{camp.maxAge} · {camp.dayType === "half" ? "Half day" : "Full day"} · {camp.hours ?? "Hours not published"}</p><p className="font-semibold">{camp.pricePerWeek !== null ? `$${camp.pricePerWeek}/week` : "Ask provider for price"}</p>{camp.note && <p className="text-muted-foreground">{camp.note}</p>}</div>
+    <div className="space-y-2 text-sm"><p>{camp.address}</p><p>{camp.minAge !== null && camp.maxAge !== null ? `Ages ${camp.minAge}–${camp.maxAge}` : "Ages not published"} · {camp.dayType === "half" ? "Half day" : camp.dayType === "full" ? "Full day" : "Day length not published"} · {camp.hours ?? "Hours not published"}</p><p className="font-semibold">{camp.pricePerWeek !== null ? `$${camp.pricePerWeek}/week` : "2027 price not published"}</p>{camp.note && <p className="text-muted-foreground">{camp.note}</p>}</div>
+    <CampTrust camp={camp} />
     {camp.website && <Button variant="outline" asChild><a href={camp.website} target="_blank" rel="noopener noreferrer"><ExternalLink /> Provider details</a></Button>}
     <Button onClick={() => setModify(true)}><CalendarDays /> Choose weeks for my kids</Button>
     {modify && <ScheduleDialog camp={camp} onClose={() => setModify(false)} />}

@@ -70,6 +70,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
             );
           })}
         </div>
+        {camp.availability !== "confirmed" && <p className="mt-3 text-sm text-coral">Tentative plan only: {camp.availability === "assumed" ? "2027 offering assumed from your flyer" : "2027 dates not published"}. Confirm dates, age eligibility and price with the provider before booking.</p>}
 
         {user && kids.data && kids.data.length > 0 && (
           <div className="mt-4">
@@ -93,7 +94,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
           <div>
             <p className="text-xs text-muted-foreground">{chosen.length} week{chosen.length === 1 ? "" : "s"} · estimated</p>
             <p className="font-display text-2xl font-bold text-navy">{total != null ? `$${total.toLocaleString()}` : "Ask provider"}</p>
-            {mode === "full" && <p className="text-xs text-teal">Full-summer rate</p>}
+            {mode === "full" && <p className="text-xs text-teal">Weekly rate × selected weeks; no assumed discount</p>}
           </div>
           <div className="flex flex-col gap-2">
             <button onClick={addToPlanner} disabled={!chosen.length || (!!user && !kids.data?.length)}
