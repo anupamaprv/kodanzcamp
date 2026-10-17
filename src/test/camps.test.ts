@@ -23,7 +23,6 @@ describe("pricing", () => {
   if (!first) throw new Error("Directory empty");
   const camp = { ...first, pricePerWeek: 300 };
   it("partial weeks = weekly price x weeks", () => expect(priceFor(camp, camp.weeks.slice(0, 2), false)).toBe(600));
-  it("unknown price stays unknown", () => expect(priceFor({ ...camp, pricePerWeek: null }, [], false)).toBeNull());
   it("does not invent a full-summer discount", () => expect(priceFor({ ...camp, weeks: ["2027-06-07", "2027-06-14"] }, [], true)).toBe(600));
 });
 
@@ -35,15 +34,16 @@ describe("directory trust", () => {
     expect([camp?.minAge, camp?.maxAge]).toEqual([5, 15]);
     expect(camp?.offeredWeeks).toEqual([]);
   });
-  it("preserves Shilpi's half-day hours without guessing eligibility or price", () => {
+  it("labels Shilpi's ages and price as estimates", () => {
     const camp = CAMPS.find((c) => c.id === "shilpi-fine-arts-summer-art-camp-middletown");
     expect(camp?.dayType).toBe("half");
     expect(camp?.hours).toBe("9am–1pm, Monday–Friday");
-    expect(camp?.minAge).toBeNull();
-    expect(camp?.pricePerWeek).toBeNull();
+    expect(camp?.ageEstimated).toBe(true);
+    expect(camp?.priceEstimated).toBe(true);
   });
-  it("does not treat unsupported ages as a verified age match", () => {
-    expect(searchCamps({ zip: "19709", age: 7 }).some((c) => c.id === "shilpi-fine-arts-summer-art-camp-middletown")).toBe(false);
+  it("shows YMCA, karate, Tumble Kids and Brilliant Little Minds for 19709 age 7", () => {
+    const ids = searchCamps({ zip: "19709", age: 7 }).map((c) => c.id);
+    for (const id of ["camp-silver-lake-middletown", "frank-family-karate-summer-camp-middletown", "tumble-kids-summer-camp-middletown", "brilliant-little-minds-bunker-hill", "brilliant-little-minds-odessa"]) expect(ids).toContain(id);
   });
   it("never confirms all thirteen weeks through a missing-date default", () => {
     const camp = CAMPS.find((c) => c.id === "spark-summer-camp-middletown-middletown");

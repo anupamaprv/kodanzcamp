@@ -172,7 +172,7 @@ function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: strin
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-navy">{camp.name}</h2>
-            <p className="text-sm text-muted-foreground">{camp.provider} · {camp.minAge !== null && camp.maxAge !== null ? `Ages ${camp.minAge} – ${camp.maxAge}` : "Ages not published"}</p>
+            <p className="text-sm text-muted-foreground">{camp.provider} · Ages {camp.minAge} – {camp.maxAge}{camp.ageEstimated ? " (estimated)" : ""}</p>
             <p className="text-xs text-muted-foreground">{camp.address}</p>
             {camp.note && <p className="mt-1 text-xs font-semibold text-coral">{camp.note}</p>}
           </div>
@@ -195,11 +195,8 @@ function CampCard({ camp, zip, onSave, compact }: { camp: CampResult; zip: strin
           {camp.interests.map((i) => <span key={i} className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold">{i}</span>)}
         </div>
         <div className="mt-auto flex flex-wrap items-end justify-between gap-2 pt-3">
-          {camp.pricePerWeek != null ? (
-            <p><span className="font-display text-2xl font-bold text-navy">${camp.pricePerWeek}</span><span className="text-sm text-muted-foreground"> / week</span></p>
-          ) : (
-            <p className="font-semibold text-navy">2027 price not published</p>
-          )}
+          <p><span className="font-display text-2xl font-bold text-navy">{camp.priceEstimated ? "~" : ""}${camp.pricePerWeek}</span><span className="text-sm text-muted-foreground"> / week{camp.priceEstimated ? " (estimate)" : ""}</span>
+            {camp.synthetic && <span className="ml-2 rounded-full bg-sun-soft px-2 py-0.5 text-xs font-semibold text-navy">Synthetic listing</span>}</p>
           <div className="text-right text-sm text-muted-foreground">
             {camp.website && <a href={camp.website} target="_blank" rel="noreferrer" className="font-semibold text-teal underline">Visit provider</a>}
             {camp.phone && <span className="ml-2">{camp.phone}</span>}
