@@ -18,6 +18,7 @@ const schema = z.object({
   view: z.enum(["list", "map"]).catch("list"),
   sort: z.enum(["distance", "cost"]).catch("distance"),
   radius: z.coerce.number().catch(20),
+  fullDay: z.coerce.boolean().catch(false),
 });
 
 export const Route = createFileRoute("/camps")({
@@ -47,8 +48,8 @@ function CampsPage() {
   });
   const center = geo.data?.ok ? { lat: geo.data.lat, lng: geo.data.lng } : undefined;
   const camps = useMemo(
-    () => searchCamps({ zip: s.zip, age: s.age, interests, radius: s.radius, sort: s.sort, center }),
-    [s.zip, s.age, s.interests, s.radius, s.sort, center?.lat, center?.lng],
+    () => searchCamps({ zip: s.zip, age: s.age, interests, radius: s.radius, sort: s.sort, center, fullDayOnly: s.fullDay }),
+    [s.zip, s.age, s.interests, s.radius, s.sort, s.fullDay, center?.lat, center?.lng],
   );
   const [selected, setSelected] = useState<string>();
   const [saving, setSaving] = useState<CampResult>();
@@ -78,6 +79,10 @@ function CampsPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Segment value={String(s.radius)} options={[["5", "5 mi"], ["10", "10 mi"], ["20", "20 mi"], ["30", "30 mi"]]} onChange={(v) => set({ radius: Number(v) })} />
+            <label className="flex cursor-pointer items-center gap-2 rounded-xl border bg-card px-3 py-1.5 text-sm font-semibold text-navy">
+              <input type="checkbox" className="h-4 w-4 accent-teal" checked={s.fullDay} onChange={(e) => set({ fullDay: e.target.checked })} />
+              Hide half-day camps
+            </label>
             <Segment value={s.sort} options={[["distance", "Nearest"], ["cost", "Lowest cost"]]} onChange={(v) => set({ sort: v as "distance" | "cost" })} />
             <Segment value={s.view} options={[["list", <List key="l" className="h-4 w-4" />], ["map", <MapIcon key="m" className="h-4 w-4" />]]} onChange={(v) => set({ view: v as "list" | "map" })} labels={["List view", "Map view"]} />
           </div>
@@ -138,6 +143,8 @@ function CampCard({ camp, onSave, compact }: { camp: CampResult; onSave: () => v
           <div>
             <h2 className="text-lg font-bold text-navy">{camp.name}</h2>
             <p className="text-sm text-muted-foreground">{camp.provider} · Ages {camp.minAge} – {camp.maxAge}</p>
+            <p className="text-xs text-muted-foreground">{camp.address}</p>
+            {camp.note && <p className="mt-1 text-xs font-semibold text-coral">{camp.note}</p>}
           </div>
           <div className="flex gap-2">
           <FavoriteButton camp={camp} />
@@ -149,14 +156,23 @@ function CampCard({ camp, onSave, compact }: { camp: CampResult; onSave: () => v
         </div>
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
           <span><MapPin className="mr-1 inline h-4 w-4 text-teal" />{camp.miles} mi · {camp.minutes} min</span>
-          <span><Clock className="mr-1 inline h-4 w-4 text-teal" />{camp.hours}</span>
+          {camp.hours && <span><Clock className="mr-1 inline h-4 w-4 text-teal" />{camp.hours}</span>}
+          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${camp.dayType === "full" ? "bg-teal-soft text-navy" : "bg-sun-soft text-navy"}`}>{camp.dayType === "full" ? "Full day" : "Half day"}</span>
         </div>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {camp.interests.map((i) => <span key={i} className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold">{i}</span>)}
         </div>
         <div className="mt-auto flex flex-wrap items-end justify-between gap-2 pt-3">
-          <p><span className="font-display text-2xl font-bold text-navy">${camp.pricePerWeek}</span><span className="text-sm text-muted-foreground"> / week</span></p>
-          <p className="text-sm text-muted-foreground">Full summer: <span className="font-semibold text-navy">${camp.fullSummerPrice.toLocaleString()}</span> · {camp.weeks.length} weeks</p>
+          {camp.pricePerWeek != null ? (
+            <p><span className="font-display text-2xl font-bold text-navy">${camp.pricePerWeek}</span><span className="text-sm text-muted-foreground"> / week</span></p>
+          ) : (
+            <p className="font-semibold text-navy">Price: contact provider</p>
+          )}
+          <div className="text-right text-sm text-muted-foreground">
+            {camp.fullSummerPrice != null && <p>Full summer est.: <span className="font-semibold text-navy">${camp.fullSummerPrice.toLocaleString()}</span> · {camp.weeks.length} weeks</p>}
+            {camp.website && <a href={camp.website} target="_blank" rel="noreferrer" className="font-semibold text-teal underline">Visit provider</a>}
+            {camp.phone && <span className="ml-2">{camp.phone}</span>}
+          </div>
         </div>
       </div>
     </article>

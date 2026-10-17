@@ -92,7 +92,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
         <div className="mt-5 flex items-center justify-between border-t pt-4">
           <div>
             <p className="text-xs text-muted-foreground">{chosen.length} week{chosen.length === 1 ? "" : "s"} · estimated</p>
-            <p className="font-display text-2xl font-bold text-navy">${total.toLocaleString()}</p>
+            <p className="font-display text-2xl font-bold text-navy">{total != null ? `$${total.toLocaleString()}` : "Ask provider"}</p>
             {mode === "full" && <p className="text-xs text-teal">Full-summer rate</p>}
           </div>
           <div className="flex flex-col gap-2">
