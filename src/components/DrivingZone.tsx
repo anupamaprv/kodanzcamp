@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Car, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { geocodeZip } from "@/lib/geocode.functions";
 import { locateCamps, type CampResult } from "@/lib/camps";
 import { loadMaps } from "@/components/CampMap";
-import type { Favorite, Kid, Plan } from "@/lib/family";
+import { useHomeZip, usePlaceMutations, type Favorite, type Kid, type Plan } from "@/lib/family";
+import { useMapPlaces, type MapPlace } from "@/lib/places";
 
 /** Map-only colors (Google Maps needs raw values); legend reuses them. */
 const KID_COLORS = ["#0e8a8a", "#e8775a", "#7c4dbc", "#d9a400", "#16324a"];
@@ -20,26 +21,13 @@ function angleBetween(a: number, b: number) {
 }
 
 export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Plan[]; favorites: Favorite[] }) {
-  const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [zipInput, setZipInput] = useState("");
 
-  const household = useQuery({
-    queryKey: ["household"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("households").select("home_zip").maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
-  const zip = household.data?.home_zip;
-  const saveZip = useMutation({
-    mutationFn: async (home_zip: string) => {
-      const { error } = await supabase.from("households").upsert({ home_zip }, { onConflict: "user_id" });
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["household"] }),
-  });
+  const household = useHomeZip(true);
+  const zip = household.data ?? undefined;
+  const { saveHome: saveZip } = usePlaceMutations();
+  const offices = useMapPlaces(open).filter((p) => p.kind === "office");
 
   const geo = useQuery({
     queryKey: ["geocode", zip],
@@ -101,7 +89,7 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
 
       {open && zip && (
         <div className="mt-4 grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-          {center ? <ZoneMap center={center} groups={perKid} /> : (
+          {center ? <ZoneMap center={center} groups={perKid} offices={offices} /> : (
             <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border text-sm text-muted-foreground">
               {geo.data && !geo.data.ok ? geo.data.error : "Loading map…"}
             </div>
@@ -136,7 +124,7 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
   );
 }
 
-function ZoneMap({ center, groups }: { center: { lat: number; lng: number }; groups: { kid: Kid; color: string; camps: CampResult[] }[] }) {
+function ZoneMap({ center, groups, offices }: { center: { lat: number; lng: number }; offices: MapPlace[]; groups: { kid: Kid; color: string; camps: CampResult[] }[] }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<any>(null);
   const overlays = useRef<any[]>([]);
@@ -162,6 +150,10 @@ function ZoneMap({ center, groups }: { center: { lat: number; lng: number }; gro
     const m = map.current;
     const bounds = new g.maps.LatLngBounds(center);
     overlays.current.push(new g.maps.Marker({ map: m, position: center, title: "Home", label: { text: "⌂", color: "#ffffff", fontSize: "16px" }, zIndex: 20 }));
+    offices.forEach((o) => {
+      bounds.extend(o);
+      overlays.current.push(new g.maps.Marker({ map: m, position: { lat: o.lat, lng: o.lng }, title: `${o.label} (${o.zip})`, label: { text: "W", color: "#ffffff", fontWeight: "700" }, icon: { path: g.maps.SymbolPath.BACKWARD_CLOSED_ARROW, scale: 7, fillColor: "#16324a", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 2, labelOrigin: new g.maps.Point(0, -3) }, zIndex: 15 }));
+    });
     groups.forEach((grp) => grp.camps.forEach((c) => {
       const pos = { lat: c.lat, lng: c.lng };
       bounds.extend(pos);
@@ -174,9 +166,9 @@ function ZoneMap({ center, groups }: { center: { lat: number; lng: number }; gro
         }),
       );
     }));
-    if (groups.some((x) => x.camps.length)) m.fitBounds(bounds, 60);
+    if (offices.length || groups.some((x) => x.camps.length)) m.fitBounds(bounds, 60);
     else m.setCenter(center);
-  }, [ready, groups, center.lat, center.lng]);
+  }, [ready, groups, offices, center.lat, center.lng]);
 
   return (
     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border bg-map-land">

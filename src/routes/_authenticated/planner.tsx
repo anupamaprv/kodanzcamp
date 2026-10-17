@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 import { DrivingZone } from "@/components/DrivingZone";
+import { SavedPlaces } from "@/components/SavedPlaces";
 import { CAMPS, SUMMER_WEEKS, weekLabel } from "@/lib/camps";
 import { useActivities, useFamilyMutations, useFavorites, useKids, usePlans } from "@/lib/family";
 
@@ -150,6 +151,8 @@ function Planner() {
           )}
           <p className="mt-2 text-xs text-muted-foreground">Planned, not booked. Use the calendar icon on any camp to add weeks here. Registration happens with the provider.</p>
         </section>
+
+        <SavedPlaces />
 
         <DrivingZone kids={kidList} plans={planList} favorites={favs.data ?? []} />
 
