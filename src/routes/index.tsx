@@ -2,8 +2,12 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useSession } from "@/hooks/use-session";
 import { useHomeZip } from "@/lib/family";
-import { MapPin, Search, CalendarPlus, Map, DollarSign, Users, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight, Users } from "lucide-react";
 import hero from "@/assets/hero.jpg";
+import featureMatched from "@/assets/feature-matched.jpg";
+import featureMap from "@/assets/feature-map.jpg";
+import featureCosts from "@/assets/feature-costs.jpg";
+import featureCalendar from "@/assets/feature-calendar.jpg";
 import { SiteHeader } from "@/components/Logo";
 import { INTERESTS } from "@/lib/camps";
 
@@ -22,10 +26,10 @@ export const Route = createFileRoute("/")({
 });
 
 const FEATURES = [
-  { icon: Search, title: "Matched camps", text: "Filtered to your child's age and interests." },
-  { icon: Map, title: "List or map", text: "Compare camp locations and driving options." },
-  { icon: DollarSign, title: "Compare costs", text: "See published prices and pending 2027 details." },
-  { icon: CalendarPlus, title: "Save to calendar", text: "Pick a few weeks or the whole summer." },
+  { img: featureMatched, title: "Matched camps", text: "Filtered to your child's age and interests." },
+  { img: featureMap, title: "List or map", text: "Compare camp locations and driving options." },
+  { img: featureCosts, title: "Compare costs", text: "See published prices and pending 2027 details." },
+  { img: featureCalendar, title: "Save to calendar", text: "Pick a few weeks or the whole summer." },
 ];
 
 function Home() {
@@ -125,11 +129,13 @@ function Home() {
             <p className="eyebrow">What's on Kodanz</p>
             <h2 className="mt-2 text-3xl font-bold text-navy md:text-4xl">Everything you need to plan summer.</h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {FEATURES.map(({ icon: Icon, title, text }) => (
-                <div key={title} className="rounded-2xl border bg-card p-5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-soft text-teal"><Icon className="h-5 w-5" /></div>
-                  <h3 className="mt-4 font-semibold text-navy">{title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+              {FEATURES.map(({ img, title, text }) => (
+                <div key={title} className="overflow-hidden rounded-2xl border bg-card shadow-soft">
+                  <img src={img} alt="" loading="lazy" width={768} height={768} className="aspect-square w-full object-cover" />
+                  <div className="p-5">
+                    <h3 className="font-semibold text-navy">{title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+                  </div>
                 </div>
               ))}
             </div>
