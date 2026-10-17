@@ -8,7 +8,7 @@ describe("camp search", () => {
   });
   it("sorts by cost ascending", () => {
     const r = searchCamps({ zip: "19709", sort: "cost" });
-    expect(r[0].pricePerWeek).toBe(240);
+    expect(r[0]?.pricePerWeek).toBe(240);
   });
   it("filters by age", () => {
     expect(searchCamps({ zip: "19709", age: 15 }).every((c) => c.maxAge >= 15)).toBe(true);

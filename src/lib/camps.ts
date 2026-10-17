@@ -70,7 +70,7 @@ export type SortKey = "distance" | "cost";
 
 export function searchCamps(opts: {
   zip: string;
-  age?: number;
+  age?: number | undefined;
   interests?: string[];
   radius?: number;
   sort?: SortKey;

@@ -5,7 +5,7 @@ const PIN = ["text-coral", "text-teal", "text-lilac", "text-sun", "text-navy"];
 
 /** Illustrated commute map: pins placed by offset (miles) from home. */
 export function CampMap({ camps, radius, selected, onSelect }: {
-  camps: CampResult[]; radius: number; selected?: string; onSelect: (id: string) => void;
+  camps: CampResult[]; radius: number; selected?: string | undefined; onSelect: (id: string) => void;
 }) {
   const scale = 45 / Math.max(radius, 10); // % per mile
   const pos = (v: number) => 50 + v * scale;
