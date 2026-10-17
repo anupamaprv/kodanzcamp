@@ -68,9 +68,11 @@ export function CampMap({ camps, radius, center, selected, onSelect, places = []
       map: m, center, radius: radius * MILE_M, strokeColor: "#0e8a8a", strokeOpacity: 0.5,
       strokeWeight: 1, fillColor: "#0e8a8a", fillOpacity: 0.06, clickable: false,
     });
-    const home = new g.maps.Marker({ map: m, position: center, title: "Home", label: { text: "⌂", color: "#ffffff", fontSize: "16px" } });
+    const homePlace = places.find((p) => p.kind === "home");
+    const home = new g.maps.Marker({ map: m, position: homePlace ?? center, title: homePlace ? "Home ZIP" : "Search ZIP", label: { text: "⌂", color: "#ffffff", fontSize: "16px" } });
     overlays.current.push(circle, home);
     const bounds = circle.getBounds(); // undefined until the map has a projection
+    if (homePlace) bounds?.extend(homePlace);
     places.filter((p) => p.kind === "office").forEach((p) => {
       bounds?.extend({ lat: p.lat, lng: p.lng });
       overlays.current.push(new g.maps.Marker({
@@ -80,7 +82,7 @@ export function CampMap({ camps, radius, center, selected, onSelect, places = []
     });
     camps.forEach((c) => {
       const mk = new g.maps.Marker({
-        map: m, position: { lat: c.lat, lng: c.lng }, title: `${c.name} · ${c.pricePerWeek != null ? `$${c.pricePerWeek}/wk` : 'price n/a'} · ${c.minutes} min`,
+        map: m, position: { lat: c.lat, lng: c.lng }, title: `${c.name} · ${c.pricePerWeek != null ? `$${c.pricePerWeek}/wk` : '2027 price not published'}`,
         label: { text: c.pricePerWeek != null ? `$${c.pricePerWeek}` : '$?', fontWeight: "700", fontSize: "11px", color: "#ffffff" },
         icon: {
           path: "M -22 -12 h 44 a 6 6 0 0 1 6 6 v 12 a 6 6 0 0 1 -6 6 h -16 l -6 7 l -6 -7 h -16 a 6 6 0 0 1 -6 -6 v -12 a 6 6 0 0 1 6 -6 z",

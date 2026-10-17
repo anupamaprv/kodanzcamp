@@ -16,6 +16,7 @@ import zoo from "@/assets/camp-zoo.jpg";
 import daycamp from "@/assets/camp-daycamp.jpg";
 import gym from "@/assets/camp-gym.jpg";
 import raw from "@/data/camps.json";
+import { CAMP_EVIDENCE, FLYER_IDS } from "@/lib/camp-evidence";
 
 export const INTERESTS = [
   "STEM", "Sports", "Arts", "Nature", "Dance", "Coding", "Music", "Swim", "Martial Arts", "Academic",
@@ -39,10 +40,10 @@ export type RawCamp = {
   website?: string | null;
   phone?: string | null;
   interests: string[];
-  minAge: number;
-  maxAge: number;
+  minAge: number | null;
+  maxAge: number | null;
   pricePerWeek: number | null;
-  dayType: "full" | "half";
+  dayType: "full" | "half" | "unknown";
   hours: string | null;
   weeks?: string[] | null;
   note?: string | null;
@@ -56,6 +57,12 @@ export type Camp = Omit<RawCamp, "weeks" | "interests"> & {
   weeks: string[];
   fullSummerPrice: number | null;
   image: string;
+  sourceUrl: string | null;
+  sourceCheckedAt: string | null;
+  availability: "confirmed" | "pending" | "assumed";
+  publishedPriceYear: number | null;
+  detailsYear: number | null;
+  offeredWeeks: string[];
 };
 
 const IMAGES: Record<string, string[]> = {
@@ -73,19 +80,35 @@ function imageFor(c: RawCamp, i: number) {
   if (/gymnast|tumbl|ninja/.test(n)) return gym;
   if (/tennis/.test(n)) return tennis;
   const pool = IMAGES[c.interests[0] ?? "Sports"] ?? [sports];
-  return pool[i % pool.length]!;
+  return pool[i % pool.length] ?? sports;
 }
 
-/** Full-summer package: 10% off the weekly rate across every offered week. */
+/** Tentative planning weeks are separate from provider-confirmed availability. */
 export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
-  const weeks = c.weeks?.length ? c.weeks : SUMMER_WEEKS;
+  const evidence = CAMP_EVIDENCE[c.id];
+  const flyer = FLYER_IDS.has(c.id);
+  const artFlyer = c.id === "summer-art-camp-july-middletown";
+  const shilpi = c.id === "shilpi-fine-arts-summer-art-camp-middletown";
+  const offeredWeeks = evidence?.confirmed2027 ? evidence.weeks ?? [] : [];
+  const weeks = offeredWeeks.length ? offeredWeeks : artFlyer && c.weeks?.length ? c.weeks : SUMMER_WEEKS;
   const interests = c.interests.filter((x): x is Interest => (INTERESTS as readonly string[]).includes(x));
   return {
     ...c,
+    minAge: evidence?.minAge ?? (artFlyer ? 5 : null),
+    maxAge: evidence?.maxAge ?? (artFlyer ? 15 : null),
+    pricePerWeek: evidence?.confirmed2027 ? evidence.pricePerWeek ?? null : artFlyer ? 100 : null,
+    hours: evidence?.hours ?? (artFlyer ? "11am–1pm" : shilpi ? "9am–1pm, Monday–Friday" : null),
+    dayType: evidence?.dayType ?? (artFlyer || shilpi ? "half" : "unknown"),
     interests,
     weeks,
+    offeredWeeks,
+    availability: evidence?.confirmed2027 ? "confirmed" : flyer ? "assumed" : "pending",
+    sourceUrl: evidence?.sourceUrl ?? c.website ?? null,
+    sourceCheckedAt: evidence?.checkedAt ?? null,
+    publishedPriceYear: evidence?.priceYear ?? null,
+    detailsYear: evidence?.detailsYear ?? null,
     image: imageFor(c, i),
-    fullSummerPrice: c.pricePerWeek == null ? null : Math.round(c.pricePerWeek * weeks.length * 0.9),
+    fullSummerPrice: null,
   };
 });
 
@@ -121,7 +144,7 @@ export function searchCamps(opts: {
   const price = (c: Camp) => c.pricePerWeek ?? Number.POSITIVE_INFINITY;
   return locateCamps(zip, center)
     .filter((c) => c.miles <= radius)
-    .filter((c) => (age ? age >= c.minAge && age <= c.maxAge : true))
+    .filter((c) => (age ? c.minAge !== null && c.maxAge !== null && age >= c.minAge && age <= c.maxAge : true))
     .filter((c) => (interests.length ? c.interests.some((i) => interests.includes(i)) : true))
     .filter((c) => (fullDayOnly ? c.dayType === "full" : true))
     .sort((a, b) =>
@@ -134,7 +157,7 @@ export function searchCamps(opts: {
 /** Price for selected weeks; null when the camp hasn't published a price. */
 export function priceFor(camp: Camp, weeks: string[], fullSummer: boolean) {
   if (camp.pricePerWeek == null) return null;
-  if (fullSummer) return camp.fullSummerPrice;
+  if (fullSummer) return camp.pricePerWeek * camp.weeks.length;
   return camp.pricePerWeek * weeks.length;
 }
 

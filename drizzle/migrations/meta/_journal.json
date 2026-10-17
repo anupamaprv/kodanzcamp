@@ -36,6 +36,13 @@
       "when": 1792237309956,
       "tag": "0004_private_planner_sharing",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792238711935,
+      "tag": "0005_camp_review_and_private_commutes",
+      "breakpoints": true
     }
   ]
 }

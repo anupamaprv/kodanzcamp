@@ -49,6 +49,84 @@ export type Database = {
           },
         ]
       }
+      camp_submissions: {
+        Row: {
+          camp_id: string | null
+          created_at: string
+          details: string
+          id: string
+          kind: string
+          name: string
+          source_url: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          camp_id?: string | null
+          created_at?: string
+          details: string
+          id?: string
+          kind: string
+          name: string
+          source_url: string
+          status?: string
+          user_id?: string
+        }
+        Update: {
+          camp_id?: string | null
+          created_at?: string
+          details?: string
+          id?: string
+          kind?: string
+          name?: string
+          source_url?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      commute_addresses: {
+        Row: {
+          address: string
+          place_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          place_key: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          address?: string
+          place_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      commute_route_cache: {
+        Row: {
+          cache_key: string
+          expires_at: string
+          result: Json
+          user_id: string
+        }
+        Insert: {
+          cache_key: string
+          expires_at: string
+          result: Json
+          user_id?: string
+        }
+        Update: {
+          cache_key?: string
+          expires_at?: string
+          result?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           camp_id: string
