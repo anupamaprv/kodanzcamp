@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      activities: {
+        Row: {
+          created_at: string
+          id: string
+          kid_id: string | null
+          label: string
+          user_id: string
+          week: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kid_id?: string | null
+          label: string
+          user_id?: string
+          week: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kid_id?: string | null
+          label?: string
+          user_id?: string
+          week?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_kid_id_fkey"
+            columns: ["kid_id"]
+            isOneToOne: false
+            referencedRelation: "kids"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       favorites: {
         Row: {
           camp_id: string
