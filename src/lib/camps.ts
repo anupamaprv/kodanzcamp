@@ -101,7 +101,7 @@ function estimatePrice(c: RawCamp, dayType: string) {
 /** Tentative planning weeks are separate from provider-confirmed availability. */
 export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
   const evidence = CAMP_EVIDENCE[c.id];
-  const direct: { minAge?: number; maxAge?: number; pricePerWeek?: number } = c.everywhere ? { minAge: c.minAge ?? undefined, maxAge: c.maxAge ?? undefined, pricePerWeek: c.pricePerWeek ?? undefined } : {};
+  const direct: { minAge?: number | undefined; maxAge?: number | undefined; pricePerWeek?: number | undefined } = c.everywhere ? { minAge: c.minAge ?? undefined, maxAge: c.maxAge ?? undefined, pricePerWeek: c.pricePerWeek ?? undefined } : {};
   const flyer = FLYER_IDS.has(c.id);
   const artFlyer = c.id === "summer-art-camp-july-middletown";
   const shilpi = c.id === "shilpi-fine-arts-summer-art-camp-middletown";
