@@ -3025,5 +3025,49 @@
   "lat": 41.9088,
   "lng": -87.6796,
   "estimated": true
+ },
+ {
+  "id": "picasso-kids-arts-club",
+  "name": "Picasso Kids Arts Club",
+  "provider": "Picasso Kids",
+  "city": "Your area",
+  "state": "",
+  "address": "Near you",
+  "website": null,
+  "interests": [
+   "Arts"
+  ],
+  "minAge": null,
+  "maxAge": null,
+  "pricePerWeek": 200,
+  "dayType": "full",
+  "hours": "10am–3pm",
+  "note": "Painting, pottery and crafts",
+  "estimated": true,
+  "everywhere": true,
+  "lat": 0,
+  "lng": 0
+ },
+ {
+  "id": "ninja-kids-sports-club",
+  "name": "Ninja Kids Sports Club",
+  "provider": "Ninja Kids",
+  "city": "Your area",
+  "state": "",
+  "address": "Near you",
+  "website": null,
+  "interests": [
+   "Sports"
+  ],
+  "minAge": 3,
+  "maxAge": 16,
+  "pricePerWeek": null,
+  "dayType": "full",
+  "hours": null,
+  "note": "Tennis, soccer, running, calisthenics and rock climbing — coached at beginner, intermediate or expert level",
+  "estimated": true,
+  "everywhere": true,
+  "lat": 0,
+  "lng": 0
  }
 ]
