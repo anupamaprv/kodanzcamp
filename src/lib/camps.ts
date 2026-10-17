@@ -9,7 +9,8 @@ export type Interest = (typeof INTERESTS)[number];
 /** Summer 2027 weeks, Mondays. */
 export const SUMMER_WEEKS = [
   "2027-06-07", "2027-06-14", "2027-06-21", "2027-06-28", "2027-07-05", "2027-07-12",
-  "2027-07-19", "2027-07-26", "2027-08-02", "2027-08-09", "2027-08-16",
+  "2027-07-19", "2027-07-26", "2027-08-02", "2027-08-09", "2027-08-16", "2027-08-23",
+  "2027-08-30",
 ];
 
 export type Camp = {
@@ -53,16 +54,19 @@ function zipSeed(zip: string) {
   return h;
 }
 
-export type CampResult = Camp & { x: number; y: number; miles: number; minutes: number };
+export type LatLng = { lat: number; lng: number };
+export type CampResult = Camp & { x: number; y: number; miles: number; minutes: number; lat: number; lng: number };
 
-export function locateCamps(zip: string): CampResult[] {
+export function locateCamps(zip: string, center: LatLng = { lat: 39.5, lng: -75.7 }): CampResult[] {
   const s = zipSeed(zip || "00000");
   return CAMPS.map((c, i) => {
     const j = ((s * (i + 3)) % 40) / 20 - 1; // -1..1
     const x = c.dx + j * 1.5;
     const y = c.dy - j * 1.2;
     const miles = Math.round(Math.hypot(x, y) * 10) / 10;
-    return { ...c, x, y, miles, minutes: Math.round(miles * 1.5 + 4) };
+    const lat = center.lat + y / 69;
+    const lng = center.lng + x / (69 * Math.cos((center.lat * Math.PI) / 180));
+    return { ...c, x, y, lat, lng, miles, minutes: Math.round(miles * 1.5 + 4) };
   });
 }
 
@@ -74,9 +78,10 @@ export function searchCamps(opts: {
   interests?: string[];
   radius?: number;
   sort?: SortKey;
+  center?: LatLng | undefined;
 }): CampResult[] {
-  const { zip, age, interests = [], radius = 30, sort = "distance" } = opts;
-  return locateCamps(zip)
+  const { center, zip, age, interests = [], radius = 30, sort = "distance" } = opts;
+  return locateCamps(zip, center)
     .filter((c) => c.miles <= radius)
     .filter((c) => (age ? age >= c.minAge && age <= c.maxAge : true))
     .filter((c) => (interests.length ? c.interests.some((i) => interests.includes(i)) : true))
