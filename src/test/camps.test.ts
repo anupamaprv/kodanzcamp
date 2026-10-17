@@ -16,7 +16,7 @@ describe("camp search", () => {
 });
 
 describe("pricing", () => {
-  const camp = CAMPS[0];
+  const camp = CAMPS[0]!;
   it("partial weeks = weekly price x weeks", () => expect(priceFor(camp, camp.weeks.slice(0, 2), false)).toBe(620));
   it("full summer uses package price", () => expect(priceFor(camp, [], true)).toBe(2990));
 });
