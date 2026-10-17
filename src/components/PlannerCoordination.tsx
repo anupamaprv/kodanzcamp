@@ -10,7 +10,7 @@ import { usePlannerSharing } from "@/lib/planner-sharing-data";
 import { buildPlannerIcs, buildPlannerPdf, deliverCalendar } from "@/lib/planner-export";
 import { ScheduleDialog } from "@/components/ScheduleDialog";
 
-type Props = { kids: Kid[]; plans: Plan[]; activities: Activity[]; invite?: string };
+type Props = { kids: Kid[]; plans: Plan[]; activities: Activity[]; invite?: string | undefined };
 
 function ChildSelection({ kids, selected, onChange }: { kids: Kid[]; selected: string[]; onChange: (ids: string[]) => void }) {
   return <div className="flex flex-wrap gap-x-5 gap-y-2">{kids.map((kid) => <label key={kid.id} className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-navy">
