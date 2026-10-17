@@ -23,8 +23,8 @@ export const Route = createFileRoute("/")({
 
 const FEATURES = [
   { icon: Search, title: "Matched camps", text: "Filtered to your child's age and interests." },
-  { icon: Map, title: "List or map", text: "See distance and drive time from your ZIP." },
-  { icon: DollarSign, title: "Compare costs", text: "Sort by price per week or full summer." },
+  { icon: Map, title: "List or map", text: "Compare camp locations and driving options." },
+  { icon: DollarSign, title: "Compare costs", text: "See published prices and pending 2027 details." },
   { icon: CalendarPlus, title: "Save to calendar", text: "Pick a few weeks or the whole summer." },
 ];
 
@@ -36,7 +36,7 @@ function Home() {
   const [error, setError] = useState("");
   const { user } = useSession();
   const homeZip = useHomeZip(!!user);
-  useEffect(() => { if (homeZip.data) setZip((z) => z || homeZip.data!); }, [homeZip.data]);
+  useEffect(() => { const saved = homeZip.data; if (saved) setZip((z) => z || saved); }, [homeZip.data]);
 
   const toggle = (i: string) =>
     setInterests((cur) => (cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i]));

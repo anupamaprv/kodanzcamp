@@ -13,6 +13,7 @@ export function CampTrust({ camp }: { camp: Camp }) {
     <div className="flex flex-wrap gap-2"><span className={camp.sourceCheckedAt ? "font-semibold text-teal" : "text-muted-foreground"}>{camp.sourceCheckedAt ? "Official source checked" : camp.availability === "assumed" ? "Community flyer" : "Source not yet verified"}</span>
       <span className="font-semibold text-coral">{camp.availability === "confirmed" ? "2027 confirmed" : camp.availability === "assumed" ? "2027 assumed from flyer" : "2027 dates pending"}</span></div>
     {camp.sourceCheckedAt && <p className="text-muted-foreground">Last checked {camp.sourceCheckedAt}{camp.publishedPriceYear ? ` · price published for ${camp.publishedPriceYear}, not confirmed for 2027` : ""}</p>}
+    {camp.sourceCheckedAt && camp.availability !== "confirmed" && <p className="text-muted-foreground">{camp.detailsYear ? `Ages and hours, where shown, are from ${camp.detailsYear}.` : "Source does not confirm 2027 ages or hours."} Confirm session-specific eligibility with the provider.</p>}
     {camp.sourceUrl && <a className="font-semibold text-teal underline" href={camp.sourceUrl} target="_blank" rel="noopener noreferrer">Official source</a>}
     <CampSubmission camp={camp} />
   </div>;
@@ -36,7 +37,7 @@ export function CampSubmission({ camp }: { camp?: Camp }) {
         e.preventDefault();
         try { const parsed = new URL(url); if (parsed.protocol !== "https:") throw new Error(); } catch { toast.error("Enter a valid https source link"); return; }
         setBusy(true);
-        try { const { error } = await supabase.from("camp_submissions").insert({ kind: camp ? "correction" : "provider", camp_id: camp?.id, name: name.trim(), source_url: url.trim(), details: details.trim() }); if (error) throw error; setSubmitted(true); }
+        try { const { error } = await supabase.from("camp_submissions").insert({ kind: camp ? "correction" : "provider", camp_id: camp?.id ?? null, name: name.trim(), source_url: url.trim(), details: details.trim() }); if (error) throw error; setSubmitted(true); }
         catch { toast.error("Could not send the submission. Please try again."); } finally { setBusy(false); }
       }}>
         <label className="block text-sm font-semibold">Camp name<input aria-label="Camp name" required maxLength={160} value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-md border bg-background p-2" /></label>

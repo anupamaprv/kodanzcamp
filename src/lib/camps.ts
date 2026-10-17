@@ -61,6 +61,7 @@ export type Camp = Omit<RawCamp, "weeks" | "interests"> & {
   sourceCheckedAt: string | null;
   availability: "confirmed" | "pending" | "assumed";
   publishedPriceYear: number | null;
+  detailsYear: number | null;
   offeredWeeks: string[];
 };
 
@@ -105,6 +106,7 @@ export const CAMPS: Camp[] = (raw as RawCamp[]).map((c, i) => {
     sourceUrl: evidence?.sourceUrl ?? c.website ?? null,
     sourceCheckedAt: evidence?.checkedAt ?? null,
     publishedPriceYear: evidence?.priceYear ?? null,
+    detailsYear: evidence?.detailsYear ?? null,
     image: imageFor(c, i),
     fullSummerPrice: null,
   };
