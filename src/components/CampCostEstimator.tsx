@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Calculator, RotateCcw, CalendarPlus, ExternalLink } from "lucide-react";
+import { Calculator, ChevronDown, RotateCcw, CalendarPlus, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScheduleDialog } from "@/components/ScheduleDialog";
 import { CAMPS, SUMMER_WEEKS, weekLabel, type Camp } from "@/lib/camps";
