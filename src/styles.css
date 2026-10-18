@@ -85,6 +85,7 @@
 
   --shadow-soft: 0 10px 30px -12px color-mix(in oklab, var(--navy) 25%, transparent);
   --shadow-pin: 0 6px 14px -4px color-mix(in oklab, var(--navy) 35%, transparent);
+  --explore-photo-shade: linear-gradient(90deg, color-mix(in oklab, var(--navy) 85%, transparent), color-mix(in oklab, var(--navy) 35%, transparent) 55%, transparent);
 }
 
 @layer base {
@@ -99,6 +100,11 @@
 
 @utility shadow-soft { box-shadow: var(--shadow-soft); }
 @utility shadow-pin { box-shadow: var(--shadow-pin); }
+.explore-photo-shade { background: var(--explore-photo-shade); }
+.explore-page :is(h1, h2, h3, h4) { letter-spacing: 0; }
+@media (max-width: 640px) {
+  .explore-photo-shade { background: color-mix(in oklab, var(--navy) 68%, transparent); }
+}
 @utility eyebrow {
   font-family: var(--font-display);
   font-size: 0.8rem;
