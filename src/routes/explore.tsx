@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Search, MapPin, CalendarDays, Users, Heart, BriefcaseBusiness, Route as RouteIcon, Plane, Download, Share2, ShieldCheck, SlidersHorizontal, Check, ExternalLink, Mail, CircleDollarSign, Sparkles } from "lucide-react";
+import { ArrowRight, Search, MapPin, CalendarDays, CalendarCheck, Users, Heart, BriefcaseBusiness, Route as RouteIcon, Plane, Download, Share2, ShieldCheck, SlidersHorizontal, Check, ExternalLink, Mail, CircleDollarSign, Wallet, Sparkles } from "lucide-react";
 import { SiteHeader, Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import summer from "@/assets/explore-summer.jpg";
@@ -28,6 +28,7 @@ export const Route = createFileRoute("/explore")({
 
 const extras = [
   { icon: Heart, title: "A shortlist worth saving", text: "Favorite camps for your children and return to the ones your family loves.", color: "bg-coral-soft text-coral" },
+  { icon: CircleDollarSign, title: "A budget you can see", text: "Compare favorite camps by weekly cost and estimate your family’s summer total with what-if picks—nothing is saved or charged.", color: "bg-sun-soft text-navy" },
   { icon: Plane, title: "Make room for life", text: "Add family trips and personal activities for everyone or just one child, with their own color in the planner.", color: "bg-lilac-soft text-lilac" },
   { icon: Download, title: "Take summer with you", text: "Export a full-summer PDF for selected children, side-by-side or on separate pages. Download calendar invites with available camp website links.", color: "bg-teal-soft text-teal" },
   { icon: Share2, title: "Send a little inspiration", text: "Share public camp links by text, email, WhatsApp, Facebook or X, without sharing your family’s plans.", color: "bg-sun-soft text-navy" },
@@ -107,8 +108,10 @@ function Explore() {
             <p className="mt-4 leading-relaxed text-muted-foreground">Plan the summer of 2027, June 7–September 3. One week or the whole season, one child or the whole crew.</p>
             <ul className="mt-6 space-y-5">
               <FeatureLine icon={Users} title="A plan for every child" text="Add multiple children and assign camp weeks to one or more of them." />
+              <FeatureLine icon={CalendarCheck} title="See what's already booked" text="Weeks you've filled show an indicator right in the camp calendar—other camps, personal activities, and friend matches—so you can compare before committing. Planning entries are easy to remove." />
               <FeatureLine icon={CalendarDays} title="Spot the gaps before summer starts" text="See camps, open weeks, and scheduling conflicts in a week-by-week calendar." />
               <FeatureLine icon={Plane} title="Vacations count, too" text="Give family trips and personal activities their own color, so those weeks don’t need camps." />
+              <FeatureLine icon={Wallet} title="Estimate the summer budget" text="Compare your favorite camps side by side, then estimate weekly costs per child and for the whole family. Try what-if picks and rate tweaks without changing your saved plans." />
             </ul>
             <Button asChild variant="link" className="mt-5 px-0 text-teal"><Link to="/planner">Open your summer planner <ArrowRight /></Link></Button>
           </div>
