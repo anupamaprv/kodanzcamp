@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { CalendarPlus, CalendarCheck, Star, X } from "lucide-react";
+import { CalendarPlus, CalendarCheck, Plane, Star, X } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "@/hooks/use-session";
-import { useFamilyMutations, useKids, usePlans } from "@/lib/family";
+import { useActivities, useFamilyMutations, useKids, usePlans } from "@/lib/family";
 import { AuthPrompt } from "@/components/AuthPrompt";
-import { buildIcs, priceFor, weekLabel, type Camp } from "@/lib/camps";
+import { buildIcs, CAMPS, priceFor, weekLabel, type Camp } from "@/lib/camps";
 import { Button } from "@/components/ui/button";
 import { friendsForCampWeek } from "@/lib/planner-sharing";
 import { useSharedPlanners } from "@/lib/planner-sharing-data";
+
+const campById = Object.fromEntries(CAMPS.map((c) => [c.id, c]));
 
 export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => void }) {
   const [mode, setMode] = useState<"partial" | "full">("partial");
@@ -18,6 +20,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
   const shared = useSharedPlanners(!!user);
   const kids = useKids(!!user);
   const plans = usePlans(!!user);
+  const acts = useActivities(!!user);
   const { addPlans } = useFamilyMutations();
   const [kidIds, setKidIds] = useState<string[] | null>(null);
   const chosenKids = kidIds ?? (kids.data ?? []).map((k) => k.id);
@@ -68,18 +71,29 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
           {camp.weeks.map((w) => {
             const on = mode === "full" || weeks.includes(w);
             const friends = user ? friendsForCampWeek(shared.data ?? [], camp.id, w) : [];
-            const bookedKids = (plans.data ?? [])
-              .filter((p) => p.camp_id === camp.id && p.week === w)
-              .map((p) => (kids.data ?? []).find((k) => k.id === p.kid_id)?.name)
-              .filter((n): n is string => !!n);
+            const kidName = (id: string | null) => (id ? (kids.data ?? []).find((k) => k.id === id)?.name : "Family");
+            const booked = (plans.data ?? [])
+              .filter((p) => p.week === w)
+              .map((p) => ({
+                key: p.id,
+                text: p.camp_id === camp.id
+                  ? `Booked for ${kidName(p.kid_id) ?? "child"}`
+                  : `${kidName(p.kid_id) ?? "Child"}: ${campById[p.camp_id]?.name ?? "another camp"}`,
+                same: p.camp_id === camp.id,
+              }));
+            const busy = (acts.data ?? [])
+              .filter((a) => a.week === w)
+              .map((a) => ({ key: a.id, text: `${kidName(a.kid_id) ?? "Child"}: ${a.label}` }));
+            const hasAny = booked.length > 0 || busy.length > 0;
             return (
               <Button key={w} variant="outline" disabled={mode === "full"} onClick={() => toggle(w)} aria-pressed={on}
                 className={`h-auto min-h-12 flex-col items-start gap-1 whitespace-normal rounded-xl px-3 py-2 text-left text-sm transition ${on ? "border-teal bg-teal-soft font-semibold text-navy" : "hover:border-teal"} hover:bg-teal-soft hover:text-navy`}>
                 <span className="flex w-full items-center justify-between gap-1">
                   <span>{weekLabel(w)}</span>
-                  {bookedKids.length > 0 && <CalendarCheck aria-label="Already in your planner" className="h-3.5 w-3.5 shrink-0 text-teal" />}
+                  {hasAny && <CalendarCheck aria-label="Already has plans in your planner" className="h-3.5 w-3.5 shrink-0 text-coral" />}
                 </span>
-                {bookedKids.map((name) => <span key={name} className="text-xs font-medium text-muted-foreground">Booked for {name}</span>)}
+                {booked.map((b) => <span key={b.key} className={`text-xs font-medium ${b.same ? "text-teal" : "text-coral"} min-w-0 break-words`}>{b.text}</span>)}
+                {busy.map((b) => <span key={b.key} className="flex min-w-0 items-start gap-1 break-words text-xs font-medium text-lilac"><Plane aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0" />{b.text}</span>)}
                 {friends.map((friend) => <span key={friend.id} className="flex max-w-full items-start gap-1 text-xs font-semibold text-teal"><Star aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-current" /><span className="min-w-0 break-words">{friend.name}</span></span>)}
               </Button>
             );
