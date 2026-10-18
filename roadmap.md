@@ -1,4 +1,5 @@
 # Directory trust and commute planning
+- [x] Add clear separation between the official-source link and the report-a-correction control; verified 24px gap on results cards and clean build.
 - [x] Add favorite comparisons and a browser-only weekly family summer cost estimator; four calculation tests passed (including sample $1,885), signed-in what-if changes, reset, rate overrides, camp review and unchanged saved plans verified.
 - [x] Explain stop-order arrows with tooltips, handle missing office routes, and exclude addressless synthetic camps; 12 tests passed and signed-in office selection/reordering verified without live Maps requests.
 - [x] Explore page header now offers Home and Log in instead of a duplicate Explore Kodanz link; verified on /explore and / with no browser errors.
