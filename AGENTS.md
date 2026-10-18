@@ -17,4 +17,5 @@
 - Corrections and provider submissions stay in an owner-readable pending queue; publication requires reviewed source changes, never automatic user edits to the public directory.
 - Commute server functions resolve owner-scoped saved places, validate bounded camp IDs, and cache road-route results per owner; addresses and route caches never enter public sharing or planner invitation payloads.
 - Driving comparisons exclude camps without fixed destinations on both client and server, and translate missing Google route data into actionable errors rather than schema exceptions; synthetic nearby pins are not road destinations.
+- Family cost estimation uses browser-only what-if selections and rate overrides, initialized from owner plans and favorites; calculate per child/week without altering saved plans or directory prices.
 - The public Explore Kodanz overview lives at /explore and uses the shared SiteHeader; keep its feature claims aligned with implemented capabilities and separate tentative planning from provider bookings. Keep the Explore Kodanz link reachable from signed-in surfaces (planner and results headers), not only from the public landing page.
