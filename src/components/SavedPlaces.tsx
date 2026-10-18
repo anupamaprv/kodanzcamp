@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Briefcase, Home, Plus, X } from "lucide-react";
+import { Briefcase, ChevronDown, Home, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { useHomeZip, usePlaceMutations, useSavedPlaces } from "@/lib/family";
 import { useCommuteAddresses } from "@/lib/family";
@@ -17,6 +17,9 @@ export function SavedPlaces() {
   const [editingHome, setEditingHome] = useState(false);
   const [label, setLabel] = useState("");
   const [zip, setZip] = useState("");
+  const [showPrivate, setShowPrivate] = useState(false);
+  const addresses = useCommuteAddresses(true);
+  const addressCount = (addresses.data ?? []).length;
 
   return (
     <section className="rounded-3xl border bg-card p-6">
@@ -64,11 +67,18 @@ export function SavedPlaces() {
         <input value={zip} onChange={(e) => setZip(e.target.value)} inputMode="numeric" maxLength={5} placeholder="ZIP" className="w-24 rounded-xl border bg-background px-3 py-2 outline-none focus:ring-2 focus:ring-ring" />
         <button className="inline-flex items-center gap-1 rounded-xl bg-primary px-3 py-2 font-semibold text-primary-foreground"><Plus className="h-4 w-4" /> Add office</button>
       </form>
-      <div className="mt-5 space-y-3 border-t pt-4">
-        <h3 className="font-semibold text-navy">Private starting addresses (optional)</h3>
-        <p className="text-xs text-muted-foreground">Used only for your driving calculations; never shared with friends. Without an address, driving uses the ZIP center. Google receives the address when you calculate.</p>
-        {home.data && <PrivateAddress placeKey="home" label="Home" />}
-        {(places.data ?? []).map((p) => <PrivateAddress key={p.id} placeKey={p.id} label={p.label} />)}
+      <div className="mt-5 border-t pt-4">
+        <button type="button" onClick={() => setShowPrivate((s) => !s)} aria-expanded={showPrivate} className="flex w-full items-center justify-between gap-2 text-left">
+          <span>
+            <span className="inline-flex items-center gap-2 font-semibold text-navy">Private starting addresses (optional)<ChevronDown className={`h-4 w-4 text-teal transition-transform ${showPrivate ? "rotate-180" : ""}`} /></span>
+            <span className="block text-xs text-muted-foreground">{showPrivate ? "Used only for your driving calculations; never shared with friends." : `Expand to add street addresses used only for your driving calculations. ${addressCount ? `${addressCount} saved.` : "None saved."}`}</span>
+          </span>
+        </button>
+        {showPrivate && <div className="mt-3 space-y-3">
+          <p className="text-xs text-muted-foreground">Without an address, driving uses the ZIP center. Google receives the address when you calculate.</p>
+          {home.data && <PrivateAddress placeKey="home" label="Home" />}
+          {(places.data ?? []).map((p) => <PrivateAddress key={p.id} placeKey={p.id} label={p.label} />)}
+        </div>}
       </div>
     </section>
   );
