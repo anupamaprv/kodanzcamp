@@ -68,10 +68,18 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
           {camp.weeks.map((w) => {
             const on = mode === "full" || weeks.includes(w);
             const friends = user ? friendsForCampWeek(shared.data ?? [], camp.id, w) : [];
+            const bookedKids = (plans.data ?? [])
+              .filter((p) => p.camp_id === camp.id && p.week === w)
+              .map((p) => (kids.data ?? []).find((k) => k.id === p.kid_id)?.name)
+              .filter((n): n is string => !!n);
             return (
               <Button key={w} variant="outline" disabled={mode === "full"} onClick={() => toggle(w)} aria-pressed={on}
                 className={`h-auto min-h-12 flex-col items-start gap-1 whitespace-normal rounded-xl px-3 py-2 text-left text-sm transition ${on ? "border-teal bg-teal-soft font-semibold text-navy" : "hover:border-teal"} hover:bg-teal-soft hover:text-navy`}>
-                <span>{weekLabel(w)}</span>
+                <span className="flex w-full items-center justify-between gap-1">
+                  <span>{weekLabel(w)}</span>
+                  {bookedKids.length > 0 && <CalendarCheck aria-label="Already in your planner" className="h-3.5 w-3.5 shrink-0 text-teal" />}
+                </span>
+                {bookedKids.map((name) => <span key={name} className="text-xs font-medium text-muted-foreground">Booked for {name}</span>)}
                 {friends.map((friend) => <span key={friend.id} className="flex max-w-full items-start gap-1 text-xs font-semibold text-teal"><Star aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-current" /><span className="min-w-0 break-words">{friend.name}</span></span>)}
               </Button>
             );
