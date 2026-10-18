@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { AccountLink } from "@/components/AccountLink";
 import { Button } from "@/components/ui/button";
 
@@ -17,13 +17,21 @@ export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
 }
 
 export function SiteHeader() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onExplore = pathname.startsWith("/explore");
   return (
     <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
       <Logo />
       <div className="flex items-center gap-2 sm:gap-3">
-      <Button asChild variant="ghost" className="px-2 text-xs sm:px-4 sm:text-sm">
-        <Link to="/explore" activeProps={{ className: "bg-secondary text-secondary-foreground" }}>Explore Kodanz</Link>
-      </Button>
+      {onExplore ? (
+        <Button asChild variant="ghost" className="px-2 text-xs sm:px-4 sm:text-sm">
+          <Link to="/">Home</Link>
+        </Button>
+      ) : (
+        <Button asChild variant="ghost" className="px-2 text-xs sm:px-4 sm:text-sm">
+          <Link to="/explore" activeProps={{ className: "bg-secondary text-secondary-foreground" }}>Explore Kodanz</Link>
+        </Button>
+      )}
       <AccountLink /></div>
     </header>
   );
