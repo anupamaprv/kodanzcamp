@@ -48,10 +48,11 @@ function CampsPage() {
   const s = Route.useSearch();
   const navigate = useNavigate({ from: "/camps" });
   const interests = s.interests ? s.interests.split(",").filter(Boolean) : [];
+  const { user } = useSession();
   const geo = useQuery({
     queryKey: ["geocode", s.zip],
     queryFn: () => geocodeZip({ data: { zip: s.zip } }),
-    enabled: /^\d{5}$/.test(s.zip),
+    enabled: !!user && /^\d{5}$/.test(s.zip),
     staleTime: Infinity,
   });
   const center = geo.data?.ok ? { lat: geo.data.lat, lng: geo.data.lng } : undefined;
@@ -59,7 +60,6 @@ function CampsPage() {
     () => searchCamps({ zip: s.zip, age: s.age, interests, radius: s.radius, sort: s.sort, center, fullDayOnly: s.fullDay }),
     [s.zip, s.age, s.interests, s.radius, s.sort, s.fullDay, center?.lat, center?.lng],
   );
-  const { user } = useSession();
   const favs = useFavorites(!!user);
   const plans = usePlans(!!user);
   const places = useMapPlaces(!!user && s.view === "map");
