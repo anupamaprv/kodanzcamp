@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Search, MapPin, CalendarDays, Users, Heart, BriefcaseBusiness, Route as RouteIcon, Plane, Download, Share2, ShieldCheck, SlidersHorizontal, Check, ExternalLink, Mail, CircleDollarSign, Sparkles } from "lucide-react";
+import { ArrowRight, Search, MapPin, CalendarDays, CalendarCheck, Users, Heart, BriefcaseBusiness, Route as RouteIcon, Plane, Download, Share2, ShieldCheck, SlidersHorizontal, Check, ExternalLink, Mail, CircleDollarSign, Wallet, Sparkles } from "lucide-react";
 import { SiteHeader, Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import summer from "@/assets/explore-summer.jpg";
