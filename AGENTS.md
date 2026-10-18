@@ -11,6 +11,7 @@
 
 - Camp sharing uses the reusable ShareButton and public /camps?camp= links; share only public camp information so recipients never see private family plans.
 - Private planner coordination uses revocable token invitations and authenticated database RPCs that return only selected children's names, ages, and camp plans to accepted recipients; keep this separate from public camp sharing and never expose household locations or personal activities.
+- Scheduling friend-week markers reuse the accepted shared-planner query and match both camp ID and week; use shared child names without requesting additional private profile data.
 - Planner exports are generated in the browser from selected children; PDF renders the whole summer with separate-page or grouped landscape columns, while ICS contains scheduled events and available provider URLs.
 - Camp evidence is maintained separately from raw directory records; normalized camps expose only supported facts, with tentative planning weeks distinct from confirmed provider availability, so older data cannot masquerade as a new season.
 - Corrections and provider submissions stay in an owner-readable pending queue; publication requires reviewed source changes, never automatic user edits to the public directory.

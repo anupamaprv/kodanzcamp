@@ -9,6 +9,14 @@ const sharedSchema = z.array(z.object({
   plans: z.array(z.object({ id: z.string().uuid(), kid_id: z.string().uuid(), camp_id: z.string(), week: z.string() })),
 }));
 
+export function useSharedPlanners(enabled = true) {
+  return useQuery({ queryKey: ["shared-planners"], enabled, queryFn: async (): Promise<SharedPlanner[]> => {
+    const { data, error } = await supabase.rpc("shared_planners");
+    if (error) throw error;
+    return sharedSchema.parse(data);
+  } });
+}
+
 export function usePlannerSharing() {
   const qc = useQueryClient();
   const invites = useQuery({ queryKey: ["planner-invitations"], queryFn: async () => {
@@ -16,11 +24,7 @@ export function usePlannerSharing() {
     if (error) throw error;
     return data as PlannerInvitation[];
   } });
-  const shared = useQuery({ queryKey: ["shared-planners"], queryFn: async (): Promise<SharedPlanner[]> => {
-    const { data, error } = await supabase.rpc("shared_planners");
-    if (error) throw error;
-    return sharedSchema.parse(data);
-  } });
+  const shared = useSharedPlanners();
   const create = useMutation({ mutationFn: async (input: { title: string; kid_ids: string[] }) => {
     const { data, error } = await supabase.from("planner_shares").insert(input).select("id,title,kid_ids,token").single();
     if (error) throw error;

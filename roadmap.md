@@ -1,4 +1,5 @@
 # Directory trust and commute planning
+- [x] Mark matching accepted-friend camp weeks with a star and friend's name in child scheduling; 13 tests passed and signed-in review, save, and reload verified.
 - [x] Add a visual Explore Kodanz page with shared navigation and the current feature overview; verified images, navigation, desktop/mobile layouts, routing test, and clean build.
 - [x] Add multi-child side-by-side PDF choice and camp website links in calendar exports; verified signed-in downloads, single-child controls, PDF rendering, and 23 tests.
 - [x] Research official providers and distinguish verification from 2027 availability (26 checked sources; remaining listings explicitly unverified).

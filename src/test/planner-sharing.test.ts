@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { adoptablePlans, matchingKids, plannerInviteUrl } from "@/lib/planner-sharing";
+import { adoptablePlans, friendsForCampWeek, matchingKids, plannerInviteUrl } from "@/lib/planner-sharing";
 import { buildPlannerIcs, buildPlannerPdf, calendarRows } from "@/lib/planner-export";
 import { CAMPS, buildIcs } from "@/lib/camps";
 
@@ -14,6 +14,18 @@ const readBlob = (blob: Blob) => new Promise<ArrayBuffer>((resolve, reject) => {
   reader.readAsArrayBuffer(blob);
 });
 describe("Private summer coordination", () => {
+  it("identifies a friend only for the same camp and week in accepted planners", () => {
+    const accepted = [{ id: "share", title: "Summer", kids: [friend], plans: source }];
+    expect(friendsForCampWeek(accepted, "camp", "2027-06-07")).toEqual([friend]);
+    expect(friendsForCampWeek(accepted, "other", "2027-06-07")).toEqual([]);
+    expect(friendsForCampWeek(accepted, "camp", "2027-06-14")).toEqual([]);
+    expect(friendsForCampWeek([], "camp", "2027-06-07")).toEqual([]);
+  });
+  it("shows each matching child once across repeated invitations and includes multiple friends", () => {
+    const other = { id: "three", name: "Taylor", age: 9 };
+    const accepted = { id: "share", title: "Summer", kids: [friend, other], plans: [...source, { id: "q", kid_id: other.id, camp_id: "camp", week: "2027-06-07" }] };
+    expect(friendsForCampWeek([accepted, { ...accepted, id: "duplicate" }], "camp", "2027-06-07")).toEqual([friend, other]);
+  });
   it("includes an existing camp website in each calendar event", () => {
     const c = CAMPS.find((camp) => camp.website);
     if (!c?.website) throw new Error("Camp website fixture missing");
