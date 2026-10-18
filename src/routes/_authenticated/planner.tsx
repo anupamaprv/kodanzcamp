@@ -8,6 +8,7 @@ import { Logo } from "@/components/Logo";
 import { DrivingZone } from "@/components/DrivingZone";
 import { SavedPlaces } from "@/components/SavedPlaces";
 import { PlannerCoordination } from "@/components/PlannerCoordination";
+import { CampCostEstimator } from "@/components/CampCostEstimator";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { CAMPS, SUMMER_WEEKS, weekLabel } from "@/lib/camps";
@@ -166,6 +167,8 @@ function Planner() {
           <PlannerCoordination kids={kidList} plans={planList} activities={actList} invite={invite} />
         </section>
 
+        <CampCostEstimator kids={kidList} plans={planList} favorites={favs.data ?? []} activities={actList} />
+
         <SavedPlaces />
 
         <DrivingZone kids={kidList} plans={planList} favorites={favs.data ?? []} />
@@ -200,8 +203,8 @@ function Planner() {
                   return (
                     <li key={f.camp_id} className="flex items-center justify-between rounded-xl border px-3 py-2">
                       <div>
-                        <p className="font-semibold text-navy">{c?.name ?? f.camp_id}</p>
-                        <p className="text-xs text-muted-foreground">{who.length ? `For ${who.join(" & ")}` : "Not assigned to a child"} · {c?.pricePerWeek != null ? `$${c.pricePerWeek}/week` : "price n/a"}</p>
+                        <Link to="/camps" search={{ camp: f.camp_id }} className="font-semibold text-navy hover:underline">{c?.name ?? f.camp_id}</Link>
+                        <p className="text-xs text-muted-foreground">{who.length ? `For ${who.join(" & ")}` : "Not assigned to a child"} · {c?.pricePerWeek != null ? `$${c.pricePerWeek}/week${c.priceEstimated ? " (estimate)" : ""}` : "price n/a"}</p>
                       </div>
                       <button onClick={() => m.removeFavorite.mutate(f.camp_id)} aria-label="Remove favorite" className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></button>
                     </li>
