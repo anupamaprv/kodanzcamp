@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CampsRouteImport } from './routes/camps'
+import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedPlannerRouteImport } from './routes/_authenticated/planner'
 
@@ -35,6 +36,11 @@ const CampsRoute = CampsRouteImport.update({
   path: '/camps',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExploreRoute = ExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -50,6 +56,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/camps': typeof CampsRoute
+  '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/planner': typeof AuthenticatedPlannerRoute
 }
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/camps': typeof CampsRoute
+  '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/planner': typeof AuthenticatedPlannerRoute
 }
@@ -66,20 +74,23 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/camps': typeof CampsRoute
+  '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/planner': typeof AuthenticatedPlannerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/camps' | '/reset-password' | '/planner'
+  fullPaths:
+    '/' | '/auth' | '/camps' | '/explore' | '/reset-password' | '/planner'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/camps' | '/reset-password' | '/planner'
+  to: '/' | '/auth' | '/camps' | '/explore' | '/reset-password' | '/planner'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/camps'
+    | '/explore'
     | '/reset-password'
     | '/_authenticated/planner'
   fileRoutesById: FileRoutesById
@@ -89,6 +100,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CampsRoute: typeof CampsRoute
+  ExploreRoute: typeof ExploreRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
@@ -120,6 +132,13 @@ declare module '@tanstack/react-router' {
       path: '/camps'
       fullPath: '/camps'
       preLoaderRoute: typeof CampsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -155,6 +174,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CampsRoute: CampsRoute,
+  ExploreRoute: ExploreRoute,
   ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
