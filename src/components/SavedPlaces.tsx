@@ -18,7 +18,8 @@ export function SavedPlaces() {
   const [label, setLabel] = useState("");
   const [zip, setZip] = useState("");
   const [showPrivate, setShowPrivate] = useState(false);
-  const addressCount = (places.data ?? []).length + (home.data ? 1 : 0);
+  const addresses = useCommuteAddresses(true);
+  const addressCount = (addresses.data ?? []).length;
 
   return (
     <section className="rounded-3xl border bg-card p-6">
