@@ -9,12 +9,21 @@ export type CommuteInput = z.infer<typeof commuteInput>;
 export type RoadRoute = { meters: number; seconds: number; path: { lat: number; lng: number }[] };
 export type CommuteResult = { route: RoadRoute; baseline: RoadRoute | null; from: string; to: string; stops: string[]; approximateStart: boolean; calculatedAt: string };
 
+export function canRouteCamp(camp: { address: string; everywhere?: boolean }): boolean {
+  return !camp.everywhere && camp.address.trim().length > 0;
+}
+
 export function parseRoadRoute(body: unknown): RoadRoute {
+  const envelope = z.object({ routes: z.array(z.unknown()).optional() }).safeParse(body);
+  if (envelope.success && !envelope.data.routes?.length) {
+    throw new Error("Google Maps could not find a driving route. Check your saved home and office ZIPs or addresses and the selected camp locations, then try fewer stops.");
+  }
   const parsed = z.object({ routes: z.array(z.object({
     distanceMeters: z.number().nonnegative().optional(), duration: z.string(),
     polyline: z.object({ encodedPolyline: z.string().min(1).max(100000) }),
-  })).min(1) }).parse(body);
-  const route = parsed.routes[0];
+  })).min(1) }).safeParse(body);
+  if (!parsed.success) throw new Error("Google Maps returned incomplete driving directions. Please try again later.");
+  const route = parsed.data.routes[0];
   if (!route || !/^\d+(\.\d+)?s$/.test(route.duration)) throw new Error("Google returned an invalid travel time");
   const seconds = Number(route.duration.slice(0, -1));
   if (!Number.isFinite(seconds)) throw new Error("Invalid duration");
