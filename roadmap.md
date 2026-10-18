@@ -1,4 +1,5 @@
 # Directory trust and commute planning
+- [x] Show saved office ZIPs as compact tiles on one wrapping row instead of stacked full-width rows; verified signed-in that both offices share a row and the add-office form stays below.
 - [x] Add clear separation between the official-source link and the report-a-correction control; verified 24px gap on results cards and clean build.
 - [x] Add favorite comparisons and a browser-only weekly family summer cost estimator; four calculation tests passed (including sample $1,885), signed-in what-if changes, reset, rate overrides, camp review and unchanged saved plans verified.
 - [x] Explain stop-order arrows with tooltips, handle missing office routes, and exclude addressless synthetic camps; 12 tests passed and signed-in office selection/reordering verified without live Maps requests.
