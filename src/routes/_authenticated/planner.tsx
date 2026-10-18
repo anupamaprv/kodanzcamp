@@ -85,6 +85,7 @@ function Planner() {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <Logo />
         <div className="flex items-center gap-2">
+          <Link to="/explore" className="rounded-full border bg-card px-4 py-2 text-sm font-semibold text-navy hover:bg-muted">Explore Kodanz</Link>
           <Link to="/" className="rounded-full border bg-card px-4 py-2 text-sm font-semibold text-navy hover:bg-muted">Find camps</Link>
           <button onClick={signOut} className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm text-muted-foreground hover:text-navy"><LogOut className="h-4 w-4" /> Sign out</button>
         </div>
