@@ -47,10 +47,12 @@ export function SavedPlaces() {
         )}
       </div>
 
-      <ul className="mt-3 space-y-2">
+      <ul className="mt-3 flex flex-wrap gap-2">
         {(places.data ?? []).map((p) => (
-          <li key={p.id} className="flex items-center justify-between rounded-xl border px-3 py-2 text-sm">
-            <span className="flex items-center gap-2"><Briefcase className="h-4 w-4 text-coral" /><b className="text-navy">{p.label}</b> {p.zip}</span>
+          <li key={p.id} className="flex shrink-0 items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-sm">
+            <Briefcase className="h-4 w-4 shrink-0 text-coral" />
+            <b className="max-w-[16ch] truncate text-navy">{p.label}</b>
+            <span>{p.zip}</span>
             <button aria-label={`Remove ${p.label}`} onClick={() => removePlace.mutate(p.id)} className="text-muted-foreground hover:text-navy"><X className="h-4 w-4" /></button>
           </li>
         ))}
