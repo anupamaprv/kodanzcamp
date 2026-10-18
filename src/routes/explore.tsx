@@ -110,6 +110,7 @@ function Explore() {
               <FeatureLine icon={CalendarCheck} title="See what's already booked" text="Weeks you've filled show an indicator right in the camp calendar—other camps, personal activities, and friend matches—so you can compare before committing. Planning entries are easy to remove." />
               <FeatureLine icon={CalendarDays} title="Spot the gaps before summer starts" text="See camps, open weeks, and scheduling conflicts in a week-by-week calendar." />
               <FeatureLine icon={Plane} title="Vacations count, too" text="Give family trips and personal activities their own color, so those weeks don’t need camps." />
+              <FeatureLine icon={Wallet} title="Estimate the summer budget" text="Compare your favorite camps side by side, then estimate weekly costs per child and for the whole family. Try what-if picks and rate tweaks without changing your saved plans." />
             </ul>
             <Button asChild variant="link" className="mt-5 px-0 text-teal"><Link to="/planner">Open your summer planner <ArrowRight /></Link></Button>
           </div>
