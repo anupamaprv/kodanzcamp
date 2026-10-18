@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { CAMPS } from "@/lib/camps";
-import { commuteInput, parseRoadRoute, type CommuteResult } from "@/lib/commute";
+import { canRouteCamp, commuteInput, parseRoadRoute, type CommuteResult } from "@/lib/commute";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_maps";
 
@@ -12,6 +12,8 @@ export const calculateCommute = createServerFn({ method: "POST" })
     const ids = [...new Set(data.campIds)];
     const camps = ids.map((id) => CAMPS.find((c) => c.id === id));
     if (camps.some((c) => !c)) throw new Error("Camp not found");
+    const unlocated = camps.find((c) => c && !canRouteCamp(c));
+    if (unlocated) throw new Error(`${unlocated.name} has no fixed street address and cannot be included in a driving route. Choose another camp.`);
     const [home, offices, addresses] = await Promise.all([
       context.supabase.from("households").select("home_zip").eq("user_id", context.userId).maybeSingle(),
       context.supabase.from("saved_places").select("id,label,zip").eq("user_id", context.userId),

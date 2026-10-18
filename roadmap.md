@@ -1,4 +1,5 @@
 # Directory trust and commute planning
+- [ ] Explain stop-order arrows and handle missing office routes; prevent addressless synthetic camps from entering driving calculations and verify non-Maps controls.
 - [x] Explore page header now offers Home and Log in instead of a duplicate Explore Kodanz link; verified on /explore and / with no browser errors.
 - [x] Keep Explore Kodanz reachable when signed in: link added to planner and results headers; verified navigation from both, page renders logged in, clean build.
 - [x] Verified matching camp saves belong to the recipient; added friend matches in evenly sized own-planner weeks. Signed-in save/reload, unchanged friend records, and 14 tests passed.

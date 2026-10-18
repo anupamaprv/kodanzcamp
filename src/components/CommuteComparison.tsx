@@ -4,7 +4,7 @@ import { Car, ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSavedPlaces } from "@/lib/family";
 import { calculateCommute } from "@/lib/commute.functions";
-import type { CommuteResult } from "@/lib/commute";
+import { canRouteCamp, type CommuteResult } from "@/lib/commute";
 import type { Camp } from "@/lib/camps";
 
 export function CommuteComparison({ camps, onRoute }: { camps: Camp[]; onRoute?: (result: CommuteResult | null) => void }) {
@@ -17,7 +17,7 @@ export function CommuteComparison({ camps, onRoute }: { camps: Camp[]; onRoute?:
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const sig = camps.map((c) => c.id).join("|");
-  useEffect(() => { setSelected(camps.slice(0, 4).map((c) => c.id)); setResult(null); onRoute?.(null); }, [sig]);
+  useEffect(() => { setSelected(camps.filter(canRouteCamp).slice(0, 4).map((c) => c.id)); setResult(null); setError(""); onRoute?.(null); }, [sig]);
   const clear = () => { setResult(null); setError(""); onRoute?.(null); };
   return <section className="space-y-3 border-t pt-4 text-sm">
     <h3 className="flex items-center gap-2 font-bold text-navy"><Car className="h-4 w-4 text-teal" /> Driving comparison</h3>
@@ -32,11 +32,11 @@ export function CommuteComparison({ camps, onRoute }: { camps: Camp[]; onRoute?:
     {camps.length > 1 && <ul className="space-y-2">{selected.map((id, i) => {
       const camp = camps.find((c) => c.id === id);
       return <li key={id} className="flex items-center gap-2"><span className="min-w-0 flex-1">{i + 1}. {camp?.name}</span>
-        <Button variant="ghost" size="icon" aria-label={`Move ${camp?.name} earlier`} disabled={i === 0} onClick={() => { const next = [...selected]; const previous = next[i - 1]; if (!previous) return; next[i - 1] = id; next[i] = previous; setSelected(next); clear(); }}><ArrowUp /></Button>
-        <Button variant="ghost" size="icon" aria-label={`Move ${camp?.name} later`} disabled={i === selected.length - 1} onClick={() => { const next = [...selected]; const after = next[i + 1]; if (!after) return; next[i + 1] = id; next[i] = after; setSelected(next); clear(); }}><ArrowDown /></Button>
+        <Button variant="ghost" size="icon" title="Visit this camp earlier" aria-label={`Move ${camp?.name} earlier`} disabled={i === 0} onClick={() => { const next = [...selected]; const previous = next[i - 1]; if (!previous) return; next[i - 1] = id; next[i] = previous; setSelected(next); clear(); }}><ArrowUp /></Button>
+        <Button variant="ghost" size="icon" title="Visit this camp later" aria-label={`Move ${camp?.name} later`} disabled={i === selected.length - 1} onClick={() => { const next = [...selected]; const after = next[i + 1]; if (!after) return; next[i + 1] = id; next[i] = after; setSelected(next); clear(); }}><ArrowDown /></Button>
       </li>;
     })}</ul>}
-    {camps.length > 1 && <div className="space-y-2">{camps.map((c) => <label key={c.id} className="flex items-start gap-2"><input type="checkbox" checked={selected.includes(c.id)} disabled={!selected.includes(c.id) && selected.length >= 4} onChange={(e) => { setSelected(e.target.checked ? [...selected, c.id] : selected.filter((id) => id !== c.id)); clear(); }} />{c.name}</label>)}</div>}
+    <div className="space-y-2">{camps.map((c) => <label key={c.id} className="flex items-start gap-2"><input type="checkbox" checked={selected.includes(c.id)} disabled={!canRouteCamp(c) || (!selected.includes(c.id) && selected.length >= 4)} onChange={(e) => { setSelected(e.target.checked ? [...selected, c.id] : selected.filter((id) => id !== c.id)); clear(); }} /><span>{c.name}{!canRouteCamp(c) && <span className="block text-xs text-muted-foreground">No fixed address · unavailable for driving routes</span>}</span></label>)}</div>
     <Button disabled={busy || !selected.length} onClick={async () => {
       setBusy(true); setError(""); setResult(null); onRoute?.(null);
       try { const value = await calculate({ data: { campIds: selected, officeKey: office || undefined, direction } }); setResult(value); onRoute?.(value); }
