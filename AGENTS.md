@@ -16,4 +16,4 @@
 - Camp evidence is maintained separately from raw directory records; normalized camps expose only supported facts, with tentative planning weeks distinct from confirmed provider availability, so older data cannot masquerade as a new season.
 - Corrections and provider submissions stay in an owner-readable pending queue; publication requires reviewed source changes, never automatic user edits to the public directory.
 - Commute server functions resolve owner-scoped saved places, validate bounded camp IDs, and cache road-route results per owner; addresses and route caches never enter public sharing or planner invitation payloads.
-- The public Explore Kodanz overview lives at /explore and uses the shared SiteHeader; keep its feature claims aligned with implemented capabilities and separate tentative planning from provider bookings.
+- The public Explore Kodanz overview lives at /explore and uses the shared SiteHeader; keep its feature claims aligned with implemented capabilities and separate tentative planning from provider bookings. Keep the Explore Kodanz link reachable from signed-in surfaces (planner and results headers), not only from the public landing page.
