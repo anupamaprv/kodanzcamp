@@ -107,6 +107,7 @@ function Explore() {
             <p className="mt-4 leading-relaxed text-muted-foreground">Plan the summer of 2027, June 7–September 3. One week or the whole season, one child or the whole crew.</p>
             <ul className="mt-6 space-y-5">
               <FeatureLine icon={Users} title="A plan for every child" text="Add multiple children and assign camp weeks to one or more of them." />
+              <FeatureLine icon={CalendarCheck} title="See what's already booked" text="Weeks you've filled show an indicator right in the camp calendar—other camps, personal activities, and friend matches—so you can compare before committing. Planning entries are easy to remove." />
               <FeatureLine icon={CalendarDays} title="Spot the gaps before summer starts" text="See camps, open weeks, and scheduling conflicts in a week-by-week calendar." />
               <FeatureLine icon={Plane} title="Vacations count, too" text="Give family trips and personal activities their own color, so those weeks don’t need camps." />
             </ul>
