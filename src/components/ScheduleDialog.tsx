@@ -69,7 +69,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
             const friends = user ? friendsForCampWeek(shared.data ?? [], camp.id, w) : [];
             return (
               <Button key={w} variant="outline" disabled={mode === "full"} onClick={() => toggle(w)} aria-pressed={on}
-                className={`h-auto min-h-12 flex-col items-start gap-1 whitespace-normal rounded-xl px-3 py-2 text-left text-sm transition ${on ? "border-teal bg-teal-soft font-semibold text-navy" : "hover:border-teal"}`}>
+                className={`h-auto min-h-12 flex-col items-start gap-1 whitespace-normal rounded-xl px-3 py-2 text-left text-sm transition ${on ? "border-teal bg-teal-soft font-semibold text-navy" : "hover:border-teal"} hover:bg-teal-soft hover:text-navy`}>
                 <span>{weekLabel(w)}</span>
                 {friends.map((friend) => <span key={friend.id} className="flex max-w-full items-start gap-1 text-xs font-semibold text-teal"><Star aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-current" /><span className="min-w-0 break-words">{friend.name}</span></span>)}
               </Button>
