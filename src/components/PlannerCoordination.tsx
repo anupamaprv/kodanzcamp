@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CalendarDays, Check, Copy, Download, ExternalLink, Share2, Users, X } from "lucide-react";
+import { CalendarDays, Check, Copy, Download, ExternalLink, Share2, Star, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -189,6 +189,7 @@ function CopySelections({ source, kids, plans, activities, onClose, onDetail }: 
       const available = target ? adoptablePlans(sourcePlans, target, [week], plans, activities, CAMPS).length > 0 : false;
       return <div key={week} className="rounded-md border p-3">
         <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" disabled={!available} checked={available && weeks.includes(week)} onChange={(e) => setWeeks(e.target.checked ? [...weeks, week] : weeks.filter((w) => w !== week))} />{weekLabel(week)}</label>
+        <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-teal"><Star aria-hidden="true" className="h-3 w-3 shrink-0 fill-current" />{source.kid.name}</p>
         {sourcePlans.filter((p) => p.week === week).map((plan) => { const camp = CAMPS.find((c) => c.id === plan.camp_id); return <Button key={plan.id} variant="link" className="mt-1 h-auto whitespace-normal p-0 text-sm text-teal" onClick={() => { if (camp) onDetail(camp); }}>{camp?.name ?? plan.camp_id}</Button>; })}
         {!available && <p className="mt-1 text-xs text-muted-foreground">Already planned, personal activity, or no age-eligible camp available this week.</p>}
       </div>;

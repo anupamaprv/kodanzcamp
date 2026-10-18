@@ -4,6 +4,16 @@ import type { Activity, Kid, Plan } from "@/lib/family";
 export type SharedPlanner = { id: string; title: string; kids: Kid[]; plans: Plan[] };
 export type PlannerInvitation = { id: string; title: string; kid_ids: string[]; token: string };
 
+export function friendsForCampWeek(planners: SharedPlanner[], campId: string, week: string) {
+  const friends = new Map<string, Kid>();
+  for (const planner of planners) {
+    for (const kid of planner.kids) {
+      if (planner.plans.some((plan) => plan.kid_id === kid.id && plan.camp_id === campId && plan.week === week)) friends.set(kid.id, kid);
+    }
+  }
+  return [...friends.values()];
+}
+
 export function matchingKids(plan: Pick<Plan, "camp_id" | "week">, kids: Kid[], ownPlans: Plan[]) {
   return kids.filter((kid) => ownPlans.some((p) => p.kid_id === kid.id && p.camp_id === plan.camp_id && p.week === plan.week));
 }

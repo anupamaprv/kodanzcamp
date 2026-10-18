@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { CalendarPlus, CalendarCheck, X } from "lucide-react";
+import { CalendarPlus, CalendarCheck, Star, X } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "@/hooks/use-session";
 import { useFamilyMutations, useKids } from "@/lib/family";
 import { AuthPrompt } from "@/components/AuthPrompt";
 import { buildIcs, priceFor, weekLabel, type Camp } from "@/lib/camps";
+import { Button } from "@/components/ui/button";
+import { friendsForCampWeek } from "@/lib/planner-sharing";
+import { useSharedPlanners } from "@/lib/planner-sharing-data";
 
 export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => void }) {
   const [mode, setMode] = useState<"partial" | "full">("partial");
@@ -12,6 +15,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
   const chosen = mode === "full" ? camp.weeks : weeks;
   const total = priceFor(camp, weeks, mode === "full");
   const { user } = useSession();
+  const shared = useSharedPlanners(!!user);
   const kids = useKids(!!user);
   const { addPlans } = useFamilyMutations();
   const [kidIds, setKidIds] = useState<string[] | null>(null);
@@ -41,7 +45,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-navy/40 p-4 sm:items-center" onClick={onClose}>
-      <div role="dialog" aria-label={`Save ${camp.name} to calendar`} className="w-full max-w-lg rounded-3xl bg-card p-6 shadow-soft" onClick={(e) => e.stopPropagation()}>
+      <div role="dialog" aria-label={`Save ${camp.name} to calendar`} className="max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-3xl bg-card p-6 shadow-soft" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between">
           <div>
             <p className="eyebrow">Save to calendar</p>
@@ -62,11 +66,13 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
         <div className="mt-4 grid max-h-64 grid-cols-2 gap-2 overflow-y-auto">
           {camp.weeks.map((w) => {
             const on = mode === "full" || weeks.includes(w);
+            const friends = user ? friendsForCampWeek(shared.data ?? [], camp.id, w) : [];
             return (
-              <button key={w} disabled={mode === "full"} onClick={() => toggle(w)} aria-pressed={on}
-                className={`rounded-xl border px-3 py-2 text-left text-sm transition ${on ? "border-teal bg-teal-soft font-semibold text-navy" : "hover:border-teal"}`}>
-                {weekLabel(w)}
-              </button>
+              <Button key={w} variant="outline" disabled={mode === "full"} onClick={() => toggle(w)} aria-pressed={on}
+                className={`h-auto min-h-12 flex-col items-start gap-1 whitespace-normal rounded-xl px-3 py-2 text-left text-sm transition ${on ? "border-teal bg-teal-soft font-semibold text-navy" : "hover:border-teal"}`}>
+                <span>{weekLabel(w)}</span>
+                {friends.map((friend) => <span key={friend.id} className="flex max-w-full items-start gap-1 text-xs font-semibold text-teal"><Star aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-current" /><span className="min-w-0 break-words">{friend.name}</span></span>)}
+              </Button>
             );
           })}
         </div>
