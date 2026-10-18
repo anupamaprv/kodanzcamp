@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { AccountLink } from "@/components/AccountLink";
+import { Button } from "@/components/ui/button";
 
 export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
   return (
@@ -19,9 +20,10 @@ export function SiteHeader() {
   return (
     <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
       <Logo />
-      <div className="flex items-center gap-3"><span className="hidden rounded-full border bg-card px-4 py-1.5 font-display text-xs font-semibold text-navy sm:inline">
-        A NEW SUMMER-PLANNING APP
-      </span>
+      <div className="flex items-center gap-2 sm:gap-3">
+      <Button asChild variant="ghost" className="px-2 text-xs sm:px-4 sm:text-sm">
+        <Link to="/explore" activeProps={{ className: "bg-secondary text-secondary-foreground" }}>Explore Kodanz</Link>
+      </Button>
       <AccountLink /></div>
     </header>
   );
