@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CalendarPlus, CalendarCheck, Star, X } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "@/hooks/use-session";
-import { useFamilyMutations, useKids } from "@/lib/family";
+import { useFamilyMutations, useKids, usePlans } from "@/lib/family";
 import { AuthPrompt } from "@/components/AuthPrompt";
 import { buildIcs, priceFor, weekLabel, type Camp } from "@/lib/camps";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
   const { user } = useSession();
   const shared = useSharedPlanners(!!user);
   const kids = useKids(!!user);
+  const plans = usePlans(!!user);
   const { addPlans } = useFamilyMutations();
   const [kidIds, setKidIds] = useState<string[] | null>(null);
   const chosenKids = kidIds ?? (kids.data ?? []).map((k) => k.id);
