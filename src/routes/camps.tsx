@@ -88,6 +88,7 @@ function CampsPage() {
             <span className="rounded-full bg-teal-soft px-3 py-1 font-semibold text-navy"><MapPin className="mr-1 inline h-3.5 w-3.5" />{s.zip}</span>
             {s.age && <span className="rounded-full bg-sun-soft px-3 py-1 font-semibold text-navy">Age {s.age}</span>}
             {interests.map((i) => <span key={i} className="rounded-full bg-coral-soft px-3 py-1 font-semibold text-navy">{i}</span>)}
+            <Link to="/explore" className="rounded-full border bg-card px-3 py-1 font-semibold text-navy hover:bg-muted">Explore Kodanz</Link>
             <AccountLink />
           </div>
         </div>
