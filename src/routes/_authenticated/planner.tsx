@@ -99,8 +99,8 @@ function Planner() {
             <p className="mt-6 rounded-3xl border bg-card p-6 text-muted-foreground">Add your kids below to start filling in their weeks.</p>
           ) : (
             <div className="mt-6 overflow-x-auto rounded-3xl border bg-card shadow-soft">
-              <table aria-label="My children's summer planner" className="w-full min-w-[1496px] table-fixed border-collapse text-sm">
-                <colgroup><col className="w-40" />{SUMMER_WEEKS.map((w) => <col key={w} />)}</colgroup>
+              <table aria-label="My children's summer planner" className="w-full min-w-[1100px] table-fixed border-collapse text-sm">
+                <colgroup><col className="w-28" />{SUMMER_WEEKS.map((w) => <col key={w} />)}</colgroup>
                 <thead>
                   <tr className="border-b">
                     <th className="sticky left-0 z-10 bg-card px-4 py-3 text-left font-display text-xs uppercase text-muted-foreground">Child</th>
@@ -126,7 +126,7 @@ function Planner() {
                               {cell.map((p) => (
                                 <div key={p.id} className={`group rounded-lg px-2 py-1 text-xs font-semibold text-navy ${CHIP[ki % CHIP.length]}`}>
                                   <div className="flex items-start justify-between gap-1">
-                                    <Button variant="link" asChild className="h-auto min-w-0 justify-start whitespace-normal break-words p-0 text-left text-xs text-navy"><Link to="/camps" search={{ camp: p.camp_id }}>{campById[p.camp_id]?.name ?? p.camp_id}</Link></Button>
+                                    <Button variant="link" asChild className="h-auto min-w-0 flex-1 justify-start whitespace-normal break-words p-0 text-left text-xs text-navy"><Link to="/camps" search={{ camp: p.camp_id }} title={campById[p.camp_id]?.name ?? p.camp_id}><span className="line-clamp-3">{campById[p.camp_id]?.name ?? p.camp_id}</span></Link></Button>
                                     <Button variant="ghost" size="icon" onClick={() => m.removePlan.mutate(p.id)} aria-label="Remove week" className="h-4 w-4 shrink-0 opacity-50 hover:bg-transparent hover:text-navy hover:opacity-100"><X /></Button>
                                   </div>
                                   {friendsForCampWeek(shared.data ?? [], p.camp_id, p.week).map((friend) => <p key={friend.id} className="mt-1 flex items-start gap-1 text-teal"><Star aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-current" /><span className="min-w-0 break-words">With {friend.name}</span></p>)}
