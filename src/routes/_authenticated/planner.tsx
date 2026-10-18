@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Heart, LogOut, Plane, Plus, Trash2, X } from "lucide-react";
+import { Heart, LogOut, Plane, Plus, Star, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { CAMPS, SUMMER_WEEKS, weekLabel } from "@/lib/camps";
 import { useActivities, useFamilyMutations, useFavorites, useKids, usePlans } from "@/lib/family";
+import { friendsForCampWeek } from "@/lib/planner-sharing";
+import { useSharedPlanners } from "@/lib/planner-sharing-data";
 
 export const Route = createFileRoute("/_authenticated/planner")({
   validateSearch: z.object({ invite: z.string().uuid().optional().catch(undefined) }),
@@ -37,6 +39,7 @@ function Planner() {
   const plans = usePlans(true);
   const favs = useFavorites(true);
   const acts = useActivities(true);
+  const shared = useSharedPlanners(true);
   const [actLabel, setActLabel] = useState("");
   const [actWeek, setActWeek] = useState(SUMMER_WEEKS[0] ?? "2027-06-07");
   const [actWho, setActWho] = useState("family");
@@ -96,17 +99,18 @@ function Planner() {
             <p className="mt-6 rounded-3xl border bg-card p-6 text-muted-foreground">Add your kids below to start filling in their weeks.</p>
           ) : (
             <div className="mt-6 overflow-x-auto rounded-3xl border bg-card shadow-soft">
-              <table className="w-full min-w-[1100px] border-collapse text-sm">
+              <table aria-label="My children's summer planner" className="w-full min-w-[1496px] table-fixed border-collapse text-sm">
+                <colgroup><col className="w-40" />{SUMMER_WEEKS.map((w) => <col key={w} />)}</colgroup>
                 <thead>
                   <tr className="border-b">
-                    <th className="sticky left-0 bg-card px-4 py-3 text-left font-display text-xs uppercase text-muted-foreground">Child</th>
+                    <th className="sticky left-0 z-10 bg-card px-4 py-3 text-left font-display text-xs uppercase text-muted-foreground">Child</th>
                     {SUMMER_WEEKS.map((w) => <th key={w} className="px-2 py-3 text-left font-display text-xs font-semibold text-muted-foreground">{weekLabel(w).split(" – ")[0]}</th>)}
                   </tr>
                 </thead>
                 <tbody>
                   {kidList.map((k, ki) => (
                     <tr key={k.id} className="border-b last:border-0">
-                      <td className="sticky left-0 bg-card px-4 py-3"><p className="font-semibold text-navy">{k.name}</p><p className="text-xs text-muted-foreground">Age {k.age} · {openWeeks(k.id)} open</p></td>
+                      <td className="sticky left-0 z-10 bg-card px-4 py-3"><p className="font-semibold text-navy">{k.name}</p><p className="text-xs text-muted-foreground">Age {k.age} · {openWeeks(k.id)} open</p></td>
                       {SUMMER_WEEKS.map((w) => {
                         const cell = planList.filter((p) => p.kid_id === k.id && p.week === w);
                         const busy = actsFor(k.id, w);
@@ -120,9 +124,12 @@ function Planner() {
                                 </div>
                               ))}
                               {cell.map((p) => (
-                                <div key={p.id} className={`group flex items-start justify-between gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-navy ${CHIP[ki % CHIP.length]}`}>
-                                  <Button variant="link" asChild className="h-auto whitespace-normal p-0 text-left text-xs text-navy"><Link to="/camps" search={{ camp: p.camp_id }}>{campById[p.camp_id]?.name ?? p.camp_id}</Link></Button>
-                                  <button onClick={() => m.removePlan.mutate(p.id)} aria-label="Remove week" className="opacity-50 hover:opacity-100"><X className="h-3 w-3" /></button>
+                                <div key={p.id} className={`group rounded-lg px-2 py-1 text-xs font-semibold text-navy ${CHIP[ki % CHIP.length]}`}>
+                                  <div className="flex items-start justify-between gap-1">
+                                    <Button variant="link" asChild className="h-auto min-w-0 justify-start whitespace-normal break-words p-0 text-left text-xs text-navy"><Link to="/camps" search={{ camp: p.camp_id }}>{campById[p.camp_id]?.name ?? p.camp_id}</Link></Button>
+                                    <Button variant="ghost" size="icon" onClick={() => m.removePlan.mutate(p.id)} aria-label="Remove week" className="h-4 w-4 shrink-0 opacity-50 hover:bg-transparent hover:text-navy hover:opacity-100"><X /></Button>
+                                  </div>
+                                  {friendsForCampWeek(shared.data ?? [], p.camp_id, p.week).map((friend) => <p key={friend.id} className="mt-1 flex items-start gap-1 text-teal"><Star aria-hidden="true" className="mt-0.5 h-3 w-3 shrink-0 fill-current" /><span className="min-w-0 break-words">With {friend.name}</span></p>)}
                                 </div>
                               ))}
                               {(cell.length > 1 || (cell.length > 0 && busy.length > 0)) && <p className="text-[10px] font-semibold text-destructive">Conflict</p>}

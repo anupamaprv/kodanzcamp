@@ -58,6 +58,18 @@ describe("Private summer coordination", () => {
     expect(source[0]?.kid_id).toBe("two");
     expect(adoptablePlans(source, kid, [], [], [], [camp])).toEqual([]);
   });
+  it("matches the recipient's copied plan back to the friend without changing the friend's planner", () => {
+    const jane = { id: "jane", name: "Jane", age: 8 };
+    const mmm = { id: "mmm", name: "MMM", age: 7 };
+    const friendPlans = [{ id: "friend-plan", kid_id: mmm.id, camp_id: "wize", week: "2027-07-12" }];
+    const original = structuredClone(friendPlans);
+    const copied = adoptablePlans(friendPlans, jane, ["2027-07-12"], [], [], [{ id: "wize", minAge: 5, maxAge: 12, weeks: ["2027-07-12"] }]);
+    expect(copied).toEqual([{ kid_id: "jane", camp_id: "wize", week: "2027-07-12" }]);
+    const ownPlan = copied[0];
+    if (!ownPlan) throw new Error("Expected Jane's copied plan");
+    expect(friendsForCampWeek([{ id: "share", title: "M-summer-planner", kids: [mmm], plans: friendPlans }], ownPlan.camp_id, ownPlan.week)).toEqual([mmm]);
+    expect(friendPlans).toEqual(original);
+  });
   it("preserves occupied weeks and family activities", () => {
     expect(adoptablePlans(source, kid, ["2027-06-07"], [{ id: "other", kid_id: kid.id, camp_id: "other", week: "2027-06-07" }], [], [camp])).toEqual([]);
     expect(adoptablePlans(source, kid, ["2027-06-07"], [], [{ id: "trip", kid_id: null, week: "2027-06-07", label: "Trip" }], [camp])).toEqual([]);
