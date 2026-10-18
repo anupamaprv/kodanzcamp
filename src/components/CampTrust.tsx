@@ -14,8 +14,10 @@ export function CampTrust({ camp }: { camp: Camp }) {
       <span className="font-semibold text-coral">{camp.availability === "confirmed" ? "2027 confirmed" : camp.availability === "assumed" ? "2027 assumed from flyer" : "2027 dates pending"}</span></div>
     {camp.sourceCheckedAt && <p className="text-muted-foreground">Last checked {camp.sourceCheckedAt}{camp.publishedPriceYear ? ` · price published for ${camp.publishedPriceYear}, not confirmed for 2027` : ""}</p>}
     {camp.sourceCheckedAt && camp.availability !== "confirmed" && <p className="text-muted-foreground">{camp.detailsYear ? `Ages and hours, where shown, are from ${camp.detailsYear}.` : "Source does not confirm 2027 ages or hours."} Confirm session-specific eligibility with the provider.</p>}
-    {camp.sourceUrl && <a className="font-semibold text-teal underline" href={camp.sourceUrl} target="_blank" rel="noopener noreferrer">Official source</a>}
-    <CampSubmission camp={camp} />
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-1 pt-1">
+      {camp.sourceUrl && <a className="font-semibold text-teal underline" href={camp.sourceUrl} target="_blank" rel="noopener noreferrer">Official source</a>}
+      <CampSubmission camp={camp} />
+    </div>
   </div>;
 }
 
