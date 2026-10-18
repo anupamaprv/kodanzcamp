@@ -14,6 +14,7 @@ export function CampCostEstimator({ kids, plans, favorites, activities }: { kids
   const [rates, setRates] = useState<Record<string, number>>({});
   const [count, setCount] = useState(1);
   const [schedule, setSchedule] = useState<Camp | null>(null);
+  const [open, setOpen] = useState(false);
   const favoritesList = favorites.flatMap((f) => { const camp = CAMPS.find((c) => c.id === f.camp_id); return camp ? [camp] : []; });
   const options = CAMPS.filter((c) => favoritesList.some((f) => f.id === c.id) || plans.some((p) => p.camp_id === c.id));
   const selections: CostSelection[] = SUMMER_WEEKS.flatMap((week) => kids.flatMap((kid) => {
@@ -24,11 +25,12 @@ export function CampCostEstimator({ kids, plans, favorites, activities }: { kids
   const costs = summerCosts(kids.map((k) => k.id), SUMMER_WEEKS, selections, CAMPS, rates);
   const hasDraft = Object.keys(draft).length > 0 || Object.keys(rates).length > 0;
 
-  return <section id="camp-costs" className="space-y-6 scroll-mt-6">
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <h2 className="flex items-center gap-2 text-2xl font-bold text-navy"><Calculator className="h-5 w-5 text-teal" /> Camp costs</h2>
+  return <section id="camp-costs" className="scroll-mt-6 space-y-6">
+    <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="flex w-full flex-wrap items-center justify-between gap-3 text-left">
+      <span className="inline-flex items-center gap-2 text-2xl font-bold text-navy"><Calculator className="h-5 w-5 text-teal" /> Camp costs<ChevronDown className={`h-5 w-5 text-teal transition-transform ${open ? "rotate-180" : ""}`} /></span>
       <span className="rounded-full bg-sun-soft px-3 py-1 text-xs font-semibold text-navy">ESTIMATES · USD</span>
-    </div>
+    </button>
+    {open && <>
     <div className="flex flex-wrap items-center justify-between gap-3">
       <h3 className="text-lg font-bold text-navy">Compare favorites</h3>
       <label className="flex items-center gap-2 text-sm">Weeks per child <input aria-label="Comparison weeks" type="number" min={1} max={13} value={count} onChange={(e) => setCount(Math.min(13, Math.max(1, Number(e.target.value) || 1)))} className="w-16 rounded-md border bg-card p-2" /></label>
@@ -59,6 +61,7 @@ export function CampCostEstimator({ kids, plans, favorites, activities }: { kids
       </table></div>
       {costs.rows.some((r) => r.children.some((c) => c.unknown)) && <p className="text-sm text-coral">Total is partial: some planned camps have no available rate.</p>}
     </> : <p className="text-sm text-muted-foreground">Add a child to estimate weekly family costs.</p>}
+    </>}
     {schedule && <ScheduleDialog camp={schedule} onClose={() => setSchedule(null)} />}
   </section>;
 }

@@ -74,8 +74,9 @@ export function DrivingZone({ kids, plans, favorites }: { kids: Kid[]; plans: Pl
           <h2 className="flex items-center gap-2 text-xl font-bold text-navy"><Car className="h-5 w-5 text-teal" /> Driving zone</h2>
           <p className="text-sm text-muted-foreground">See each child's camps around home. Are drop-offs in opposite directions?</p>
         </div>
-        <Button onClick={() => setOpen((o) => !o)}>
+        <Button onClick={() => setOpen((o) => !o)} aria-expanded={open} className="gap-1">
           {open ? "Hide driving zone" : "Show driving zone"}
+          <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
         </Button>
       </div>
 
