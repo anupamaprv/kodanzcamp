@@ -28,6 +28,7 @@ export const Route = createFileRoute("/explore")({
 
 const extras = [
   { icon: Heart, title: "A shortlist worth saving", text: "Favorite camps for your children and return to the ones your family loves.", color: "bg-coral-soft text-coral" },
+  { icon: CircleDollarSign, title: "A budget you can see", text: "Compare favorite camps by weekly cost and estimate your family’s summer total with what-if picks—nothing is saved or charged.", color: "bg-sun-soft text-navy" },
   { icon: Plane, title: "Make room for life", text: "Add family trips and personal activities for everyone or just one child, with their own color in the planner.", color: "bg-lilac-soft text-lilac" },
   { icon: Download, title: "Take summer with you", text: "Export a full-summer PDF for selected children, side-by-side or on separate pages. Download calendar invites with available camp website links.", color: "bg-teal-soft text-teal" },
   { icon: Share2, title: "Send a little inspiration", text: "Share public camp links by text, email, WhatsApp, Facebook or X, without sharing your family’s plans.", color: "bg-sun-soft text-navy" },
