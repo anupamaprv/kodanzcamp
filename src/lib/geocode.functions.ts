@@ -1,11 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_maps";
 const cache = new Map<string, { lat: number; lng: number; label: string }>();
 
 /** Turns a US ZIP code into map coordinates (cached per server instance). */
 export const geocodeZip = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ zip: z.string().regex(/^\d{5}$/) }).parse(d))
   .handler(async ({ data }) => {
     const hit = cache.get(data.zip);

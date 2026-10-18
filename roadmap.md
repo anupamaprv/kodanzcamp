@@ -15,3 +15,4 @@
 - [x] Compare home/camp/office detours and selected multi-child drop-off/pick-up routes.
 - [x] Test privacy and route parsing; verify non-Maps signed-in flows.
 - [ ] Validate Google route estimates and road paths on an authorized deployed origin (live Maps testing unavailable in sandbox).
+- [x] Map ZIP lookups require sign-in (security fix)
