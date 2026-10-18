@@ -116,6 +116,7 @@ export function ScheduleDialog({ camp, onClose }: { camp: Camp; onClose: () => v
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 font-semibold text-primary-foreground disabled:opacity-40">
               <CalendarCheck className="h-4 w-4" /> Add to my planner
             </button>
+            <p className="max-w-44 text-center text-[11px] leading-snug text-muted-foreground">Just a plan — compare options and remove it anytime in My summer.</p>
             <button onClick={download} disabled={!chosen.length}
               className="inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2 text-sm font-semibold text-navy disabled:opacity-40">
               <CalendarPlus className="h-4 w-4" /> Download to calendar
