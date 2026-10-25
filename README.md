@@ -4,7 +4,7 @@ Build the Zillow for summer camps. Homepage should have basic form: zipcode, age
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://kodanzcamp.lovable.app
+**Live app**: https://kodanz.com
 
 ## Build with Lovable
 
